@@ -33,7 +33,7 @@ const editButton = (cellContent) => {
 }
 
 
-const RemoteAll = ({ data, page, sizePerPage, onTableChange, totalSize, users,columns,user}) => (
+const RemoteAll = ({ data, page, sizePerPage, onTableChange, totalSize, columns,user}) => (
   <div>
     <BootstrapTable
       bootstrap4
@@ -184,8 +184,7 @@ class Zones extends React.Component {
         user = {this.user.username}
         sizePerPage={ sizePerPage | defaultZoneFilters(this.user.username).sizePerPage}
         totalSize={ this.props.zones &&  this.props.zones.totalSize ? this.props.zones.totalSize : this.state.totalSize }
-        onTableChange={ this.handleTableChange }
-        users = {this.props.rootDescendants || this.props.descendants}
+        onTableChange={ this.handleTableChange }       
       />
       </>    
   }
