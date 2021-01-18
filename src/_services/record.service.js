@@ -16,24 +16,24 @@ function getAll(zoneName) {
         method: 'GET',
         headers: authHeader()
     };
-    return fetch(`${config.apiUrl}/zone/${zoneName}`, requestOptions).then(handleResponse);
+    return fetch(`${config.apiUrl}/zones/${zoneName}`, requestOptions).then(handleResponse);
 }
 function update (zoneName, formdata) {
-    return fetch(`${config.apiUrl}/record/${zoneName}`,{
+    return fetch(`${config.apiUrl}/zones/${zoneName}/records`,{
         method: "PUT", 
         headers: authHeader({ 'Content-Type': 'application/json' }),
         body: JSON.stringify(formdata)            
       }).then(handleResponse)             
 }
 function create (zoneName, formdata) {
-    return fetch(`${config.apiUrl}/record/${zoneName}`,{
+    return fetch(`${config.apiUrl}/zones/${zoneName}/record`,{
         method: "POST", 
         headers: authHeader({ 'Content-Type': 'application/json' }),
         body: JSON.stringify(formdata)            
       }).then(handleResponse)             
 }
 function _delete (zoneName, recordId) {
-    return fetch(`${config.apiUrl}/record/${zoneName}/${recordId}`,{
+    return fetch(`${config.apiUrl}/zones/${zoneName}/records/${recordId}`,{
         method: "DELETE",
         headers: authHeader()       
       }).then(handleResponse)  

@@ -18,21 +18,21 @@ function filter(searchParameters) {
     return fetch(`${config.apiUrl}/zones/search`, requestOptions).then(handleResponse);
 }
 function updateOwner (zoneName, owner) {
-    return fetch(`${config.apiUrl}/zone/${zoneName}`,{
+    return fetch(`${config.apiUrl}/zones/${zoneName}`,{
         method: "PUT", 
         headers: authHeader({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({owner})            
       }).then(handleResponse)             
 }
 function create (zoneName, owner, api, filters) {
-    return fetch(`${config.apiUrl}/zone`,{
+    return fetch(`${config.apiUrl}/zones`,{
         method: "POST", 
         headers: authHeader({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({zoneName,owner, api, filters})            
     }).then(handleResponse)             
 }
 function _delete (zoneName, filters) {
-    return fetch(`${config.apiUrl}/zone/${zoneName}`,{
+    return fetch(`${config.apiUrl}/zones/${zoneName}`,{
         method: "DELETE",
         headers: authHeader({ 'Content-Type': 'application/json' }),
         body:  JSON.stringify(filters)    
