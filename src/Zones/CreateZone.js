@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { zoneActions } from '../_actions';
 import { Button, Form, Col } from 'react-bootstrap';
 import { Combobox } from 'react-widgets';
-import defaultZoneFilters  from '../defaults';
+import {defaultZoneFilters}  from '../defaults';
 import AlertSuccess from '../AlertSuccess';
 import { AllowedRoles } from "../_components";
 

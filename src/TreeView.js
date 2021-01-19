@@ -5,7 +5,7 @@ import TreeView from "@material-ui/lab/TreeView";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import TreeItem from "@material-ui/lab/TreeItem";
-import defaultZoneFilters from './defaults'
+import {defaultZoneFilters} from './defaults'
 import { zoneActions } from './_actions';
 import { userTreeActions } from './_actions';
 import { history } from './_helpers';

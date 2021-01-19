@@ -12,8 +12,9 @@ import { PrivateRoute } from './_components';
 import { LoginPage } from './LoginPage';
 import { RegisterPage } from './RegisterPage';
 import {DnsManager} from './DnsManager';
+import {UserManager} from './UserManager';
 import {Zone} from './Zone';
-import defaultZoneFilters  from './defaults';
+import {defaultZoneFilters}  from './defaults';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.css';
 
@@ -90,6 +91,7 @@ class App extends React.Component {
 							<Redirect to="/dns-manager" />
 						</Route>
 						<PrivateRoute path="/dns-manager" exact component={DnsManager} />
+						<PrivateRoute path="/users" exact component={UserManager} />
 						<PrivateRoute path="/zone/:zoneName" component={Zone} />
 						<Route path="/login" component={LoginPage} />
 						<Route path="/register" component={RegisterPage} />						
@@ -102,8 +104,7 @@ class App extends React.Component {
 }
 function mapState(state) {
 	const {  authentication,records  } = state;
-	const { user,socket,token } = authentication;
-	
+	const { user,socket,token } = authentication;	
 	return { user,authentication,socket,token,records};
 }
 

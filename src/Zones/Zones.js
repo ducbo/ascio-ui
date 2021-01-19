@@ -6,7 +6,7 @@ import PropTypes from 'prop-types'
 import { history } from '../_helpers';
 import { connect } from 'react-redux';
 import { zoneActions } from '../_actions';
-import defaultZoneFilters from '../defaults.js'
+import {defaultZoneFilters} from '../defaults.js'
 import {Modal, Button} from 'react-bootstrap'
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import { AllowedRoles } from "../_components";
