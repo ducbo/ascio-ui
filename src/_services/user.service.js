@@ -14,9 +14,17 @@ export const userService = {
     force2fa,
     getQR,
     verifyTotpCode,
-    delete: _delete
+    delete: _delete,
+    filter
 };
-
+function filter(searchParameters) {
+    const requestOptions = {
+        method: 'POST',
+        headers: authHeader(),
+        body: JSON.stringify(searchParameters)
+    };
+    return fetch(`${config.apiUrl}/users/search`, requestOptions).then(handleResponse);
+}
 function login(username, password,code, options) {
     const requestOptions = {
         method: 'POST',

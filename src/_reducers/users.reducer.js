@@ -2,6 +2,20 @@ import { userConstants } from '../_constants';
 
 export function users(state = {}, action) {
   switch (action.type) {
+    case userConstants.FILTER_REQUEST:
+			return {
+				loading: true, 
+				zones:action.zones
+			};
+		case userConstants.FILTER_SUCCESS:
+			return {
+				zones:action.zones,
+				filterParams: { ...action.filterParams}
+			};
+		case userConstants.FILTER_FAILURE:
+			return {
+				error: action.error
+			};
     case userConstants.GETALL_REQUEST:
       return {
         loading: true

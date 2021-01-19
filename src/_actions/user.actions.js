@@ -15,9 +15,27 @@ export const userActions = {
     setCode,
     verifyTotpCode,
     delete: _delete,
-    setSocket
+    setSocket,
+    filter
 };
-
+function filter(searchParameters, oldZones) {	
+	
+	return (dispatch) => {
+		dispatch(request(oldZones));
+		return userService
+			.filter(searchParameters)
+			.then((zones) => dispatch(success(zones,searchParameters)), (error) => dispatch(failure(error.toString())));
+	};
+	function request(zones) {
+		return { type: userConstants.FILTER_REQUEST, zones  };
+	}
+	function success(zones,filterParams) {
+		return { type: userConstants.FILTER_SUCCESS, zones, filterParams};
+	}
+	function failure(error) {
+		return { type: userConstants.FILTER_FAILURE, error };
+	}
+}
 function login(username, password, code, options) {
     return dispatch => {
         dispatch(request({ username }));
