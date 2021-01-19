@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
 import NavTop from './NavTop';
+import NavLeft from './NavLeft';
 import Wait from './Wait'
 import logo from './logo.png';
 import CustomerTreeItem from './TreeView.js'
@@ -18,13 +19,13 @@ function NavProtected (props) {
 			 <div className="row">
              <div className="col-2" style={{minWidth:"230px"}}>
 					<img style={{width:"200px"}} src={logo} alt="Logo" />
-					<h4 className="mb-5">DNS-Manager</h4>
-									
-                        <CustomerTreeItem key={user.username} id={user.username} name={user.company}/>
+					<h4 className="mb-5">DNS-Manager</h4>									
+						<NavLeft></NavLeft>
+						<CustomerTreeItem key={user.username} id={user.username} name={user.company}/>						
                     </div>
                     <div className="col-10">
-					{props.children}
-				</div>
+						{props.children}
+					</div>
                 </div>               
 				<Wait></Wait>
 			</div>
