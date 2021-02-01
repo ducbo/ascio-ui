@@ -34,21 +34,28 @@ function CustomerTreeItem(props) {
       1: []
     }
   }
-  let initialExpanded = JSON.parse(localStorage.getItem(storageId+"_expanded"))
-  initialExpanded = initialExpanded || []
-  const selectedItems = {}
-  const [tree, setTree] = useState(initialData);  
+  let initialExpanded =  JSON.parse(localStorage.getItem(storageId+"_expanded"))  ||  []
+  
+  let [tree, setTree] = useState(initialData);  
+  let [expanded, setExpanded] = useState(initialExpanded);  
+  
+  if(props.updatedUser) {
+    Object.keys(tree).forEach((key) => {
+      tree[key].forEach(child => {
+        if(child.id === props.updatedUser.username) {
+          child.label = props.updatedUser.company
+        }
+      });
+    })
+    localStorage.setItem(storageId, JSON.stringify(tree))  
+  }
 
+  if(props.data) Object.keys(props.data).forEach(key => {
+    tree[key] = props.data[key]
+  })
   const onNodeSelect = async (event, users) => { 
-    const filterParams = props.filterParams || defaultZoneFilters(user.username)
-    filterParams.users = users
-    filterParams.page = 1
-    localStorage.setItem(storageId+"_selected", JSON.stringify(users))  
-    localStorage.setItem('defaultZoneFilters_' + user.username, JSON.stringify(filterParams))
-    await props.filter(filterParams, props.zones)
-    if(window.location.pathname!=="/dns-manager") {
-      history.push("/dns-manager")
-    }
+    localStorage.setItem(storageId+"_selected", JSON.stringify(users))      
+    await props.setImpersonate(users)
   }
   const buildTree = function(name,nodes) {
     {
@@ -67,7 +74,9 @@ function CustomerTreeItem(props) {
     }
   }
   const onNodeToggle = (event, nodeId) => {
-    localStorage.setItem(storageId+"_expanded", JSON.stringify(nodeId))         
+    localStorage.setItem(storageId+"_expanded", JSON.stringify(nodeId))  
+    setExpanded(nodeId)     
+    props.setExpanded(nodeId)     
     if(nodeId.length > initialExpanded.length) {    
       initialExpanded = nodeId  
       return props.getChildren(nodeId[0])
@@ -75,9 +84,7 @@ function CustomerTreeItem(props) {
             buildTree(nodeId[0],children)  
                   
         })         
-    } else {
-      
-    }    
+    }  
   };
   const renderTree = children => {
     return children.map(child => {
@@ -94,8 +101,8 @@ function CustomerTreeItem(props) {
     });
   };
   const renderedChildren = renderTree(tree.root)
-  const selected = JSON.parse(localStorage.getItem(storageId+"_selected")) || []
-  return (
+  const selectedStorage = JSON.parse(localStorage.getItem(storageId+"_selected")) || []
+  return <>
     <TreeView
       key="tree"
       className={classes.root}
@@ -103,24 +110,27 @@ function CustomerTreeItem(props) {
       defaultExpandIcon={<ChevronRightIcon />}
       onNodeToggle={onNodeToggle}
       onNodeSelect={onNodeSelect}
-      expanded={initialExpanded}
-      selected={selected}
+      expanded={expanded || initialExpanded}
+      selected={props.impersonate || selectedStorage}
     >
       {renderedChildren}
     </TreeView>
-  );
+  </>;
 }
 
 const actionCreators = {
-  filter: zoneActions.filter,
-  getChildren : userTreeActions.getChildren
+  getChildren : userTreeActions.getChildren,
+  setImpersonate : userTreeActions.impersonate,
+  setData : userTreeActions.setData,
+  setExpanded : userTreeActions.setExpanded,
 }
 
 function mapState(state) {
-  const {  authentication } = state;
+  const {  authentication, usertree, users } = state;
   const { user } = authentication;
-  const { filterParams,zones } = state.zones;
-  return { user, filterParams , zones};
+  const {updatedUser} = users
+  const { refresh,data, impersonate } = usertree;
+  return { user,refresh, data, impersonate,updatedUser };
 }
 const connectedTreeView = connect(mapState, actionCreators)(CustomerTreeItem)
 export default connectedTreeView 
