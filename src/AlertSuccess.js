@@ -2,13 +2,17 @@ import React from 'react';
 import { Alert } from 'react-bootstrap';
 
 class AlertSuccess extends React.Component {
+	constructor (props) { 
+        super(props)
+	}
 	render() {
-        if (this.props.progress) {
-			return <Alert className="in" variant="secondary">{this.props.progress}</Alert>
+		const className = "in "+this.props.className
+		if (this.props.progress) {
+			return <Alert className={className} variant="secondary">{this.props.progress}</Alert>
 		} else if (this.props.success) {
-			return <Alert className="in" variant="success">{this.props.success}</Alert>
+			return <Alert className={className} variant="success">{this.props.success}</Alert>
 		} else if (this.props.error) {
-			return <Alert className="in" variant="danger">{this.props.error}</Alert>
+			return <Alert className={className} variant="danger">{this.props.error}</Alert>
 		} else return ""
 	}
 }
