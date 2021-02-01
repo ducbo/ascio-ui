@@ -8,14 +8,15 @@ class UserManager extends Component {
         super(props);
         this.state = { selectedSubUserManager: []};
         this.user = this.props.user.user
+        this.isWorker = props.location.pathname.search("/workers") > -1
     }
     render() {
         return (
             <>
                <NavProtected>
-                 <CreateUser></CreateUser>
-                 <Users/>  
-                </NavProtected> 
+                 <CreateUser isWorker={this.isWorker}></CreateUser>
+                 <Users isWorker={this.isWorker}/>  
+               </NavProtected> 
             </>
         )
     }

@@ -6,7 +6,7 @@ import PropTypes from 'prop-types'
 import { history } from '../_helpers';
 import { connect } from 'react-redux';
 import { userActions } from '../_actions';
-import {defaultAccountFilters} from '../defaults.js'
+import {defaultAccountFilters,defaultWorkerFilters} from '../defaults.js'
 import {Modal, Button} from 'react-bootstrap'
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import { AllowedRoles } from "../_components";
@@ -64,6 +64,8 @@ class Users extends React.Component {
     super(props);
     this.handleTableChange = this.handleTableChange.bind(this);
     this.user = this.props.user.user
+    this.filters = this.props.isWorker ? defaultWorkerFilters(this.user.username) : defaultAccountFilters(this.user.username) 
+    this.filterName = this.props.isWorker ? "defaultWorkerFilters" : "defaultAccountFilters" 
     this.state ={
       data: [],
       totalSize:0,
@@ -110,8 +112,7 @@ class Users extends React.Component {
         padding:0
       },
       formatter: (cellContent, row) => { return <><button title="Edit User" className="btn edit-button"  data-row={row.UserName}><FaEdit  size="20px"></FaEdit></button> <AllowedRoles roles={["admin","user_editor"]}><button title="Delete User" className="btn delete-button" data-row={row.UserName} onClick={this.deleteDialog.bind(this)}><FaTrash size="20px"></FaTrash></button></AllowedRoles></>}
-    }];
-    
+    }];    
     this.deleteUser = this.deleteUser.bind(this)    
     this.closeDialog = this.closeDialog.bind(this)  
   }
@@ -123,7 +124,7 @@ class Users extends React.Component {
   }
   deleteUser() {
     const self = this
-    const filters = this.props.filterParams || defaultAccountFilters(this.user.username);
+    const filters = this.props.filterParams || this.filters;
     this.props.deleteUser(this.state.deleteUserName,filters)
     .then(() =>{
       self.closeDialog();
@@ -134,12 +135,12 @@ class Users extends React.Component {
     this.setState(this.state)
   }
   componentDidMount() {
-    const searchParameters = defaultAccountFilters(this.user.username)
+    const searchParameters = this.filters
     searchParameters.users = searchParameters.users ||  this.user.username
     this.props.filter(searchParameters,this.props.users)
   }
   componentDidUpdate() {
-    const searchParameters = defaultAccountFilters(this.user.username)
+    const searchParameters = this.filters
     searchParameters.users = this.getImpersonated()
     if(searchParameters.users !== this.state.lastUsers) {
       this.props.filter(searchParameters,this.props.zones)
@@ -147,20 +148,25 @@ class Users extends React.Component {
     }
   }
   getImpersonated() {
-    return this.props.impersonate || defaultAccountFilters(this.user.username).users || this.user.username 
+    return this.props.impersonate || this.filters.users || this.user.username 
   }
   handleTableChange  (type, { page, sizePerPage, filters, sortField, sortOrder, cellEdit }) {
     const self = this
+    if(this.isWorker) {
+      filters.type = { filterVal : "worker"}
+    } else {
+      filters.type = { filterVal : "account"}
+    }
     const queryArray = Object.keys(filters).map(filterName => {
       const filter = filters[filterName]
       return "@" + filterName + ":" + filter.filterVal.replace(/\./g,"").replace(/\-/,"_")+"*"
     })
     const filter  = queryArray.length > 0 ? queryArray.join(" ") : "*"
     const users = this.getImpersonated();
-    sortField = sortField || defaultAccountFilters(this.user.username).sortField
-    sortOrder = sortOrder  || defaultAccountFilters(this.user.username).sortOrder
+    sortField = sortField || this.filters.sortField
+    sortOrder = sortOrder  || this.filters.sortOrder
     const searchParameters = {page,sizePerPage,filter,sortField,sortOrder,users }
-    localStorage.setItem('defaultAccountFilters_' + this.user.username, JSON.stringify(searchParameters))
+    localStorage.setItem(this.filterName+'_' + this.user.username, JSON.stringify(searchParameters))
     this.props.filter(searchParameters,this.props.users).then(() => {
       self.setState({
         data:this.props.users.data, 
@@ -193,7 +199,7 @@ class Users extends React.Component {
         page={ page || 1}
         columns = {this.columns}
         user = {this.user.username}
-        sizePerPage={ sizePerPage | defaultAccountFilters(this.user.username).sizePerPage}
+        sizePerPage={ sizePerPage | this.filters.sizePerPage}
         totalSize={ this.props.users &&  this.props.users.totalSize ? this.props.users.totalSize : this.state.totalSize }
         onTableChange={ this.handleTableChange }       
       />

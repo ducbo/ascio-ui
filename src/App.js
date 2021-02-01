@@ -93,6 +93,7 @@ class App extends React.Component {
 						</Route>
 						<PrivateRoute path="/dns-manager" exact component={DnsManager} />
 						<PrivateRoute path="/users" exact component={UserManager} />
+						<PrivateRoute path="/workers" exact component={UserManager} />
 						<PrivateRoute path="/zone/:zoneName" component={Zone} />
 						<Route path="/login" component={LoginPage} />
 						<Route path="/password-reset/:token" component={PasswordResetPage} />

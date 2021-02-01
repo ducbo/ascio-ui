@@ -6,6 +6,7 @@ function NavLeft(props) {
             <div id="nav-left">
                <div><a href="/dns-manager">Zones</a></div>
                <div><a href="/users">Users</a></div>
+               <div><a href="/workers">Workers</a></div>
             </div>
         );
      } else {
