@@ -4,9 +4,42 @@ import { userTreeService } from '../_services';
 export const userTreeActions = {
     getRootDescendants,
     getDescendants,
-    getChildren
+	getChildren,
+	impersonate,
+	refresh,
+	setExpanded,
+	setData
 };
 
+function impersonate(users, descendants) {
+	return { type: usertreeConstants.IMPERSONATE, users, descendants }
+}
+function setExpanded(expanded) {
+	return { type: usertreeConstants.SET_EXPANDED, expanded }
+}
+
+function setData(data) {
+	return { type: usertreeConstants.SET_DATA, data }
+}
+function refresh(username,selected) {
+	const tree = "customer_tree_" + username
+	//localStorage.removeItem(tree)
+	return (dispatch) => {
+		dispatch(request());
+		return userTreeService
+			.refresh(username,selected)
+			.then((result) => dispatch(success(result)), (error) => dispatch(failure(error.toString())));
+	};
+	function request() {
+		return { type: usertreeConstants.REFRESH_REQUEST };
+	}
+	function success(usertree) {
+		return { type: usertreeConstants.REFRESH_SUCCESS, usertree};
+	}
+	function failure(error) {
+		return { type: usertreeConstants.REFRESH_FAILURE, error };
+	}
+}
 function getDescendants(user) {
 	return (dispatch) => {
 		dispatch(request());

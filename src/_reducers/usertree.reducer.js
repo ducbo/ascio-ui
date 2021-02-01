@@ -1,38 +1,46 @@
 import { usertreeConstants } from '../_constants';
 
-export function usertree(state = {descendants : [], rootDescendants : [],children : []}, action) {
+export function usertree(state = {data: {}, descendants : [], rootDescendants : [],children : []}, action) {
   switch (action.type) {
-    
+    // refresh 
+    case usertreeConstants.REFRESH: return {
+      ...state, 
+      refresh : ! state.refresh
+    }
+
     // get descendants
 
     case usertreeConstants.DESCENDANT_REQUEST:
       return {
+        ...state,
         loading: true, 
-        rootDescendants: state.rootDescendants
       };
     case usertreeConstants.DESCENDANT_SUCCESS:
       return {
-        descendants: action.children,
-        rootDescendants: state.rootDescendants
+        ...state,
+        descendants: action.children
       };
     case usertreeConstants.DESCENDANT_FAILURE:
       return { 
+        ...state,
         error: action.error,
-        rootDescendants: state.rootDescendants
       };
 
     // get root descendants
 
     case usertreeConstants.ROOT_DESCENDANT_REQUEST:
-      return {
+      return {   
+        ...state,     
         loading: true
       };
     case usertreeConstants.ROOT_DESCENDANT_SUCCESS:
       return {
+        ...state,
         rootDescendants: action.children
       };
     case usertreeConstants.ROOT_DESCENDANT_FAILURE:
       return { 
+        ...state,
         error: action.error
       };
     
@@ -40,19 +48,56 @@ export function usertree(state = {descendants : [], rootDescendants : [],childre
     
     case usertreeConstants.CHILDREN_REQUEST:
       return {
-        loading: true,
-        rootDescendants: state.rootDescendants
+        ...state,
+        loading: true,        
       };
     case usertreeConstants.CHILDREN_SUCCESS:
       return {
+        ...state,
         children: action.children,
-        rootDescendants: state.rootDescendants
       };
     case usertreeConstants.CHILDREN_FAILURE:
       return { 
+        ...state,
         error: action.error,
-        rootDescendants: state.rootDescendants
+      };    
+    // set current tree, IMPERSONATE_USER
+    case usertreeConstants.IMPERSONATE:
+      return {
+        ...state,
+        impersonate: action.users,
+        impersonateDescendants: action.descendants,
+        refresh: !state.refresh
       };
+    case usertreeConstants.SET_EXPANDED: {
+      return {
+        ...state, 
+        expanded: action.expanded
+      }
+    }
+    case usertreeConstants.SET_DATA: {
+      return {
+        ...state, 
+        data: action.data
+      }
+    }
+    case usertreeConstants.REFRESH_REQUEST:
+      return {
+        ...state,
+        loading: true
+        
+      };
+    case usertreeConstants.REFRESH_SUCCESS:
+      return {
+        ...state,
+        data : action.usertree
+      };
+    case usertreeConstants.REFRESH_FAILURE:
+      return { 
+        ...state,
+        error: action.error,
+
+      };  
     default:
       return state
   }
