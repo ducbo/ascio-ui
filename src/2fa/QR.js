@@ -1,7 +1,5 @@
 import { connect } from 'react-redux';
 import { userActions } from '../_actions';
-import Code from './Code'
-import Activate from './Activate'
 import React from 'react';
 
 class QR extends React.Component {
@@ -27,8 +25,9 @@ class QR extends React.Component {
 }
 
 function mapState(state) {
-    const {  authentication } = state;
-    const { user,qr, loggedIn} = authentication;
+    const {  authentication,users } = state;
+    const { user, loggedIn} = authentication;
+    const qr = authentication.qr ||users.qr || users.error && users.error.qr
     return { user,qr };
 }
 
