@@ -10,6 +10,7 @@ import { history } from './_helpers';
 import { alertActions, userActions, recordActions, zoneActions } from './_actions';
 import { PrivateRoute } from './_components';
 import { LoginPage } from './LoginPage';
+import { PasswordResetPage } from './PasswordResetPage';
 import { RegisterPage } from './RegisterPage';
 import {DnsManager} from './DnsManager';
 import {UserManager} from './UserManager';
@@ -94,6 +95,7 @@ class App extends React.Component {
 						<PrivateRoute path="/users" exact component={UserManager} />
 						<PrivateRoute path="/zone/:zoneName" component={Zone} />
 						<Route path="/login" component={LoginPage} />
+						<Route path="/password-reset/:token" component={PasswordResetPage} />
 						<Route path="/register" component={RegisterPage} />						
 						<Redirect from="*" to="/" />
 					</Switch>
