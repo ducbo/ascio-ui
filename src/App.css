@@ -83,3 +83,24 @@ body .container {
 .order-4, .caret-4, .caret-4-asc, .caret-4-desc {
   margin-right:5px;
 }
+.container th.expand-cell-header, 
+.container td.expand-cell {
+  padding-right: 30px;
+  cursor:pointer;
+}
+.container table.expand-table td {
+  cursor: pointer;
+}
+.container table.expand-table div {
+  cursor: auto;
+}
+.validation-list {
+  list-style-type: none;
+  padding-left: 15px; 
+  margin-top:20px;
+  margin-bottom:20px;
+}
+.validation-list li svg {
+  list-style-type: none;
+  margin-right: 15px; 
+}
