@@ -17,13 +17,13 @@ function NavProtected (props) {
 			<div className="container">
 			 {alert.message && <div className={`alert ${alert.type}`}>{alert.message}</div>}
 			 <div className="row">
-             <div className="col-2" style={{minWidth:"230px"}}>
+             <div className="col-2 col-md-4 col-lg-2">
 					<img style={{width:"200px"}} src={logo} alt="Logo" />
 					<h4 className="mb-5">DNS-Manager</h4>									
 						<NavLeft></NavLeft>
 						<CustomerTreeItem key={user.username} id={user.username} name={user.company}/>						
                     </div>
-                    <div className="col-10">
+                    <div className="col-lg-10 col-md-12 col-sm-12">
 						{props.children}
 					</div>
                 </div>               
