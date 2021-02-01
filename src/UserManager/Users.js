@@ -150,13 +150,9 @@ class Users extends React.Component {
   getImpersonated() {
     return this.props.impersonate || this.filters.users || this.user.username 
   }
-  handleTableChange  (type, { page, sizePerPage, filters, sortField, sortOrder, cellEdit }) {
+  handleTableChange =  (type, { page, sizePerPage, filters, sortField, sortOrder, cellEdit })  => {
     const self = this
-    if(this.isWorker) {
-      filters.type = { filterVal : "worker"}
-    } else {
-      filters.type = { filterVal : "account"}
-    }
+    filters.type = { filterVal : this.filters.type}
     const queryArray = Object.keys(filters).map(filterName => {
       const filter = filters[filterName]
       return "@" + filterName + ":" + filter.filterVal.replace(/\./g,"").replace(/\-/,"_")+"*"
@@ -165,7 +161,7 @@ class Users extends React.Component {
     const users = this.getImpersonated();
     sortField = sortField || this.filters.sortField
     sortOrder = sortOrder  || this.filters.sortOrder
-    const searchParameters = {page,sizePerPage,filter,sortField,sortOrder,users }
+    const searchParameters = {page,sizePerPage,filter,sortField,sortOrder,users, type: this.filters.type }
     localStorage.setItem(this.filterName+'_' + this.user.username, JSON.stringify(searchParameters))
     this.props.filter(searchParameters,this.props.users).then(() => {
       self.setState({
