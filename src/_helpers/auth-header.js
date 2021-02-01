@@ -13,6 +13,6 @@ export function authHeader(additionalHeaders) {
         })
         return auth;
     } else {
-        return {};
+        return additionalHeaders;
     }
 }

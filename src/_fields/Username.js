@@ -4,14 +4,15 @@ export const Username = function (props) {
     const [value, setValue] = useState({value: props.data[props.field]})
     
     const onChange = (e) => {
-      setValue({value: e.target.value});
+      setValue({value: e.target.value});            
       props.onChange(e)
     } 
+
     return <div className='form-group row'>
-      <label htmlFor={'input' + props.field} className='col-sm-2 col-form-label'>
+      <label htmlFor={'input' + props.field} className='col-sm-3 col-form-label'>
         {props.name}
       </label>
-      <div className='col-sm-10'>
+      <div className='col-sm-9'>
         <input
           label={props.description}
           type='text'
