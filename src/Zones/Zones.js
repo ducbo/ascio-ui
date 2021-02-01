@@ -72,7 +72,9 @@ class Zones extends React.Component {
       sizePerPage : 10, 
       page: 1,
       showDialog : false, 
-      users : props.users
+      users : this.getImpersonated(),
+      lastUsers : null
+     // users : props.users
       }
     const columns1 = [{
       dataField: 'ZoneName',
@@ -123,8 +125,9 @@ class Zones extends React.Component {
   }
   deleteZone() {
     const self = this
-    const filters = this.props.filterParams || defaultZoneFilters(this.user.username);
-    this.props.deleteZone(this.state.deleteZoneName,filters)
+    const searchParameters = defaultZoneFilters(this.user.username)
+    searchParameters.users = this.getImpersonated()
+    this.props.deleteZone(this.state.deleteZoneName,searchParameters)
     .then(() =>{
       self.closeDialog();
     })
@@ -135,8 +138,16 @@ class Zones extends React.Component {
   }
   componentDidMount() {
     const searchParameters = defaultZoneFilters(this.user.username)
-    searchParameters.users = searchParameters.users ||  this.user.username
+    searchParameters.users = this.getImpersonated()
     this.props.filter(searchParameters,this.props.zones)
+  }
+  componentDidUpdate() {
+    const searchParameters = defaultZoneFilters(this.user.username)
+    searchParameters.users = this.getImpersonated()
+    if(searchParameters.users !== this.state.lastUsers) {
+      this.props.filter(searchParameters,this.props.zones)
+      this.setState({lastUsers:searchParameters.users})
+    }
   }
   handleTableChange  (type, { page, sizePerPage, filters, sortField, sortOrder, cellEdit }) {
     const self = this
@@ -145,11 +156,11 @@ class Zones extends React.Component {
       return "@" + filterName + "Search:" + filter.filterVal.replace(/\./g,"").replace(/\-/,"_")+"*"
     })
     const filter  = queryArray.length > 0 ? queryArray.join(" ") : "*"
-    const users = defaultZoneFilters(this.user.username).users || this.user.username;
+    const users = this.getImpersonated();
     sortField = sortField || defaultZoneFilters(this.user.username).sortField
     sortOrder = sortOrder  || defaultZoneFilters(this.user.username).sortOrder
     const searchParameters = {page,sizePerPage,filter,sortField,sortOrder,users }
-    localStorage.setItem('defaultZoneFilters_' + this.user.username, JSON.stringify(searchParameters))
+    localStorage.setItem('defaultZoneFilters_' + this.user.username , JSON.stringify(searchParameters))
     this.props.filter(searchParameters,this.props.zones).then(() => {
       self.setState({
         data:this.props.zones.data, 
@@ -157,6 +168,9 @@ class Zones extends React.Component {
         page, sizePerPage
       })
     })
+  }
+  getImpersonated() {
+    return this.props.impersonate || defaultZoneFilters(this.user.username).users || this.user.username 
   }
   render() {     
     const page = this.props.filterParams ? this.props.filterParams.page : this.state.page
@@ -196,8 +210,8 @@ const actionCreators = {
 function mapState(state) {
   const { user } = state.authentication;
   const { zones,filterParams } = state.zones;
-  const { rootDescendants, descendants } = state.usertree;
-  return { user, zones, filterParams, rootDescendants, descendants };
+  const { rootDescendants, descendants, impersonate } = state.usertree;
+  return { user, zones, filterParams, rootDescendants, descendants,impersonate };
 }
 const connectedZones = connect(mapState, actionCreators)(Zones)
 export {connectedZones as Zones}

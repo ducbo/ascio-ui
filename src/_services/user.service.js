@@ -13,9 +13,14 @@ export const userService = {
     activate2fa,
     force2fa,
     getQR,
+    updatePassword,
+    verifyUserToken,
+    resetPassword,
+    resetQR,
     verifyTotpCode,
     delete: _delete,
-    filter
+    filter,
+    update
 };
 function filter(searchParameters) {
     const requestOptions = {
@@ -24,6 +29,14 @@ function filter(searchParameters) {
         body: JSON.stringify(searchParameters)
     };
     return fetch(`${config.apiUrl}/users/search`, requestOptions).then(handleResponse);
+}
+function update(data) {
+    const requestOptions = {
+        method: 'PUT',
+        headers: authHeader(),
+        body: JSON.stringify(data)
+    };
+    return fetch(`${config.apiUrl}/users`, requestOptions).then(handleResponse);
 }
 function login(username, password,code, options) {
     const requestOptions = {
@@ -53,11 +66,43 @@ function reAuth() {
             return user;
         });
 }
-function getQR () { 
+function getQR (username) { 
     const requestOptions = {
-        headers: authHeader({ 'Content-Type': 'application/json' }),
+        headers: authHeader(),
     };
-    return fetch(`${config.apiUrl}/users/qr`, requestOptions)
+    return fetch(`${config.apiUrl}/users/${username}/qr`, requestOptions)
+        .then(handleResponse)        
+}
+function resetQR (username) { 
+    const requestOptions = {
+        headers: authHeader(),
+    };
+    return fetch(`${config.apiUrl}/users/${username}/reset-qr`, requestOptions)
+        .then(handleResponse)        
+}
+function resetPassword (username) { 
+    const requestOptions = {
+        headers: authHeader(),
+    };
+    return fetch(`${config.apiUrl}/users/${username}/reset-password`, requestOptions)
+        .then(handleResponse)        
+}
+function verifyUserToken(username,token,code) {
+    const requestOptions = {
+        method:'POST',
+        headers: authHeader({ 'Content-Type': 'application/json' }),
+        body: JSON.stringify({username, token,code})
+    };
+    return fetch(`${config.apiUrl}/users/${username}/password/verify-user-token`, requestOptions)
+        .then(handleResponse)  
+}
+function updatePassword (username,token,password,code) { 
+    const requestOptions = {
+        method:'POST',
+        headers: authHeader({ 'Content-Type': 'application/json' }),
+        body: JSON.stringify({token, password,code})
+    };
+    return fetch(`${config.apiUrl}/users/${username}/password`, requestOptions)
         .then(handleResponse)        
 }
 function activate2fa (status) { 
@@ -121,15 +166,6 @@ function register(user) {
     return fetch(`${config.apiUrl}/users/register`, requestOptions).then(handleResponse);
 }
 
-function update(user) {
-    const requestOptions = {
-        method: 'PUT',
-        headers: authHeader({'Content-Type': 'application/json' }),
-        body: JSON.stringify(user)
-    };
-
-    return fetch(`${config.apiUrl}/users/${user.id}`, requestOptions).then(handleResponse);;
-}
 
 // prefixed function name with underscore because delete is a reserved word in javascript
 function _delete(id) {
@@ -150,15 +186,18 @@ function handleResponse(response) {
                 logout();
                 //location.reload(true);
             }
-            const qr = data && data.qr ? data.qr : null
             const error = (data && data.message) || response.statusText;
             const code = (data && data.code) || response.statusCode;
-            return Promise.reject({
-                qr,
+            const result = {
                 code,
                 message: error
-
-            });
+                
+            }
+            const qr = data && data.qr ? data.qr : null
+            if(qr){
+                result.qr = qr; 
+            }
+            return Promise.reject(result);
         }
 
         return data;

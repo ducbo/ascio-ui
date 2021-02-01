@@ -5,15 +5,16 @@ export function users(state = {}, action) {
     case userConstants.FILTER_REQUEST:
 			return {
 				loading: true, 
-				zones:action.zones
+				users:action.users || []
 			};
 		case userConstants.FILTER_SUCCESS:
 			return {
-				zones:action.zones,
+				users:action.users,
 				filterParams: { ...action.filterParams}
 			};
 		case userConstants.FILTER_FAILURE:
 			return {
+        users:action.users || [],
 				error: action.error
 			};
     case userConstants.GETALL_REQUEST:
@@ -54,10 +55,92 @@ export function users(state = {}, action) {
             // return copy of user with 'deleteError:[error]' property
             return { ...userCopy, deleteError: action.error };
           }
-
           return user;
         })
       };
+      case userConstants.UPDATE_REQUEST:
+        return {
+          loading: true,
+          users : state.users
+        };
+      case userConstants.UPDATE_SUCCESS:
+        return {
+          updatedUser: action.user,
+          users : 
+            { 
+              data : state.users.data.map((user) => {
+                  if(user.username === action.user.username) {
+                    return action.user
+                  } else return user
+                }
+              ),
+              totalSize : state.users.totalSize
+            }
+      }
+      case userConstants.UPDATE_FAILURE:
+        return { 
+          error: action.error
+        };
+      case userConstants.RESET_QR_REQUEST: 
+        return {
+          loading: true,
+          username: action.username
+        }
+      case userConstants.RESET_QR_SUCCESS: 
+        return {
+          username: action.username,
+          message: action.message
+        }
+      case userConstants.RESET_QR_FAILURE: 
+        return { 
+          error: action.error,
+          username: action.username
+        };
+      case userConstants.RESET_PASSWORD_REQUEST: 
+        return {
+          loading: true,
+          username: action.username
+        }
+      case userConstants.RESET_PASSWORD_SUCCESS: 
+        return {
+          username: action.username
+        }
+      case userConstants.RESET_PASSWORD_FAILURE: 
+        return { 
+          error: action.error,
+          username: action.username
+        };
+      case userConstants.UPDATE_PASSWORD_REQUEST: 
+        return {
+          loading: true,
+          username: action.username
+        }
+      case userConstants.UPDATE_PASSWORD_SUCCESS: 
+        return {
+          username: action.username
+        }
+      case userConstants.UPDATE_PASSWORD_FAILURE: 
+        return { 
+          error: action.error,
+          username: action.username
+        };
+      case userConstants.VERIFY_USER_TOKEN_REQUEST: 
+        return {
+          loading: true,
+          ...state,
+          username: action.username
+        }
+      case userConstants.VERIFY_USER_TOKEN_SUCCESS: 
+        return {
+          username: action.username,
+          qr: action.qr
+        }
+      case userConstants.VERIFY_USER_TOKEN_FAILURE: 
+        return { 
+          error: action.error,
+          username: action.username,
+          qr: action.qr
+        };
     default:
       return state
   }

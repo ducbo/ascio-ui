@@ -10,6 +10,7 @@ import {defaultAccountFilters} from '../defaults.js'
 import {Modal, Button} from 'react-bootstrap'
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import { AllowedRoles } from "../_components";
+import {UpdateUser} from './UpdateUser'
 
 function dateFormatter (cell, row) {
   const date = new Date(parseInt(cell))  
@@ -26,13 +27,6 @@ function dateFormatter (cell, row) {
   }
 
 
-
-const editButton = (cellContent) => {
-  const target = cellContent.currentTarget.dataset.row
-  history.push("/user/" + target)
-}
-
-
 const RemoteAll = ({ data, page, sizePerPage, onTableChange, totalSize, columns,user}) => (
   <div>
     <BootstrapTable
@@ -44,11 +38,15 @@ const RemoteAll = ({ data, page, sizePerPage, onTableChange, totalSize, columns,
       keyField="username"
       data={ data }
       columns={ columns }
-      defaultSorted={ [{ dataField: defaultAccountFilters(user).sortField,  order: defaultAccountFilters(user).sortOrder
-}] }
+      defaultSorted={ [{ dataField: defaultAccountFilters(user).sortField,  order: defaultAccountFilters(user).sortOrder}] }
       filter={ filterFactory() }
       pagination={ paginationFactory({ page, sizePerPage, totalSize }) }
       onTableChange={ onTableChange }  
+      expandRow={{
+        showExpandColumn: true,
+        renderer: row => (<UpdateUser data={{...row}} action = "update"></UpdateUser>)
+      }}
+      classes="expand-table" 
     />
   </div>
 );
@@ -72,23 +70,36 @@ class Users extends React.Component {
       sizePerPage : 10, 
       page: 1,
       showDialog : false, 
-      users : props.users
+      users : this.getImpersonated(),
+      lastUsers : null
       }
-    const columns1 = [{
+    this.columns = [{
       dataField: 'username',
       text: 'Username',    
       sort: true,
       filter: textFilter()
     }, {
-      dataField: '_clientId',
-      text: 'Owner',
+      dataField: 'company',
+      text: 'Company',
       sort: true,
       filter: textFilter()
     
-    }];
-    const columns3 = [ {
-      dataField: 'CreatedDate',
+    },
+    {
+      dataField: 'email',
+      text: 'Email',
+      sort: true,
+      filter: textFilter()
+    
+    },{
+      dataField: 'created',
       text: 'Created',
+      type : 'date',
+      formatter : dateFormatter,
+      sort: true,
+    },{
+      dataField: 'updated',
+      text: 'Updated',
       type : 'date',
       formatter : dateFormatter,
       sort: true,
@@ -98,20 +109,9 @@ class Users extends React.Component {
       style : {
         padding:0
       },
-      formatter: (cellContent, row) => { return <><button title="Edit User" className="btn edit-button"  data-row={row.UserName} onClick={editButton}><FaEdit  size="20px"></FaEdit></button> <AllowedRoles roles={["admin","user_editor"]}><button title="Delete User" className="btn delete-button" data-row={row.UserName} onClick={this.deleteDialog.bind(this)}><FaTrash size="20px"></FaTrash></button></AllowedRoles></>}
+      formatter: (cellContent, row) => { return <><button title="Edit User" className="btn edit-button"  data-row={row.UserName}><FaEdit  size="20px"></FaEdit></button> <AllowedRoles roles={["admin","user_editor"]}><button title="Delete User" className="btn delete-button" data-row={row.UserName} onClick={this.deleteDialog.bind(this)}><FaTrash size="20px"></FaTrash></button></AllowedRoles></>}
     }];
-
-    const user = JSON.parse(localStorage.getItem('user'))
-    let columns2 = []
-    if(user.user && user.user.roles && user.user.roles.includes('admin')) {
-      columns2  = [{
-        dataField: 'api',
-        text: 'Api',
-        sort: true,
-        filter: textFilter()
-      }]
-    }
-    this.columns = columns1.concat(columns2,columns3)
+    
     this.deleteUser = this.deleteUser.bind(this)    
     this.closeDialog = this.closeDialog.bind(this)  
   }
@@ -138,14 +138,25 @@ class Users extends React.Component {
     searchParameters.users = searchParameters.users ||  this.user.username
     this.props.filter(searchParameters,this.props.users)
   }
+  componentDidUpdate() {
+    const searchParameters = defaultAccountFilters(this.user.username)
+    searchParameters.users = this.getImpersonated()
+    if(searchParameters.users !== this.state.lastUsers) {
+      this.props.filter(searchParameters,this.props.zones)
+      this.setState({lastUsers:searchParameters.users})
+    }
+  }
+  getImpersonated() {
+    return this.props.impersonate || defaultAccountFilters(this.user.username).users || this.user.username 
+  }
   handleTableChange  (type, { page, sizePerPage, filters, sortField, sortOrder, cellEdit }) {
     const self = this
     const queryArray = Object.keys(filters).map(filterName => {
       const filter = filters[filterName]
-      return "@" + filterName + "Search:" + filter.filterVal.replace(/\./g,"").replace(/\-/,"_")+"*"
+      return "@" + filterName + ":" + filter.filterVal.replace(/\./g,"").replace(/\-/,"_")+"*"
     })
     const filter  = queryArray.length > 0 ? queryArray.join(" ") : "*"
-    const users = defaultAccountFilters(this.user.username).users || this.user.username;
+    const users = this.getImpersonated();
     sortField = sortField || defaultAccountFilters(this.user.username).sortField
     sortOrder = sortOrder  || defaultAccountFilters(this.user.username).sortOrder
     const searchParameters = {page,sizePerPage,filter,sortField,sortOrder,users }
@@ -196,8 +207,8 @@ const actionCreators = {
 function mapState(state) {
   const { user } = state.authentication;
   const { users,filterParams } = state.users;
-  const { rootDescendants, descendants } = state.usertree;
-  return { user, users, filterParams, rootDescendants, descendants };
+  const { rootDescendants, descendants, impersonate } = state.usertree;
+  return { user, users, filterParams, rootDescendants, descendants,impersonate };
 }
 const connectedUsers = connect(mapState, actionCreators)(Users)
 export {connectedUsers as Users}

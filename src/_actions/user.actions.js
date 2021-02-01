@@ -12,11 +12,16 @@ export const userActions = {
     activate2fa,
     force2fa,
     getQR,
+    resetQR,
+    resetPassword,
+    verifyUserToken,
+    updatePassword,
     setCode,
     verifyTotpCode,
     delete: _delete,
     setSocket,
-    filter
+    filter,
+    update
 };
 function filter(searchParameters, oldZones) {	
 	
@@ -24,13 +29,13 @@ function filter(searchParameters, oldZones) {
 		dispatch(request(oldZones));
 		return userService
 			.filter(searchParameters)
-			.then((zones) => dispatch(success(zones,searchParameters)), (error) => dispatch(failure(error.toString())));
+			.then((users) => dispatch(success(users,searchParameters)), (error) => dispatch(failure(error.toString())));
 	};
-	function request(zones) {
-		return { type: userConstants.FILTER_REQUEST, zones  };
+	function request(users) {
+		return { type: userConstants.FILTER_REQUEST, users  };
 	}
-	function success(zones,filterParams) {
-		return { type: userConstants.FILTER_SUCCESS, zones, filterParams};
+	function success(users,filterParams) {
+		return { type: userConstants.FILTER_SUCCESS, users, filterParams};
 	}
 	function failure(error) {
 		return { type: userConstants.FILTER_FAILURE, error };
@@ -77,6 +82,78 @@ function reAuth () {
 function logout() {
     userService.logout();
     return { type: userConstants.LOGOUT };
+}
+function resetQR(username) {
+    return dispatch => {
+        dispatch(request());
+        return userService.resetQR(username)
+            .then(
+                () => { 
+                    dispatch(success(username));                    
+                },
+                error => {
+                    dispatch(failure(error));
+                 }
+            );
+    }    
+    function request() { return { type: userConstants.RESET_QR_REQUEST } }
+    function success(username) { return { type: userConstants.RESET_QR_SUCCESS,username } }
+    function failure(error) { return { type: userConstants.RESET_QR_FAILURE, error } }
+
+}
+function resetPassword(username) {
+    return dispatch => {
+        dispatch(request());
+        return userService.resetPassword(username)
+            .then(
+                () => { 
+                    dispatch(success(username));                    
+                },
+                error => {
+                    dispatch(failure(error));
+                 }
+            );
+    }    
+    function request() { return { type: userConstants.RESET_PASSWORD_REQUEST } }
+    function success(username) { return { type: userConstants.RESET_PASSWORD_SUCCESS,username } }
+    function failure(error) { return { type: userConstants.RESET_PASSWORD_FAILURE, error } }
+
+}
+function updatePassword(username,token,password,code) {
+    return dispatch => {
+        dispatch(request());
+        return userService.updatePassword(username,token,password,code)
+            .then(
+                () => { 
+                    dispatch(success());                    
+                },
+                error => {
+                    dispatch(failure(error));
+                 }
+            );
+    }    
+    function request() { return { type: userConstants.RESET_PASSWORD_REQUEST } }
+    function success() { return { type: userConstants.RESET_PASSWORD_SUCCESS } }
+    function failure(error) { return { type: userConstants.RESET_PASSWORD_FAILURE, error } }
+
+}
+function verifyUserToken(username,token,code) {
+    return dispatch => {
+        dispatch(request());
+        return userService.verifyUserToken(username,token,code)
+            .then(
+                (result) => { 
+                    dispatch(success(result.qr));                    
+                },
+                error => {
+                    dispatch(failure(error));
+                 }
+            );
+    }    
+    function request() { return { type: userConstants.VERIFY_USER_TOKEN_REQUEST } }
+    function success(qr) { return { type: userConstants.VERIFY_USER_TOKEN_SUCCESS,qr } }
+    function failure(error) { return { type: userConstants.VERIFY_USER_TOKEN_FAILURE, error } }
+
 }
 function activate2fa(code,active) {
     active = active || true
@@ -137,6 +214,24 @@ function verifyTotpCode(code) {
     function success() { return { type: userConstants.VERIFY_TOPTP_CODE_SUCCESS} }
     function failure(error) { return { type: userConstants.VERIFY_TOPTP_CODE_FAILURE,error } }
 }
+function update(data) { 
+    return dispatch => {
+        dispatch(request());
+
+        return userService.update(data)
+            .then(
+                (user) => { 
+                    dispatch(success(user));
+                },
+                error => {
+                    dispatch(failure(error.toString()));                   
+                }
+            );
+    }
+    function request() { return { type: userConstants.UPDATE_REQUEST} }
+    function success(user) { return { type: userConstants.UPDATE_SUCCESS , user} }
+    function failure(error) { return { type: userConstants.UPDATE_FAILURE,error } }
+}
 function force2fa(level) { 
     return dispatch => {
         dispatch(request());
@@ -177,7 +272,6 @@ function register(user) {
     function success(user) { return { type: userConstants.REGISTER_SUCCESS, user } }
     function failure(error) { return { type: userConstants.REGISTER_FAILURE, error } }
 }
-
 function getAll() {
     return dispatch => {
         dispatch(request());
