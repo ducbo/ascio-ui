@@ -5,16 +5,19 @@ export function users(state = {}, action) {
     case userConstants.FILTER_REQUEST:
 			return {
 				loading: true, 
-				users:action.users || []
+        filterParams:  { ...action.filterParams}
 			};
 		case userConstants.FILTER_SUCCESS:
 			return {
-				users:action.users,
-				filterParams: { ...action.filterParams}
-			};
+        ...state,
+        loading: false,
+				list:action.list,
+        totalSize: action.totalSize
+      }
 		case userConstants.FILTER_FAILURE:
 			return {
-        users:action.users || [],
+        ...state,
+        loading: false,
 				error: action.error
 			};
     case userConstants.GETALL_REQUEST:
@@ -29,56 +32,78 @@ export function users(state = {}, action) {
       return { 
         error: action.error
       };
-    case userConstants.DELETE_REQUEST:
-      // add 'deleting:true' property to user being deleted
-      return {
-        ...state,
-        items: state.items.map(user =>
-          user.id === action.id
-            ? { ...user, deleting: true }
-            : user
-        )
-      };
-    case userConstants.DELETE_SUCCESS:
-      // remove deleted user from state
-      return {
-        items: state.items.filter(user => user.id !== action.id)
-      };
-    case userConstants.DELETE_FAILURE:
-      // remove 'deleting:true' property and add 'deleteError:[error]' property to user 
-      return {
-        ...state,
-        items: state.items.map(user => {
-          if (user.id === action.id) {
-            // make copy of user without 'deleting:true' property
-            const { deleting, ...userCopy } = user;
-            // return copy of user with 'deleteError:[error]' property
-            return { ...userCopy, deleteError: action.error };
-          }
-          return user;
-        })
-      };
+      case userConstants.DELETE_REQUEST:
+				// add 'deleting:true' property to user being deleted
+				return {
+				  ...state,
+				  loading: true,
+				  list: state.list.map(user =>
+					user.username === action.username
+					  ? { ...user, deleting: true }
+					  : user
+				  )
+				};	
+		case userConstants.DELETE_SUCCESS:
+		// remove deleted user from state
+		return {
+			...state,
+			loading: false,
+			list: state.list.filter(user => user.username !== action.username)
+		};
+		case userConstants.DELETE_FAILURE:
+		// remove 'deleting:true' property and add 'deleteError:[error]' property to user 
+		return {
+			...state,
+			list: state.list.map(user => {
+			if (user.username === action.username) {
+				// make copy of user without 'deleting:true' property
+				const { deleting, ...userCopy } = user;
+				// return copy of user with 'deleteError:[error]' property
+				return { ...userCopy, deleteError: action.error };
+			}
+			return user;
+			})
+		};	
       case userConstants.UPDATE_REQUEST:
         return {
+          ...state,
           loading: true,
-          users : state.users
+          
         };
       case userConstants.UPDATE_SUCCESS:
         return {
+          ...state,
           updatedUser: action.user,
-          users : 
-            { 
-              data : state.users.data.map((user) => {
-                  if(user.username === action.user.username) {
-                    return action.user
-                  } else return user
-                }
-              ),
-              totalSize : state.users.totalSize
-            }
-      }
+          list: state.list.map((user) => {
+              if (user.username === action.user.username) {
+                return action.user;
+              } else return user;
+            }),
+          totalSize: state.totalSize				
+        }
       case userConstants.UPDATE_FAILURE:
         return { 
+          ...state,
+          error: action.error
+        };
+        
+      case userConstants.CREATE_REQUEST:
+        return {
+          ...state,
+          loading: true
+        };
+      case userConstants.CREATE_SUCCESS:
+        return {
+          ...state,
+          loading:false,
+          list: action.list,
+          success: true,
+          totalSize: action.totalSize	
+        };
+      case userConstants.CREATE_FAILURE:
+        return { 
+          ...state,
+          loading:false,
           error: action.error
         };
       case userConstants.RESET_QR_REQUEST: 
