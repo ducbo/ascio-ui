@@ -26,7 +26,7 @@ function update (zoneName, formdata) {
       }).then(handleResponse)             
 }
 function create (zoneName, formdata) {
-    return fetch(`${config.apiUrl}/zones/${zoneName}/record`,{
+    return fetch(`${config.apiUrl}/zones/${zoneName}/records`,{
         method: "POST", 
         headers: authHeader({ 'Content-Type': 'application/json' }),
         body: JSON.stringify(formdata)            
