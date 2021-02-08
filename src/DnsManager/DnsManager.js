@@ -16,7 +16,7 @@ class DnsManager extends Component {
     render() {
         return (
             <>
-               <NavProtected>
+               <NavProtected  selected={this.props.location.pathname}>
                  <CreateZone></CreateZone>
                  <Zones/>  
                 </NavProtected> 
