@@ -8,6 +8,7 @@ export const userActions = {
     reAuth,
     logout,
     register,
+    create,
     getAll,
     activate2fa,
     force2fa,
@@ -23,19 +24,19 @@ export const userActions = {
     filter,
     update
 };
-function filter(searchParameters, oldZones) {	
+function filter(searchParameters) {	
 	
 	return (dispatch) => {
-		dispatch(request(oldZones));
+		dispatch(request(searchParameters));
 		return userService
 			.filter(searchParameters)
-			.then((users) => dispatch(success(users,searchParameters)), (error) => dispatch(failure(error.toString())));
+			.then((result) => dispatch(success(result.data, result.totalSize)), (error) => dispatch(failure(error.toString())));
 	};
-	function request(users) {
-		return { type: userConstants.FILTER_REQUEST, users  };
+	function request(filterParams) {
+		return { type: userConstants.FILTER_REQUEST, filterParams  };
 	}
-	function success(users,filterParams) {
-		return { type: userConstants.FILTER_SUCCESS, users, filterParams};
+	function success(list,totalSize) {
+		return { type: userConstants.FILTER_SUCCESS, list, totalSize};
 	}
 	function failure(error) {
 		return { type: userConstants.FILTER_FAILURE, error };
@@ -272,6 +273,26 @@ function register(user) {
     function success(user) { return { type: userConstants.REGISTER_SUCCESS, user } }
     function failure(error) { return { type: userConstants.REGISTER_FAILURE, error } }
 }
+function create(user,filters) {
+    return dispatch => {
+        dispatch(request(user));
+
+        return userService.create(user,filters)
+            .then(
+                result => { 
+                    dispatch(success(result.data, result.totalSize));
+                },
+                error => {
+                    dispatch(failure(error));
+                    dispatch(alertActions.error(error));
+                }
+            );
+    };
+
+    function request() { return { type: userConstants.CREATE_REQUEST } }
+    function success(list,totalSize) { return { type: userConstants.CREATE_SUCCESS, list, totalSize} }
+    function failure(error) { return { type: userConstants.CREATE_FAILURE, error } }
+}
 function getAll() {
     return dispatch => {
         dispatch(request());
@@ -289,18 +310,18 @@ function getAll() {
 }
 
 // prefixed function name with underscore because delete is a reserved word in javascript
-function _delete(id) {
+function _delete(username,filters) {
     return dispatch => {
-        dispatch(request(id));
+        dispatch(request(username));
 
-        return userService.delete(id)
+        return userService.delete(username,filters)
             .then(
-                user => dispatch(success(id)),
-                error => dispatch(failure(id, error.toString()))
+                users => dispatch(success(username,users)),
+                error => dispatch(failure(username, error.toString()))
             );
     };
 
-    function request(id) { return { type: userConstants.DELETE_REQUEST, id } }
-    function success(id) { return { type: userConstants.DELETE_SUCCESS, id } }
-    function failure(id, error) { return { type: userConstants.DELETE_FAILURE, id, error } }
+    function request(username) { return { type: userConstants.DELETE_REQUEST, username } }
+    function success(username,users) { return { type: userConstants.DELETE_SUCCESS, username,users } }
+    function failure(username, error) { return { type: userConstants.DELETE_FAILURE, username, error } }
 }
