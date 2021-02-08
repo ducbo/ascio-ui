@@ -25,15 +25,18 @@ class App extends React.Component {
 	constructor(props) {
 		super(props);
 		this.user = this.props.user ? this.props.user.user : localStorage.getItem('user');
-		const self = this;		
+		const self = this;
+		let timer;		
 		const reAuth =  function() {
 			console.log("user:",self.user)
-			window.setTimeout(async () => {				
-				if(self.user) {
+			timer = window.setTimeout(async () => {				
+				if(props.user) {
 					await props.reAuth();
-					if(self.props.user) {
-						self.reconnectSocket(self.props.user.token );
-						console.log("reauth socket: ",self.props.user.token )
+					if(props.user) {
+						self.reconnectSocket(props.user.token );
+						console.log("reauth socket: ",props.user.token )
+					} else {
+						window.clearTimeout(timer)
 					}
 					reAuth()
 				}
