@@ -6,6 +6,7 @@ import { records } from './records.reducer';
 import { zones } from './zones.reducer';
 import { usertree } from './usertree.reducer';
 import { users } from './users.reducer';
+import { workers } from './workers.reducer';
 import { alert } from './alert.reducer';
 
 const rootReducer = combineReducers({
@@ -15,7 +16,8 @@ const rootReducer = combineReducers({
   records,
   zones,
   alert,
-  usertree
+  usertree,
+  workers
 });
 
 export default rootReducer;
