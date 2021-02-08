@@ -82,6 +82,7 @@ body .container {
 }
 .order-4, .caret-4, .caret-4-asc, .caret-4-desc {
   margin-right:5px;
+  margin-left:5px;
 }
 .container th.expand-cell-header, 
 .container td.expand-cell {
@@ -103,4 +104,45 @@ body .container {
 .validation-list li svg {
   list-style-type: none;
   margin-right: 15px; 
+}
+#nav-left a:visited,
+#nav-left a:link {
+  color: black;
+  font-weight:bold;
+  display:block;
+  padding:2px;
+  padding-left:10px;
+}
+#nav-left a:hover
+ {
+  color: white;
+  background-color: black; 
+  font-weight:bold;
+  text-decoration: none ;
+  
+
+}
+.container #nav-left .active,
+.container #nav-left .active:hover
+ {
+  color: white;
+  background-color: black; 
+  font-weight:bold;
+  text-decoration: none ;
+}
+.container #nav-left .inactive:hover {
+  color: black;
+  background-color: rgba(0, 0, 0, 0.05) 
+}
+.container .MuiTreeItem-root.Mui-selected > .MuiTreeItem-content .MuiTreeItem-label {
+  background-color: black;
+  color: white;
+}
+.container .MuiTreeItem-root.Mui-selected > .MuiTreeItem-content .MuiTreeItem-label:hover {
+  background-color: black;
+  color: white;
+}
+.container .MuiTreeItem-root.Mui-selected:focus > .MuiTreeItem-content .MuiTreeItem-label {
+  background-color: black;
+  color: white;
 }
