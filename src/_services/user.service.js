@@ -20,7 +20,8 @@ export const userService = {
     verifyTotpCode,
     delete: _delete,
     filter,
-    update
+    update,
+    create
 };
 function filter(searchParameters) {
     const requestOptions = {
@@ -29,6 +30,14 @@ function filter(searchParameters) {
         body: JSON.stringify(searchParameters)
     };
     return fetch(`${config.apiUrl}/users/search`, requestOptions).then(handleResponse);
+}
+function create(user,filters) {
+    const requestOptions = {
+        method: 'POST',
+        headers: authHeader(),
+        body: JSON.stringify({user,filters})
+    };
+    return fetch(`${config.apiUrl}/users`, requestOptions).then(handleResponse);
 }
 function update(data) {
     const requestOptions = {
@@ -168,13 +177,12 @@ function register(user) {
 
 
 // prefixed function name with underscore because delete is a reserved word in javascript
-function _delete(id) {
-    const requestOptions = {
-        method: 'DELETE',
-        headers: authHeader()
-    };
-
-    return fetch(`${config.apiUrl}/users/${id}`, requestOptions).then(handleResponse);
+function _delete(username,filters) {
+    return fetch(`${config.apiUrl}/users/${username}`,{
+        method: "DELETE",
+        headers: authHeader({ 'Content-Type': 'application/json' }),
+        body:  JSON.stringify(filters)    
+      }).then(handleResponse) 
 }
 
 function handleResponse(response) {
@@ -187,7 +195,7 @@ function handleResponse(response) {
                 //location.reload(true);
             }
             const error = (data && data.message) || response.statusText;
-            const code = (data && data.code) || response.statusCode;
+            const code = (data && data.code) || response.status;
             const result = {
                 code,
                 message: error
