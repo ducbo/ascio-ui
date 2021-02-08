@@ -1,12 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { AllowedRoles, BlockLink } from "./_components";
 function NavLeft(props) {
     if (props.user) {
         return (
             <div id="nav-left">
-               <div><a href="/dns-manager">Zones</a></div>
-               <div><a href="/users">Users</a></div>
-               <div><a href="/workers">Workers</a></div>
+               <BlockLink href="/dns-manager" selected={props.selected}>Zones</BlockLink>
+               <AllowedRoles roles={["admin","user_editor"]}>
+                    <BlockLink href="/users" selected={props.selected}>Users</BlockLink>
+                    <BlockLink href="/workers" selected={props.selected}>Workers</BlockLink>
+               </AllowedRoles>         
             </div>
         );
      } else {
