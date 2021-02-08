@@ -3,7 +3,6 @@ import BootstrapTable from 'react-bootstrap-table-next';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import filterFactory, { textFilter, Comparator } from 'react-bootstrap-table2-filter';
 import PropTypes from 'prop-types'
-import { history } from '../_helpers';
 import { connect } from 'react-redux';
 import { userActions } from '../_actions';
 import {defaultAccountFilters,defaultWorkerFilters} from '../defaults.js'
@@ -93,13 +92,8 @@ class Users extends React.Component {
       sort: true,
       filter: textFilter()
     
-    },{
-      dataField: 'created',
-      text: 'Created',
-      type : 'date',
-      formatter : dateFormatter,
-      sort: true,
-    },{
+    },
+    {
       dataField: 'updated',
       text: 'Updated',
       type : 'date',
@@ -111,7 +105,7 @@ class Users extends React.Component {
       style : {
         padding:0
       },
-      formatter: (cellContent, row) => { return <><button title="Edit User" className="btn edit-button"  data-row={row.UserName}><FaEdit  size="20px"></FaEdit></button> <AllowedRoles roles={["admin","user_editor"]}><button title="Delete User" className="btn delete-button" data-row={row.UserName} onClick={this.deleteDialog.bind(this)}><FaTrash size="20px"></FaTrash></button></AllowedRoles></>}
+      formatter: (cellContent, row) => { return <><button title="Edit User" className="btn edit-button"  data-row={row.username}><FaEdit  size="20px"></FaEdit></button> <AllowedRoles roles={["admin","user_editor"]}><button title="Delete User" className="btn delete-button" data-row={row.username} onClick={this.deleteDialog.bind(this)}><FaTrash size="20px"></FaTrash></button></AllowedRoles></>}
     }];    
     this.deleteUser = this.deleteUser.bind(this)    
     this.closeDialog = this.closeDialog.bind(this)  
@@ -119,7 +113,7 @@ class Users extends React.Component {
   deleteDialog(event) {
     this.state.showDialog = true;
     this.state.deleteUserName = event.currentTarget.dataset.row
-    this.state.data = this.props.users.data 
+    this.state.data = this.props.list 
     this.setState(this.state)
   }
   deleteUser() {
@@ -134,21 +128,16 @@ class Users extends React.Component {
     this.state.showDialog = false;
     this.setState(this.state)
   }
-  componentDidMount() {
-    const searchParameters = this.filters
-    searchParameters.users = searchParameters.users ||  this.user.username
-    this.props.filter(searchParameters,this.props.users)
+  getImpersonated() {
+    return this.props.impersonate || this.filters.users || this.user.username 
   }
   componentDidUpdate() {
     const searchParameters = this.filters
     searchParameters.users = this.getImpersonated()
     if(searchParameters.users !== this.state.lastUsers) {
-      this.props.filter(searchParameters,this.props.zones)
+      this.props.filter(searchParameters)
       this.setState({lastUsers:searchParameters.users})
     }
-  }
-  getImpersonated() {
-    return this.props.impersonate || this.filters.users || this.user.username 
   }
   handleTableChange =  (type, { page, sizePerPage, filters, sortField, sortOrder, cellEdit })  => {
     const self = this
@@ -163,10 +152,10 @@ class Users extends React.Component {
     sortOrder = sortOrder  || this.filters.sortOrder
     const searchParameters = {page,sizePerPage,filter,sortField,sortOrder,users, type: this.filters.type }
     localStorage.setItem(this.filterName+'_' + this.user.username, JSON.stringify(searchParameters))
-    this.props.filter(searchParameters,this.props.users).then(() => {
+    this.props.filter(searchParameters).then(() => {
       self.setState({
-        data:this.props.users.data, 
-        totalSize: this.props.users.totalSize,
+        data:this.props.list, 
+        totalSize: this.props.totalSize,
         page, sizePerPage
       })
     })
@@ -174,7 +163,7 @@ class Users extends React.Component {
   render() {     
     const page = this.props.filterParams ? this.props.filterParams.page : this.state.page
     const sizePerPage = this.props.filterParams ? this.props.filterParams.sizePerPage : this.state.sizePerPage
-    let data = this.props.users ? this.props.users.data  : this.state.data
+    let data = this.props.list || this.state.data
     return <>  
         <Modal  style={{opacity:1}} show={this.state.showDialog} onHide={this.closeDialog}>
           <Modal.Header closeButton>
@@ -195,8 +184,8 @@ class Users extends React.Component {
         page={ page || 1}
         columns = {this.columns}
         user = {this.user.username}
-        sizePerPage={ sizePerPage | this.filters.sizePerPage}
-        totalSize={ this.props.users &&  this.props.users.totalSize ? this.props.users.totalSize : this.state.totalSize }
+        sizePerPage={ sizePerPage || this.filters.sizePerPage}
+        totalSize={ this.props.totalSize || this.state.totalSize }
         onTableChange={ this.handleTableChange }       
       />
       </>    
@@ -208,9 +197,9 @@ const actionCreators = {
 }
 function mapState(state) {
   const { user } = state.authentication;
-  const { users,filterParams } = state.users;
-  const { rootDescendants, descendants, impersonate } = state.usertree;
-  return { user, users, filterParams, rootDescendants, descendants,impersonate };
+  const { list,filterParams, totalSize } = state.users;
+  const { impersonate } = state.usertree;
+  return { user, list, filterParams, impersonate, totalSize };
 }
 const connectedUsers = connect(mapState, actionCreators)(Users)
 export {connectedUsers as Users}

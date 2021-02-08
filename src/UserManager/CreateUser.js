@@ -1,74 +1,57 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { zoneActions } from '../_actions';
+import { userActions, workerActions } from '../_actions';
 import { Button, Form, Col } from 'react-bootstrap';
-import { Combobox } from 'react-widgets';
-import {defaultAccountFilters}  from '../defaults';
+import { defaultAccountFilters }  from '../defaults';
 import AlertSuccess from '../AlertSuccess';
 import { AllowedRoles } from "../_components";
 
 class CreateUser extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {
-			user: '',
-			zoneName: null
-		};
-		this.handleChange = this.handleChange.bind(this);
-		this.submit = this.submit.bind(this);
 		this.user = this.props.user.user;
-	}
-	handleChange(e) {
-		this.state[e.target.name] = e.target.value;
-		this.setState(this.state);
-	}
-	submit() {
-		const filters = this.props.filterParams || defaultAccountFilters(this.user.username);
-		this.props.createUser(this.state.zoneName, this.state.user.id, this.state.api, filters);
-	}
-	render() {
-		const self = this;
-		let onChange = (user) => {
-			this.state.user = user;
-			self.setState(this.state);
-		};
-		const api = (
-			<AllowedRoles roles={["admin","zone_editor"]}>
-				<Form.Row>
-					<Col md="5">
-						<Form.Label>API</Form.Label>
-						<Form.Control as="select" name="api" onChange={this.handleChange} custom>
-							<option>Ascio</option>
-							<option>Hetzner</option>
-						</Form.Control>
-					</Col>
-				</Form.Row>
-			</AllowedRoles>
-		);
+		this.isWorker = this.props.isWorker
+		this.defaultFilters = defaultAccountFilters(this.user.username) 
+		const selectedKey = "customer_tree_"+this.user.username+"_selected"
 		
-   	 const users = this.props.rootDescendants || [];    
+		this.state = {
+			username: '',
+			type: this.defaultFilters.type,
+			parent: this.props.impersonate || JSON.parse(localStorage.getItem(selectedKey))
+		};
+	}
+	handleChange = (e) => {
+		this.setState({[e.target.name] : e.target.value});
+	}
+	submit = () => {
+		const filters =  this.defaultFilters;		
+		this.props.createUser(this.state,filters);
+	}
+	render() {	
 		return (      
 			<div className="mb-1">
-			 <AllowedRoles roles={["admin","zone_editor"]}>
+			 <AllowedRoles roles={["admin","user_editor"]}>
 			 <Form>
 					<Form.Row>
 						<Col>
-							<Form.Control name="zoneName" placeholder="Username" onChange={this.handleChange} />
+							<Form.Control name="username" placeholder="Username" onChange={this.handleChange} />
 						</Col>
 						<Col>
-							<Combobox onChange={onChange} valueField="id" textField="name" data={users} />
+							<Form.Control name="company" placeholder="Company Name" onChange={this.handleChange} />
+						</Col>
+						<Col>
+							<Form.Control name="email" placeholder="Email" onChange={this.handleChange} />
 						</Col>
 						<Col>						
 							<Button onClick={this.submit}>CreateUser</Button>
 						</Col>
 					</Form.Row>          
-					{api}
           <Form.Row>
             <Col className="mt-2">
               <AlertSuccess 
-                success={this.props.success}
+                success={this.props.success ? "User created" : null}
                 progress={this.props.progress}
-                error={this.props.error}
+                error={this.props.error && this.props.error.message}
               ></AlertSuccess>
             </Col>
           </Form.Row>
@@ -80,14 +63,15 @@ class CreateUser extends React.Component {
 	}
 }
 const actionCreators = {
-	createUser: zoneActions.create
+	createUser: userActions.create
 };
 function mapState(state) {
-	const { authentication } = state;
+	const { authentication,usertree } = state;
+	const { users } = state;
+	const { error, success } = users;
 	const { user } = authentication;
-	const { zones, filterParams, progress, success, error } = state.zones;
-	const { rootDescendants } = state.usertree;
-	return { user, zones, filterParams, rootDescendants, progress, success, error };
+	const { impersonate } = usertree
+	return { user,impersonate, error, success };
 }
 const connectedCreateUser = connect(mapState, actionCreators)(CreateUser);
 export {connectedCreateUser as CreateUser};
