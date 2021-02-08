@@ -74,6 +74,7 @@ class App extends React.Component {
 			case "update" : this.props.updateRecordSocket(data.data.record); break
 			case "delete" : this.props.deleteRecordSocket(data.data.record); break
 			case "create" : this.props.createRecordSocket(data.data.record); break
+			default: break;
 		}
 	}
 	connectSocket (token) { 

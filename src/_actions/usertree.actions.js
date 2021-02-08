@@ -22,8 +22,6 @@ function setData(data) {
 	return { type: usertreeConstants.SET_DATA, data }
 }
 function refresh(username,selected) {
-	const tree = "customer_tree_" + username
-	//localStorage.removeItem(tree)
 	return (dispatch) => {
 		dispatch(request());
 		return userTreeService

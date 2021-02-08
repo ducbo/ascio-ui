@@ -20,7 +20,6 @@ export const userService = {
     verifyTotpCode,
     delete: _delete,
     filter,
-    update,
     create
 };
 function filter(searchParameters) {

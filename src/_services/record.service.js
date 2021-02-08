@@ -1,8 +1,6 @@
 import { authHeader } from '../_helpers';
 import config from '../config';
 import { history } from '../_helpers';
-const allFields = ["Id","Source","Target","TTL","Expire","HostmasterEmail","PrimaryNameServer","Refresh","Retry","SerialUsage","Priority","Weight","Port"]
-
 
 export const recordService = {
     create,

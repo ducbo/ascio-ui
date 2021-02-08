@@ -5,10 +5,7 @@ import TreeView from "@material-ui/lab/TreeView";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import TreeItem from "@material-ui/lab/TreeItem";
-import {defaultZoneFilters} from './defaults'
-import { zoneActions } from './_actions';
 import { userTreeActions } from './_actions';
-import { history } from './_helpers';
 
 const useStyles = makeStyles({
   root: {
@@ -58,7 +55,6 @@ function CustomerTreeItem(props) {
     await props.setImpersonate(users)
   }
   const buildTree = function(name,nodes) {
-    {
       const newChildren = {
         ...tree,
         [name] : nodes.children.map(child => {
@@ -71,7 +67,6 @@ function CustomerTreeItem(props) {
       }
       setTree(newChildren);
       localStorage.setItem(storageId, JSON.stringify(newChildren))  
-    }
   }
   const onNodeToggle = (event, nodeId) => {
     localStorage.setItem(storageId+"_expanded", JSON.stringify(nodeId))  

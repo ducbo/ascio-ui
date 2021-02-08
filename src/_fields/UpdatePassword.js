@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import AlertSuccess from '../AlertSuccess';
 import { FaCheck, FaExclamationTriangle } from 'react-icons/fa';
 import {pwStrength} from '../_helpers'
 

@@ -20,7 +20,7 @@ class CreateZone extends React.Component {
 	}
 	handleChange(e) {
 		this.state[e.target.name] = e.target.value;
-		this.setState(this.state);
+		this.setState({[e.target.name] : e.target.value});
 	}
 	submit() {
 		const filters = this.props.filterParams || defaultZoneFilters(this.user.username);

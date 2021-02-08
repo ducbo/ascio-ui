@@ -59,7 +59,7 @@ module.exports.pwStrength = (password,password2) => {
   if(strength.length > 29) {
     strength.value="Strong"
   }
-  strength.valid = strength.value=="Strong" && password === password2
+  strength.valid = strength.value === "Strong" && password === password2
   strength.requires = {
     "valid" : {
       name: strength.valid ? "Password is valid" : "Password is invalid",

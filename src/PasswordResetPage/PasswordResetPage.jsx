@@ -36,7 +36,7 @@ class PasswordResetPage extends React.Component {
         }
         this.timeoutHandle = window.setTimeout(async () => {
             if(this.state.username.length > 2 ) {
-                const result = await this.props.verifyUserToken(this.state.username, this.token,this.state.code)
+                await this.props.verifyUserToken(this.state.username, this.token,this.state.code)
             }
         },500)
         
@@ -50,7 +50,6 @@ class PasswordResetPage extends React.Component {
     }
     render() {
         let errors
-        let qr =""
         if(this.props.error) {
              errors = <ul className="validation-list"><li><FaExclamationTriangle style={{color:"darkred"}}/> {this.props.error.message}</li></ul>
         }

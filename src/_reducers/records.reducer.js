@@ -33,7 +33,6 @@ export function records(state = { records: [] }, action) {
 					if (record.Id !== action.record.Id) {
 						return record;
                     }
-                    action.record.Target = action.record.Target 
                     return {
 						...record,
 						...action.record

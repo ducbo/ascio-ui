@@ -18,7 +18,6 @@ const initialState = user ? {
   active2fa : false, 
   loginStatus: {},
   user,alert : {} } : {};
-let socket
 export function authentication(state = initialState, action) {
   switch (action.type) {
     //login

@@ -16,7 +16,6 @@ const getFilters = function(name,defaultSortField) {
 				filter: '*',
 				sortField: defaultSortField,
 				sortOrder: 'desc',
-				filter: '*',
 				type: name.toLowerCase()
 			};
 		}

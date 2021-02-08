@@ -21,7 +21,7 @@ class ResetQrButton extends React.Component {
 
 function mapState(state) {
     const {  authentication } = state;
-    const { user,qr, loggedIn} = authentication;
+    const { user,qr } = authentication;
     return { user,qr };
 }
 

@@ -1,9 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { userActions, workerActions } from '../_actions';
+import {  workerActions } from '../_actions';
 import { Button, Form, Col } from 'react-bootstrap';
-import { Combobox } from 'react-widgets';
-import {defaultAccountFilters, defaultWorkerFilters}  from '../defaults';
+import { defaultWorkerFilters}  from '../defaults';
 import AlertSuccess from '../AlertSuccess';
 import { AllowedRoles } from "../_components";
 

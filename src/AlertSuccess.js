@@ -2,9 +2,6 @@ import React from 'react';
 import { Alert } from 'react-bootstrap';
 
 class AlertSuccess extends React.Component {
-	constructor (props) { 
-        super(props)
-	}
 	render() {
 		const className = "in "+this.props.className
 		if (this.props.progress) {
