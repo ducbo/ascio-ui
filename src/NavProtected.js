@@ -20,7 +20,9 @@ function NavProtected (props) {
              <div className="col-2 col-md-4 col-lg-2">
 					<img style={{width:"200px"}} src={logo} alt="Logo" />
 					<h4 className="mb-5">DNS-Manager</h4>									
-						<NavLeft></NavLeft>
+						<NavLeft selected={props.selected}></NavLeft>
+						<hr/>
+						<h4>Impersonate</h4>
 						<CustomerTreeItem key={user.username} id={user.username} name={user.company}/>						
                     </div>
                     <div className="col-lg-10 col-md-12 col-sm-12">
