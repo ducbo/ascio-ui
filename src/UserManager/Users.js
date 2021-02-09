@@ -131,6 +131,13 @@ class Users extends React.Component {
   getImpersonated() {
     return this.props.impersonate || this.filters.users || this.user.username 
   }
+  componentDidMount() {
+    const searchParameters = this.filters
+    searchParameters.users = this.getImpersonated()
+    this.props.filter(searchParameters)
+    this.setFilter(searchParameters)
+    this.lastUsers = searchParameters.users
+  }
   componentDidUpdate() {
     const searchParameters = this.filters
     searchParameters.users = this.getImpersonated()
@@ -159,6 +166,9 @@ class Users extends React.Component {
         page, sizePerPage
       })
     })
+  }
+  setFilter(searchParameters) {
+    localStorage.setItem(this.filterName+'_' + this.user.username, JSON.stringify(searchParameters))
   }
   render() {     
     const page = this.props.filterParams ? this.props.filterParams.page : this.state.page
