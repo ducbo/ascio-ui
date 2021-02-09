@@ -10,18 +10,22 @@ function toFQDN(zoneName, recordContent) {
     } else if(!recordContent.endsWith(".")) {
         recordContent =  recordContent + "."  + zoneName
     } 
-    return recordContent
+    return trimDot(recordContent)
 }
-function toShortName(zoneName, recordContent) {
+function toShortName(zoneName, recordContent, direction) {
     if(recordContent === "@") {
         recordContent =  "@"
     } else if(recordContent.match(/.*@.*/)) {
-        // do nothing
+        // do nothung
     } else if(trimDot(recordContent) === zoneName) {
         recordContent = "@"
     } else if(trimDot(recordContent).endsWith(zoneName)) {
         recordContent =  trimDot(recordContent.replace(zoneName,""))
-    }
+    } else if(
+        direction !== "to-api"
+    ) {
+        recordContent =  recordContent + "."
+    } 
     return recordContent
 }
 function fromFQDN (zoneName, recordContent) {
@@ -36,13 +40,16 @@ function fromFQDN (zoneName, recordContent) {
 module.exports.recordToApi = function (zoneName, record,api) {
     if(api === "Ascio") {
         record.Source = toFQDN(zoneName,record.Source)
-        if(["CNAME","SRV","NS"].includes(record._type )) {
+        if(["CNAME"].includes(record._type )) {
             record.Target = toFQDN(zoneName,record.Target)
         }
+        else {
+            record.Target = trimDot(record.Target)
+        }
     } else {
-        record.Source = toShortName(zoneName,record.Source)
+        record.Source = toShortName(zoneName,record.Source, "to-api")
         if(["CNAME","SRV","NS"].includes(record._type )) {
-            record.Target = toShortName(zoneName,record.Target)
+            record.Target = toShortName(zoneName,record.Target, "to-api")
         }
     }
     return record
@@ -57,7 +64,9 @@ module.exports.recordFromApi = function (zoneName, record,api) {
     return record  
 }
 module.exports.recordsFromApi = function (zone) {
-    zone.Records.Record.forEach(function (record) {
-        module.exports.recordFromApi(zone.ZoneName, record,zone.api)
-    })
+    if(zone.Records) {
+        zone.Records.Record.forEach(function (record) {
+            module.exports.recordFromApi(zone.ZoneName, record,zone.api)
+        })
+    }
 }
