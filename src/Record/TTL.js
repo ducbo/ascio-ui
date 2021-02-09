@@ -11,7 +11,7 @@ function TTL (props) {
     ];
     const onChange =  (value) =>  {
         const seconds = value.seconds || value;
-        return props.onChange({target : {TTL : seconds}})
+        return props.onChange({target : {name :"TTL", value: seconds}})
     };
     let widget = (
         <div className="form-group row">
