@@ -32,12 +32,12 @@ export default {
 		text: "will be managed by"
 	},
 	SRV: {
-		list: [ 'Source', 'TTL', 'Target', 'Priority', 'Weight', 'Port' ],
+		list: ['Port', 'Priority', 'Weight',  'Source', 'TTL', 'Target' ],
 		targetDescription: 'Target',
 		text: "will be serviced by"
 	},
 	SOA: {
-		list: [ 'Source', 'TTL', 'Expire', 'HostmasterEmail', 'PrimaryNameServer', 'Refresh', 'Retry' ],
+		list: [ 'Expire', 'HostmasterEmail',  'PrimaryNameServer', 'Refresh', 'Retry', 'TTL'],
 		targetDescription: 'Value',
 		text: "will be defined by",
 		type: "SOA"
