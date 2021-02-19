@@ -64,10 +64,11 @@ const actionCreators = {
 	createWorker: workerActions.create
 };
 function mapState(state) {
-	const { authentication,usertree } = state;
+	const { authentication,usertree,workers } = state;
 	const { user } = authentication;
 	const { impersonate } = usertree
-	return { user,impersonate };
+	const { error, success  } = workers
+	return { user,impersonate, error,success};
 }
 const connectedCreateWorker = connect(mapState, actionCreators)(CreateWorker);
 export {connectedCreateWorker as CreateWorker};

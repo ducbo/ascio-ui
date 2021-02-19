@@ -64,10 +64,11 @@ export function workers(state = {}, action) {
 				totalSize: action.totalSize	
 			};
 		case workerConstants.CREATE_FAILURE:
+			console.log("action", action)
 			return {
 				...state,
 				loading:false,
-				error: action.error
+				error: action.error.message
 			};
 		case workerConstants.DELETE_REQUEST:
 				// add 'deleting:true' property to user being deleted

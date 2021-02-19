@@ -45,8 +45,8 @@ function create(user,filters) {
                     dispatch(success(result.data, result.totalSize));
                 },
                 error => {
-                    dispatch(failure(error.toString()));
-                    dispatch(alertActions.error(error.toString()));
+                    dispatch(failure(error));
+                    dispatch(alertActions.error(error));
                 }
             );
     };
