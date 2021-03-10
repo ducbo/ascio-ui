@@ -58,7 +58,14 @@ class App extends React.Component {
 					if(message.data.record)	 {
 						self.updateRecordSocket(message)
 					} else if (message.data.zone) {
+						let action = "none"
+						switch(message.action) {
+							case "create" : action = "Created" ; break; 
+							case "update" : action = "Updated" ; break; 
+							case "delete" : action = "Deleted" ; break; 
+						}
 						self.props.filter(defaultZoneFilters(self.props.user.user.username)); 
+						self.props.success(action + " zone" + message.data.zone.ZoneName)
 					}
 				}) 
 			},1)						
@@ -69,11 +76,13 @@ class App extends React.Component {
 		if(data.data.zoneName !== this.props.records.zoneName) {
 			console.log("wrong zone")
 			return
-		}
+		}		
+		const record = data.data.record
+		const message = record._type+" record with Source: "+ record.Source
 		switch(data.action) {
-			case "update" : this.props.updateRecordSocket(data.data.record); break
-			case "delete" : this.props.deleteRecordSocket(data.data.record); break
-			case "create" : this.props.createRecordSocket(data.data.record); break
+			case "update" : this.props.updateRecordSocket(record); this.props.success("Updated "+ message); break
+			case "delete" : this.props.deleteRecordSocket(record); this.props.success("Deleted "+ message);break
+			case "create" : this.props.createRecordSocket(record); this.props.success("Created "+ message);break
 			default: break;
 		}
 	}
@@ -88,6 +97,9 @@ class App extends React.Component {
 		this.connectSocket(token)
 	}
 	render() {
+		const click = () => {
+			this.props.success("test")
+		}
 		return (
 			<> 
 				<Router history={history}>
@@ -105,6 +117,7 @@ class App extends React.Component {
 						<Redirect from="*" to="/" />
 					</Switch>
 				</Router> 				   
+				<button onClick={click}>vvvv</button>
 			</>
 		);
 	}
@@ -117,6 +130,7 @@ function mapState(state) {
 
 const actionCreators = {
 	clearAlerts: alertActions.clear,
+	success: alertActions.success,
 	reAuth: userActions.reAuth,
 	setSocket : userActions.setSocket,
 	updateRecordSocket : recordActions.updateSocket,

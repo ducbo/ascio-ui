@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+import { alertActions } from './_actions';
 import NavTop from './NavTop';
 import NavLeft from './NavLeft';
 import Wait from './Wait'
@@ -12,10 +13,13 @@ function NavProtected (props) {
 		console.log("logout")
 		return ""
 	}
+	const className = `alert ${props.alert.type} fadeInDown animated`
+	window.setTimeout(() => {
+		if(props.message) props.clearAlerts()
+	},5000)
     return   <> 
 			<NavTop></NavTop>
 			<div className="container">
-			 {alert.message && <div className={`alert ${alert.type}`}>{alert.message}</div>}
 			 <div className="row">
 				<div className="col-2 col-md-4 col-lg-2">					
 					<NavLeft selected={props.selected}></NavLeft>
@@ -28,18 +32,19 @@ function NavProtected (props) {
 					</div>
 				</div>               
 				<Wait></Wait>
+				{props.message && <div style={{position:"absolute", marginLeft: "200px", top: "5px", left:"100px", padding: "3px 10px 3px 10px"}} className={className}>{props.message}</div>}
 			</div>
 			</>
 }
 function mapState(state) {
-	const {  authentication } = state;
+	const {  authentication, alert } = state;
     const { user } = authentication;
-	const { alert } = state;
-	return { alert, user,authentication };
+    const { message, type } = alert;
+	return { alert, message, type, user,authentication };
 }
 
 const actionCreators = {
-	
+	clearAlerts: alertActions.clear,
 };
 
 const connectedNavProtected = connect(mapState, actionCreators)(NavProtected);
