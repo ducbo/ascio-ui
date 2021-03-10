@@ -1,10 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { userActions } from './_actions';
+import logo from './logo.svg';
+
 function NavTop(props) {
     if (props.user) {
         return (
             <div id="nav-top">
+            <img style={{marginLeft:"20px", width:"200px"}} src={logo} alt="Logo" />
                 <div className="logout">
                 <a onClick={props.logout} href="#">
                     <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
