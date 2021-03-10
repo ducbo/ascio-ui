@@ -7,7 +7,7 @@ function NavLeft(props) {
             <div id="nav-left">
                <BlockLink href="/dns-manager" selected={props.selected}>Zones</BlockLink>
                <AllowedRoles roles={["admin","user_editor"]}>
-                    <BlockLink href="/users" selected={props.selected}>Users</BlockLink>
+                    <BlockLink href="/users" selected={props.selected}>Accounts</BlockLink>
                     <BlockLink href="/workers" selected={props.selected}>Workers</BlockLink>
                </AllowedRoles>         
             </div>
