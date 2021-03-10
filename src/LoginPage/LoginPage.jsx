@@ -40,7 +40,7 @@ class LoginPage extends React.Component {
         const uri = config.websocketUrl
         return <div className="login">
                 <img style={{width:"200px"}} src={logo} alt="Logo" />
-                <h4 className="mb-5">DNS-Manager</h4>
+                <h4 className="mb-5">IPanel</h4>
                 <h2>Login</h2>
                 
                     <div className={'form-group' + (submitted && !username ? ' has-error' : '')}>

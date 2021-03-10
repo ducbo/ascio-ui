@@ -55,7 +55,7 @@ class PasswordResetPage extends React.Component {
         }
         return <div className="login">
                 <img style={{width:"200px"}} src={logo} alt="Logo" />
-                <h4 className="mb-5">DNS-Manager</h4>
+                <h4 className="mb-5">IPanel</h4>
                 <h2>Reset Password</h2>
                 <p>Please choose a secure password with lowercase characters, uppercase characters, numbers, special characters or a very long password with more than 29 characters.</p>
                 <form onSubmit={this.sendUpdate}>
