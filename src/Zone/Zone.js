@@ -60,13 +60,13 @@ class Zone extends React.Component {
       text: 'Source',
       filter: textFilter(),    
       sort: true,
-      formatter : (cellContent, row) => { return cellContent && (cellContent.length > 30 ? <span title={cellContent}>{cellContent.slice(0,30) +" ..." }</span>: cellContent )}
+      style: {wordWrap: "break-word"}
     }, {
       dataField: 'Target',
       text: 'Target',
       filter: textFilter(),    
       sort: true,
-      formatter : (cellContent, row) => { return cellContent && (cellContent.length > 30 ? <span title={cellContent}>{cellContent.slice(0,30) +" ..." }</span>: cellContent )}
+      style: {wordWrap: "break-word"}
     }, {
       dataField: 'Delete',
       text: 'Delete',
