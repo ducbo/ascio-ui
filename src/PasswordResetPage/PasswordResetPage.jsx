@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import logo from '../logo.png';
+import logo from '../logo-black.svg';
 import { userActions } from '../_actions';
 import {TextInput, UpdatePassword} from "../_fields"
 import {  FaExclamationTriangle } from 'react-icons/fa';
@@ -54,10 +54,13 @@ class PasswordResetPage extends React.Component {
              errors = <ul className="validation-list"><li><FaExclamationTriangle style={{color:"darkred"}}/> {this.props.error.message}</li></ul>
         }
         return <div className="login">
-                <img style={{width:"200px"}} src={logo} alt="Logo" />
-                <h4 className="mb-5">IPanel</h4>
-                <h2>Reset Password</h2>
-                <p>Please choose a secure password with lowercase characters, uppercase characters, numbers, special characters or a very long password with more than 29 characters.</p>
+				<img style={{ width: '300px' }} src={logo} alt="Logo" />
+				<div class="card mb-4 rounded-3 shadow-sm mt-5">
+					<div class="card-header py-3">
+						<h4 class="my-0 fw-normal">Reset Password</h4>
+					</div>
+					<div class="card-body">
+					<p>Please choose a secure password with lowercase characters, uppercase characters, numbers, special characters or a very long password with more than 29 characters.</p>
                 <form onSubmit={this.sendUpdate}>
                 <UpdatePassword onChange={this.handleChange} passwordValid={this.passwordValid}></UpdatePassword>                   
                     <TextInput               
@@ -82,7 +85,9 @@ class PasswordResetPage extends React.Component {
                    
                     <button className="btn btn-primary" onClick={this.sendUpdate} disabled = {!this.state.valid}>Update password</button>
                 </form>
-            </div>
+					</div>
+				</div>
+			</div>               
     }
 }
 

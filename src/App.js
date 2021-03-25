@@ -117,7 +117,6 @@ class App extends React.Component {
 						<Redirect from="*" to="/" />
 					</Switch>
 				</Router> 				   
-				<button onClick={click}>vvvv</button>
 			</>
 		);
 	}
