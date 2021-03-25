@@ -61,7 +61,8 @@ export function workers(state = {}, action) {
 				...state,
 				loading:false,
 				list: action.list,
-				totalSize: action.totalSize	
+				totalSize: action.totalSize,
+				error: null
 			};
 		case workerConstants.CREATE_FAILURE:
 			console.log("action", action)
@@ -74,7 +75,7 @@ export function workers(state = {}, action) {
 				// add 'deleting:true' property to user being deleted
 				return {
 				  ...state,
-				  loading: true,
+				  loading: true,				  
 				  list: state.list.map(user =>
 					user.username === action.username
 					  ? { ...user, deleting: true }

@@ -46,7 +46,7 @@ function create(user,filters) {
                 },
                 error => {
                     dispatch(failure(error));
-                    dispatch(alertActions.error(error));
+                    throw(error)
                 }
             );
     };

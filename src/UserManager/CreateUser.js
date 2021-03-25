@@ -11,21 +11,21 @@ class CreateUser extends React.Component {
 		super(props);
 		this.user = this.props.user.user;
 		this.isWorker = this.props.isWorker
-		this.defaultFilters = defaultAccountFilters(this.user.username) 
+		const defaultFilters = defaultAccountFilters(this.user.username) 
 		const selectedKey = "customer_tree_"+this.user.username+"_selected"
 		
 		this.state = {
 			username: '',
-			type: this.defaultFilters.type,
-			parent: this.props.impersonate || JSON.parse(localStorage.getItem(selectedKey))
+			type: defaultFilters.type,
+			parent: JSON.parse(localStorage.getItem(selectedKey))
 		};
 	}
 	handleChange = (e) => {
 		this.setState({[e.target.name] : e.target.value});
 	}
 	submit = () => {
-		const filters =  this.defaultFilters;		
-		this.props.createUser(this.state,filters);
+		const filters =   defaultAccountFilters(this.user.username) ;		
+		this.props.createUser({...this.state, parent : this.props.impersonate },filters);
 	}
 	render() {	
 		return (      
@@ -34,13 +34,13 @@ class CreateUser extends React.Component {
 			 <Form>
 					<Form.Row>
 						<Col>
-							<Form.Control name="username" placeholder="Username" onChange={this.handleChange} />
+							<Form.Control name="username" placeholder="Username" onChange={this.handleChange} value={this.state.username}/>
 						</Col>
 						<Col>
-							<Form.Control name="company" placeholder="Company Name" onChange={this.handleChange} />
+							<Form.Control name="company" placeholder="Company Name" onChange={this.handleChange} value={this.state.company} />
 						</Col>
 						<Col>
-							<Form.Control name="email" placeholder="Email" onChange={this.handleChange} />
+							<Form.Control name="email" placeholder="Email" onChange={this.handleChange} value={this.state.email} />
 						</Col>
 						<Col>						
 							<Button onClick={this.submit}>CreateUser</Button>
