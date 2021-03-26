@@ -14,7 +14,9 @@ RUN npm install serve -g
 # RUN npm ci --only=production
 
 # Bundle app source
-COPY . .
+COPY public public
+COPY src src
+
 RUN npm run build
 EXPOSE 5000
 CMD [ "serve", "-s","build" ]
