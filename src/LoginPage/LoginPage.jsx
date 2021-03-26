@@ -43,7 +43,7 @@ class LoginPage extends React.Component {
 		const uri = config.websocketUrl;
 		return (
 			<div className="login">
-				<img style={{ width: '300px' }} src={logo} alt="Logo" />
+				<img style={{ width: '100%' }} src={logo} alt="Logo" />
 				<div class="card mb-4 rounded-3 shadow-sm mt-5">
 					<div class="card-header py-3">
 						<h4 class="my-0 fw-normal">Login</h4>

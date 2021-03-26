@@ -54,7 +54,7 @@ class PasswordResetPage extends React.Component {
              errors = <ul className="validation-list"><li><FaExclamationTriangle style={{color:"darkred"}}/> {this.props.error.message}</li></ul>
         }
         return <div className="login">
-				<img style={{ width: '300px' }} src={logo} alt="Logo" />
+				<img style={{ width: '100%' }} src={logo} alt="Logo" />
 				<div class="card mb-4 rounded-3 shadow-sm mt-5">
 					<div class="card-header py-3">
 						<h4 class="my-0 fw-normal">Reset Password</h4>
