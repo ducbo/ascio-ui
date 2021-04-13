@@ -129,7 +129,7 @@ function updatePassword(username,token,password,code) {
                     dispatch(success());                    
                 },
                 error => {
-                    dispatch(failure(error));
+                    dispatch(failure(error.message));
                  }
             );
     }    
