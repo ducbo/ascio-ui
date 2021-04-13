@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { recordActions } from '../_actions';
 import { recordToApi } from '../_helpers';
-import { Combobox } from 'react-widgets';
 import { TTL } from './TTL';
 import { RedirectionType } from './RedirectionType';
 import fields from './fields';
