@@ -1,6 +1,6 @@
 import { usertreeConstants } from '../_constants';
 
-export function usertree(state = {data: {}, descendants : [], rootDescendants : [],children : []}, action) {
+export function usertree(state = {data: {}, descendants : [], rootDescendants : [], selectableUsers: {}, children : []}, action) {
   switch (action.type) {
     // refresh 
     case usertreeConstants.REFRESH: return {
@@ -34,9 +34,14 @@ export function usertree(state = {data: {}, descendants : [], rootDescendants : 
         loading: true
       };
     case usertreeConstants.ROOT_DESCENDANT_SUCCESS:
+      const users = {}
+      action.children.forEach((user) => {
+        users[user.id] = user.name
+      }) 
       return {
         ...state,
-        rootDescendants: action.children
+        rootDescendants: action.children,
+        selectableUsers: users
       };
     case usertreeConstants.ROOT_DESCENDANT_FAILURE:
       return { 
