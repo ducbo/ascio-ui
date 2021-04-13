@@ -1,3 +1,14 @@
+body .container,
+body .MuiInputBase-root ,
+body .form-control,
+body .custom-select,
+body .btn,
+body .MuiTreeItem-label
+  {
+  font-size:0.9rem;
+}
+
+
 .App {
   text-align: left;
 }
