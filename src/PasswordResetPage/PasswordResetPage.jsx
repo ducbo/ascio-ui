@@ -35,7 +35,7 @@ class PasswordResetPage extends React.Component {
             window.clearTimeout(this.timeoutHandle)
         }
         this.timeoutHandle = window.setTimeout(async () => {
-            if(this.state.username.length > 2 ) {
+            if(this.state.username.length > 1 ) {
                 await this.props.verifyUserToken(this.state.username, this.token,this.state.code)
             }
         },500)
