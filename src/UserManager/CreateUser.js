@@ -31,31 +31,38 @@ class CreateUser extends React.Component {
 		return (      
 			<div className="mb-1">
 			 <AllowedRoles roles={["admin","user_editor"]}>
-			 <Form>
+			 <div class="card record-inputs">
+				<div class="card-header">
+					<h5>Create Account</h5>
+				</div>
+				<div class="card-body">
+				<Form>
+                    <Form.Row>
+                        <Col>
+                            <Form.Control name="username" placeholder="Username" onChange={this.handleChange} value={this.state.username}/>
+                        </Col>
+                        <Col>
+                            <Form.Control name="company" placeholder="Company Name" onChange={this.handleChange} value={this.state.company} />
+                        </Col>
+                        <Col>
+                            <Form.Control name="email" placeholder="Email" onChange={this.handleChange} value={this.state.email} />
+                        </Col>
+                        <Col>                       
+                            <Button onClick={this.submit}>CreateUser</Button>
+                        </Col>
+                    </Form.Row>          
 					<Form.Row>
-						<Col>
-							<Form.Control name="username" placeholder="Username" onChange={this.handleChange} value={this.state.username}/>
+						<Col className="mt-2">
+						<AlertSuccess 
+							success={this.props.success ? "User created" : null}
+							progress={this.props.progress}
+							error={this.props.error && this.props.error.message}
+						></AlertSuccess>
 						</Col>
-						<Col>
-							<Form.Control name="company" placeholder="Company Name" onChange={this.handleChange} value={this.state.company} />
-						</Col>
-						<Col>
-							<Form.Control name="email" placeholder="Email" onChange={this.handleChange} value={this.state.email} />
-						</Col>
-						<Col>						
-							<Button onClick={this.submit}>CreateUser</Button>
-						</Col>
-					</Form.Row>          
-          <Form.Row>
-            <Col className="mt-2">
-              <AlertSuccess 
-                success={this.props.success ? "User created" : null}
-                progress={this.props.progress}
-                error={this.props.error && this.props.error.message}
-              ></AlertSuccess>
-            </Col>
-          </Form.Row>
-				</Form>
+					</Form.Row>
+                </Form>
+        </div>
+</div>
 			 </AllowedRoles>
 
 			</div>

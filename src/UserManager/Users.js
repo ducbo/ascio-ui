@@ -31,7 +31,7 @@ const RemoteAll = ({ data, page, sizePerPage, onTableChange, totalSize, columns,
     <BootstrapTable
       bootstrap4
       remote
-      striped
+      bordered={false}
       hover
       condense
       keyField="username"
@@ -189,15 +189,22 @@ class Users extends React.Component {
             </Button>
           </Modal.Footer>
         </Modal>
-      <RemoteAll
-        data={ data || [] }
-        page={ page || 1}
-        columns = {this.columns}
-        user = {this.user.username}
-        sizePerPage={ sizePerPage || this.filters.sizePerPage}
-        totalSize={ this.props.totalSize || this.state.totalSize }
-        onTableChange={ this.handleTableChange }       
-      />
+        <div class="card record-inputs">
+        <div class="card-header">
+          <h5>Edit Accounts</h5>
+        </div>
+        <div class="card-body card-table">
+          <RemoteAll
+          data={ data || [] }
+          page={ page || 1}
+          columns = {this.columns}
+          user = {this.user.username}
+          sizePerPage={ sizePerPage || this.filters.sizePerPage}
+          totalSize={ this.props.totalSize || this.state.totalSize }
+          onTableChange={ this.handleTableChange }       
+        />
+        </div>
+</div>
       </>    
   }
 }
