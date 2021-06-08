@@ -122,15 +122,24 @@ class Record extends Component {
 		});
 		return html;
 	}
+	validate() {
+		if(! (this.state.data.Target && this.state.data.Target)) {
+			return false;
+		}
+		return true;
+	}
 	renderCreateForm(ttl, use) {
 		const self = this
 		let html = [];
+		let updating = self.state.updating;
 		let message = '';
 		const typeFields = fields[this.state.data._type];
 		typeFields.list.forEach((field) => {
 			html.push(self.renderField(field));
 		});
-
+		if(!this.validate()) {
+			updating = "disabled";
+		}
 		let type = '';
 		if (use.type) {
 			type = (
@@ -166,7 +175,7 @@ class Record extends Component {
 					<div className="col-md-2">
 						<button
 							className="btn btn-primary"
-							disabled={self.state.updating}
+							disabled={updating}
 							action={this.state.action}
 							id={this.state.data.Id}
 							onClick={this.handleSubmit}
@@ -207,7 +216,7 @@ class Record extends Component {
 			if (error) {
 				message = (
 					<div className="alert alert-danger  mt-2 col-md-12" role="alert">
-						{error}
+						{error || this.state.error}
 					</div>
 				);
 			}

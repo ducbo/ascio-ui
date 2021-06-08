@@ -26,6 +26,15 @@ class CreateZone extends React.Component {
 		const filters = this.props.filterParams || defaultZoneFilters(this.user.username);
 		this.props.createZone(this.state.zoneName, this.state.user.id, this.state.api, filters);
 	}
+	validate() {
+		if(! (this.state.zoneName && this.state.user)) {
+			return false;
+		}
+		if(!this.state.zoneName.match(/^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9](?:\.[a-zA-Z]{2,})+$/)) {
+			return false; 
+		}
+		return true;
+	}
 	render() {
 		const self = this;
 		let onChange = (user) => {
@@ -47,6 +56,7 @@ class CreateZone extends React.Component {
 		);
 		
    	 const users = this.props.rootDescendants || [];    
+		const disabled = !this.validate() ? "disabled" : false
 		return (      
 			<div className="mb-1">
 			 <AllowedRoles roles={["admin","zone_editor"]}>
@@ -59,7 +69,7 @@ class CreateZone extends React.Component {
 							<Combobox onChange={onChange} valueField="id" textField="name" data={users} />
 						</Col>
 						<Col>						
-							<Button onClick={this.submit}>CreateZone</Button>
+							<Button disabled={disabled} onClick={this.submit}>CreateZone</Button>
 						</Col>
 					</Form.Row>          
 					{api}
