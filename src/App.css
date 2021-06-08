@@ -157,3 +157,28 @@ body .container {
   background-color: black;
   color: white;
 }
+.container .record-inputs {
+  word-wrap: normal;
+  margin-top:5px;
+  margin-bottom:15px;
+}
+.container .card-table {
+  word-wrap: normal;
+}
+.container .card-header {
+  background-color: #fffaee;
+}
+
+.container .table th, 
+.container .table td {
+  border:none; 
+
+}
+.container .text-filter {
+  width:90%;
+}
+.container .table thead th {
+  margin-bottom: 10px;
+  padding-bottom: 12px;
+
+}

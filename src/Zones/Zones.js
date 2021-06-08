@@ -10,6 +10,9 @@ import {defaultZoneFilters} from '../defaults.js'
 import {Modal, Button} from 'react-bootstrap'
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import { AllowedRoles } from "../_components";
+import { Combobox } from 'react-widgets';
+import Autocomplete from '@material-ui/lab/Autocomplete'
+import TextField from '@material-ui/core/TextField';
 
 function dateFormatter (cell, row) {
   const date = new Date(parseInt(cell))  
@@ -38,7 +41,7 @@ const RemoteAll = ({ data, page, sizePerPage, onTableChange, totalSize, columns,
     <BootstrapTable
       bootstrap4
       remote
-      striped
+      bordered={ false }
       hover
       condense
       keyField="ZoneName"
@@ -73,9 +76,22 @@ class Zones extends React.Component {
       page: 1,
       showDialog : false, 
       users : this.getImpersonated(),
-      lastUsers : null
+      lastUsers : null,
+      options : [],
+      refresh : false
      // users : props.users
       }
+    this.deleteZone = this.deleteZone.bind(this)    
+    this.closeDialog = this.closeDialog.bind(this)
+
+    this.rootDescendants = this.props.rootDescendants
+
+  }
+
+  onOwnerChange = (newOwner,a) => {
+      console.log("change",newOwner,a)
+  }
+  getColumns = (users,selectableUsers) => {
     const columns1 = [{
       dataField: 'ZoneName',
       text: 'Zone',    
@@ -83,9 +99,25 @@ class Zones extends React.Component {
       filter: textFilter()
     }, {
       dataField: '_clientId',
-      text: 'Owner',
+      text: 'Account',
       sort: true,
-      filter: textFilter()
+      style : {
+        padding:"4px"
+      },
+      filter: textFilter(),
+      formatter: (cellContent, row) => { 
+        return  <>
+        <Autocomplete
+          value={selectableUsers ? {id:  cellContent, name: selectableUsers[cellContent]} : {id : "",name :""}}
+          size="small"
+          onChange={(event, newInputValue) => {console.log(newInputValue)}}
+          id={row.ZoneName}        
+          options={users}
+          getOptionLabel={(option) => {
+            return option.name || ""
+          }}
+          renderInput={(params) => <><TextField  {...params} labelSize="small" variant="outlined" /></>}
+        /></>}
     
     }];
     const columns3 = [ {
@@ -114,8 +146,7 @@ class Zones extends React.Component {
       }]
     }
     this.columns = columns1.concat(columns2,columns3)
-    this.deleteZone = this.deleteZone.bind(this)    
-    this.closeDialog = this.closeDialog.bind(this)  
+    return this.columns
   }
   deleteDialog(event) {
     this.state.showDialog = true;
@@ -137,11 +168,14 @@ class Zones extends React.Component {
     this.setState(this.state)
   }
   componentDidMount() {
+    console.log("zone did mount", this.props.rootDescendants)
     const searchParameters = defaultZoneFilters(this.user.username)
     searchParameters.users = this.getImpersonated()
     this.props.filter(searchParameters,this.props.zones)
   }
   componentDidUpdate() {
+    console.log("zone did update", this.props.rootDescendants)
+    // this.setState({options: this.props.rootDescendants})
     const searchParameters = defaultZoneFilters(this.user.username)
     searchParameters.users = this.getImpersonated()
     if(searchParameters.users !== this.state.lastUsers) {
@@ -172,10 +206,17 @@ class Zones extends React.Component {
   getImpersonated() {
     return this.props.impersonate || defaultZoneFilters(this.user.username).users || this.user.username 
   }
-  render() {     
+  render() {  
+    console.log("render zones", this.props.rootDescendants)   
     const page = this.props.filterParams ? this.props.filterParams.page : this.state.page
     const sizePerPage = this.props.filterParams ? this.props.filterParams.sizePerPage : this.state.sizePerPage
     let data = this.props.zones ? this.props.zones.data  : this.state.data
+    if(this.rootDescendants.length === 0 && this.props.rootDescendants.length > 0) {
+      this.rootDescendants = this.props.rootDescendants
+      data.forEach((row) => {
+        row.refresh = true;
+      })     
+    }
     return <>  
         <Modal  style={{opacity:1}} show={this.state.showDialog} onHide={this.closeDialog}>
           <Modal.Header closeButton>
@@ -194,7 +235,7 @@ class Zones extends React.Component {
       <RemoteAll
         data={ data || [] }
         page={ page || 1}
-        columns = {this.columns}
+        columns = {this.getColumns(this.props.rootDescendants, this.props.selectableUsers)}
         user = {this.user.username}
         sizePerPage={ sizePerPage | defaultZoneFilters(this.user.username).sizePerPage}
         totalSize={ this.props.zones &&  this.props.zones.totalSize ? this.props.zones.totalSize : this.state.totalSize }
@@ -210,8 +251,8 @@ const actionCreators = {
 function mapState(state) {
   const { user } = state.authentication;
   const { zones,filterParams } = state.zones;
-  const { rootDescendants, descendants, impersonate } = state.usertree;
-  return { user, zones, filterParams, rootDescendants, descendants,impersonate };
+  const { rootDescendants, selectableUsers, descendants, impersonate } = state.usertree;
+  return { user, zones, filterParams, rootDescendants, selectableUsers, descendants,impersonate };
 }
 const connectedZones = connect(mapState, actionCreators)(Zones)
 export {connectedZones as Zones}

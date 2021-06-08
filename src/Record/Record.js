@@ -123,6 +123,14 @@ class Record extends Component {
 		return html;
 	}
 	renderCreateForm(ttl, use) {
+		const self = this
+		let html = [];
+		let message = '';
+		const typeFields = fields[this.state.data._type];
+		typeFields.list.forEach((field) => {
+			html.push(self.renderField(field));
+		});
+
 		let type = '';
 		if (use.type) {
 			type = (
@@ -146,8 +154,7 @@ class Record extends Component {
 				</div>
 			);
 		}
-		return (
-			<div>
+		return <>
 				<div className="row">
 					<div className="col-md-2">
 						{type}
@@ -155,50 +162,6 @@ class Record extends Component {
 					</div>
 					<div className="col-md-8">{this.renderFields()}</div>
 				</div>
-			</div>
-		);
-	}
-	renderTTL(value) {
-		return <TTL onChange={this.onChange} value={value} />;
-	}
-	render() {
-		let html = [];
-		const self = this;
-		let message = '';
-		const { error, success } = this.props.records;
-		if (
-			this.props.records.recordId == this.props.data.Id ||
-			(this.props.records.newRecord == true && this.props.action == 'create')
-		) {
-			if (error) {
-				message = (
-					<div className="alert alert-danger  mt-2 col-md-12" role="alert">
-						{error}
-					</div>
-				);
-			}
-			if (success) {
-				message = (
-					<div className="alert alert-success   mt-2 col-md-12" role="alert">
-						{this.props.action == 'create' ? 'Create record successful' : 'Update record successful'}
-					</div>
-				);
-			}
-		}
-		const typeFields = fields[this.state.data._type];
-		typeFields.list.forEach((field) => {
-			html.push(self.renderField(field));
-		});
-		let form = '';
-		if (this.state.action == 'create') {
-			form = this.renderCreateForm(3600, { type: true });
-		} else {
-			form = this.renderCreateForm(this.state.data.TTL, {});
-		}
-
-		return (
-			<div key={this.state.data.Id}>
-				{form}
 				<div className="row">
 					<div className="col-md-2">
 						<button
@@ -227,6 +190,47 @@ class Record extends Component {
 				<div className="row">
 					<div className="col-md-10">{message}</div>
 				</div>
+		</>
+	}
+	renderTTL(value) {
+		return <TTL onChange={this.onChange} value={value} />;
+	}
+	render() {
+		let html = [];
+		const self = this;
+		let message = '';
+		const { error, success } = this.props.records;
+		if (
+			this.props.records.recordId == this.props.data.Id ||
+			(this.props.records.newRecord == true && this.props.action == 'create')
+		) {
+			if (error) {
+				message = (
+					<div className="alert alert-danger  mt-2 col-md-12" role="alert">
+						{error}
+					</div>
+				);
+			}
+			if (success) {
+				message = (
+					<div className="alert alert-success   mt-2 col-md-12" role="alert">
+						{this.props.action == 'create' ? 'Create record successful' : 'Update record successful'}
+					</div>
+				);
+			}
+		}
+
+		let form = '';
+		if (this.state.action == 'create') {
+			form = this.renderCreateForm(3600, { type: true });
+		} else {
+			form = this.renderCreateForm(this.state.data.TTL, {});
+		}
+
+		return (
+			<div key={this.state.data.Id}>
+				{form}
+				
 			</div>
 		);
 	}

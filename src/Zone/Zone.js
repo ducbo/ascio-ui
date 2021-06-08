@@ -106,25 +106,24 @@ class Zone extends React.Component {
     return (
         <NavProtected>
         <div className="row">
-            <div className="col-6"><h4 className="create-record">Zone <b>{zoneName}</b>: Create record</h4></div>
+            <div className="col-6"><h4 className="create-record">Zone <b>{zoneName}</b></h4></div>
         </div>
-        
+        <div class="card record-inputs">
+        <div class="card-header">
+          <h5>Create Record</h5>
+        </div>
+        <div class="card-body">
         <Record data={this.state.createType} zone={zoneName} action = "create"></Record>    
-        <Modal  style={{opacity:1}} show={this.state.showDialog} onHide={this.closeDialog}>
-          <Modal.Header closeButton>
-            <Modal.Title>Delete record from {zoneName}</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>Do you want to delete the record {this.state.deleteId}?</Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={this.closeDialog}>
-              Close
-            </Button>
-            <Button variant="primary" id={this.state.deleteId} onClick={this.deleteRecord}>
-              Delete record
-            </Button>
-          </Modal.Footer>
-        </Modal>
-    <BootstrapTable
+        </div>
+</div>
+      
+        
+        <div class="card record-inputs">
+  <div class="card-header">
+  <h5>Edit Records</h5>
+  </div>
+  <div class="card-body card-table">
+  <BootstrapTable
     bootstrap4
       keyField="Id"
       hover
@@ -143,7 +142,24 @@ class Zone extends React.Component {
     />
     <Button variant="secondary" onClick={this.backAction}>
             Back to Search Zones
-      </Button>
+    </Button>
+  </div>
+</div>   
+   
+      <Modal  style={{opacity:1}} show={this.state.showDialog} onHide={this.closeDialog}>
+          <Modal.Header closeButton>
+            <Modal.Title>Delete record from {zoneName}</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>Do you want to delete the record {this.state.deleteId}?</Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={this.closeDialog}>
+              Close
+            </Button>
+            <Button variant="primary" id={this.state.deleteId} onClick={this.deleteRecord}>
+              Delete record
+            </Button>
+          </Modal.Footer>
+        </Modal>
   </NavProtected>
     );
   }
