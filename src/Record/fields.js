@@ -29,12 +29,14 @@ export default {
 	NS: {
 		list: [ 'Source', 'TTL' , 'Target'],
 		targetDescription: 'Name Server',
-		text: "will be managed by"
+		text: "will be managed by",
+		dot: true
 	},
 	SRV: {
 		list: ['Port', 'Priority', 'Weight',  'Source', 'TTL', 'Target' ],
 		targetDescription: 'Target',
-		text: "will be serviced by"
+		text: "will be serviced by",
+		dot: true
 	},
 	SOA: {
 		list: [ 'Expire', 'HostmasterEmail',  'PrimaryNameServer', 'Refresh', 'Retry', 'TTL'],
