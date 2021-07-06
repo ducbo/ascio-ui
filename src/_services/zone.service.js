@@ -6,7 +6,8 @@ export const zoneService = {
     create,
     updateOwner,
     delete : _delete,
-    filter
+    filter, 
+    sync
 };
 
 function filter(searchParameters) {
@@ -26,6 +27,13 @@ function updateOwner (zoneName, owner) {
 }
 function create (zoneName, owner, api, filters) {
     return fetch(`${config.apiUrl}/zones`,{
+        method: "POST", 
+        headers: authHeader({ 'Content-Type': 'application/json' }),
+        body: JSON.stringify({zoneName,owner, api, filters})            
+    }).then(handleResponse)             
+}
+function sync (zoneName, owner, api, filters) {
+    return fetch(`${config.apiUrl}/zones/sync`,{
         method: "POST", 
         headers: authHeader({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({zoneName,owner, api, filters})            

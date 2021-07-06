@@ -67,6 +67,25 @@ export function zones(state = { filterParams : {users : null}, zones: {data :[] 
                 zones: state.zones,
                 error: action.error
 			};;
+		// sync zone
+
+		case zoneConstants.SYNC_REQUEST:
+			return {
+				progress: "Sync new zone. Please wait.",
+				loading: true,
+				...state
+			};
+		case zoneConstants.SYNC_SUCCESS:
+			return {
+				zones:action.zones,
+				success: "Zone successfully synced.",
+				...state
+			};
+		case zoneConstants.SYNC_FAILURE:
+            return {                
+                error: action.error,
+				...state
+			};;
 
 		// delete zone
 
