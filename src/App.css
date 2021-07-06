@@ -182,3 +182,7 @@ body .container {
   padding-bottom: 12px;
 
 }
+.container .name-notation-switch {
+  margin-top: 20px;
+  float: right;
+}
