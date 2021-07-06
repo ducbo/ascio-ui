@@ -8,6 +8,7 @@ import { usertree } from './usertree.reducer';
 import { users } from './users.reducer';
 import { workers } from './workers.reducer';
 import { alert } from './alert.reducer';
+import { nameswitch } from './nameswitch.reducer';
 
 const rootReducer = combineReducers({
   authentication,
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   users,
   records,
   zones,
+  nameswitch,
   alert,
   usertree,
   workers
