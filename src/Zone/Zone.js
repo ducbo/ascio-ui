@@ -2,7 +2,8 @@ import React from "react";
 import BootstrapTable from 'react-bootstrap-table-next';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import filterFactory, { selectFilter,textFilter, Comparator } from 'react-bootstrap-table2-filter';
-import {Record} from '../Record'
+import {ConvertName, Record} from '../Record'
+import {NameSwitch} from '../Record/NameSwitch'
 import {Modal, Button} from 'react-bootstrap'
 import { connect } from 'react-redux';
 import { recordActions } from '../_actions';
@@ -60,13 +61,19 @@ class Zone extends React.Component {
       text: 'Source',
       filter: textFilter(),    
       sort: true,
-      style: {wordWrap: "break-word"}
+      style: {wordWrap: "break-word"},
+      formatter:  (cellContent, row) => { 
+        return <ConvertName value={cellContent} record={row} zone={this.props.match.params.zoneName} keyName={"Source"}></ConvertName>
+      }
     }, {
       dataField: 'Target',
       text: 'Target',
       filter: textFilter(),    
       sort: true,
-      style: {wordWrap: "break-word"}
+      style: {wordWrap: "break-word"},
+      formatter:  (cellContent, row) => { 
+        return <ConvertName value={cellContent} record={row} zone={this.props.match.params.zoneName} keyName={"Target"}></ConvertName>
+      }
     }, {
       dataField: 'Delete',
       text: 'Delete',
@@ -98,7 +105,7 @@ class Zone extends React.Component {
     this.state.showDialog = false;
     this.setState(this.state)
   }
-  render() { 
+  render() {     
     const { records } = this.props.records;
     const  { data, sizePerPage, page } = this.state;
     const {title,description,action} = this.state
@@ -143,6 +150,8 @@ class Zone extends React.Component {
     <Button variant="secondary" onClick={this.backAction}>
             Back to Search Zones
     </Button>
+    <div class="name-notation-switch"><NameSwitch></NameSwitch></div>
+    
   </div>
 </div>   
    

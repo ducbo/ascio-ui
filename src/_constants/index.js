@@ -4,3 +4,5 @@ export * from './worker.constants';
 export * from './zone.constants';
 export * from './record.constants';
 export * from './usertree.constants';
+export * from './nameswitch.constants';
+export * from './nslookup.constants';

@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { recordActions } from '../_actions';
-import { recordToApi } from '../_helpers';
+import { recordToApi, recordFromApi } from '../_helpers';
 import { TTL } from './TTL';
 import { RedirectionType } from './RedirectionType';
 import fields from './fields';
+import {RecordInfo}  from './RecordInfo';
 
 function renderInfoText(zone, Source, Target, text, _type) {
 	const record = { Source, Target, _type };
@@ -32,16 +33,18 @@ class Record extends Component {
 		this.state = {
 			data: props.data || { TTL: 3600, RedirectionType: 'Permanent' },
 			zone: props.zone,
-			action: props.action
+			action: props.action,	
 		};
 		this.onChange = this.onChange.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.setNewType = this.setNewType.bind(this);
+		this.nameswitch = false
 	}
 	componentDidUpdate() {
 		console.log('Record component update');
 	}
 	onChange(e) {
+		this.useNameswitch = false; 
 		this.state.data[e.target.name] = e.target.value;
 		this.setState(this.state);
 	}
@@ -82,13 +85,13 @@ class Record extends Component {
 			this.props.createRecord(this.state.zone, this.state.data);
 		}
 	}
-	renderField(field) {
+	renderField(field,data) {
 		const typeFields = fields[this.state.data._type];
 		const placeHolder = field == 'Target' ? typeFields.targetDescription : field;
 		let input = '';
 		switch (field) {
 			case 'RedirectionType':
-				input = <RedirectionType onChange={this.onChange} value={this.state.data[field]} />;
+				input = <RedirectionType onChange={this.onChange} value={data[field]} />;
 				break;
 			default:
 				input = (
@@ -97,7 +100,7 @@ class Record extends Component {
 						name={field}
 						className="form-control"
 						id={'input' + field}
-						value={this.state.data[field]}
+						value={data[field]}
 						onChange={this.onChange}
 						placeholder={placeHolder}
 					/>
@@ -115,12 +118,35 @@ class Record extends Component {
 	renderFields() {
 		let html = [];
 		const self = this;
-		const typeFields = fields[this.state.data._type];
+		const typeFields = fields[this.state.data._type];	
+		const data = this.getConvertedData(this.state.data)	
 		typeFields.list.forEach((field) => {
 			if (field == 'TTL') return;
-			html.push(self.renderField(field));
+			html.push(self.renderField(field,data));
 		});
 		return html;
+	}
+	getConvertedData() {
+		if(this.props.nameswitch === this.nameswitch) {
+			console.log("same",this.state.data)
+			return this.state.data
+		}
+		if(this.props.nameswitch) {
+			const newRecord = recordToApi(this.props.zone, {...this.state.data} , "Ascio")
+			this.nameswitch =  this.props.nameswitch
+			this.setState({data: newRecord})
+			console.log("long format",newRecord)
+			return newRecord
+        } else {
+			const newRecord = recordFromApi(this.props.zone, {...this.state.data} , "Ascio")
+			this.nameswitch =  this.props.nameswitch
+			this.setState({data: newRecord})
+			console.log("long format",newRecord)
+			return newRecord		
+		}
+
+		
+
 	}
 	validate() {
 		if(! (this.state.data.Target && this.state.data.Target)) {
@@ -134,8 +160,9 @@ class Record extends Component {
 		let updating = self.state.updating;
 		let message = '';
 		const typeFields = fields[this.state.data._type];
+		const data = this.getConvertedData(this.state.data)
 		typeFields.list.forEach((field) => {
-			html.push(self.renderField(field));
+			html.push(self.renderField(field, data));
 		});
 		if(!this.validate()) {
 			updating = "disabled";
@@ -165,7 +192,7 @@ class Record extends Component {
 		}
 		return <>
 				<div className="row">
-					<div className="col-md-2">
+					<div className="col-md-2">						
 						{type}
 						<TTL onChange={this.onChange} value={ttl} />
 					</div>
@@ -186,13 +213,7 @@ class Record extends Component {
 					<div className="col-md-8">
 						{' '}
 						<div className="alert alert-secondary" role="alert">
-							{renderInfoText(
-								self.props.zone,
-								self.state.data.Source,
-								self.state.data.Target || self.state.data.PrimaryNameServer,
-								typeFields.text,
-								self.state.data._type
-							)}
+							<RecordInfo record={{...self.state.data}} zone={self.props.zone} text={typeFields.text}></RecordInfo>
 						</div>
 					</div>
 				</div>
@@ -250,9 +271,9 @@ const actionCreators = {
 	createRecord: recordActions.create
 };
 function mapState(state) {
-	const { users, authentication, records } = state;
+	const { users, authentication, records,nameswitch } = state;
 	const { user } = authentication;
-	return { user, users, records };
+	return { user, users, records, nameswitch };
 }
 const connectedRecord = connect(mapState, actionCreators)(Record);
 export { connectedRecord as Record };
