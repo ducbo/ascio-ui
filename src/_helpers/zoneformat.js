@@ -37,14 +37,13 @@ function fromFQDN (zoneName, recordContent) {
     return recordContent
 }
    
-module.exports.recordToApi = function (zoneName, record,api) {
+module.exports.recordToApi = function (zoneName, record,api) {    
     if(api === "Ascio") {
-        record.Source = toFQDN(zoneName,record.Source)
+        if(record.Source) {
+            record.Source = toFQDN(zoneName,record.Source)
+        }
         if(["CNAME","SRV","NS","MX"].includes(record._type )) {
             record.Target = toFQDN(zoneName,record.Target)
-        }
-        else {
-            record.Target = trimDot(record.Target)
         }
     } else {
         record.Source = toShortName(zoneName,record.Source, "to-api")
@@ -55,9 +54,15 @@ module.exports.recordToApi = function (zoneName, record,api) {
     return record
 }
 module.exports.recordFromApi = function (zoneName, record,api) {
+    if(!record.Source) {
+        return record
+    }
+    if(record.attributes) {
+        record._type = record.attributes["i:type"]
+    }
     if(api === "Ascio") {
         record.Source = fromFQDN(zoneName,record.Source)
-        if(["CNAME","SRV","NS","MX"].includes(record._type)) {
+        if(["CNAME","SRV","NS","MX"].includes(record._type )) {
             record.Target = fromFQDN(zoneName,record.Target)
         } 
     }     
