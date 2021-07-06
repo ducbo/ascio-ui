@@ -5,7 +5,8 @@ export const zoneActions = {
 	create,
     updateOwner,
 	delete: _delete,
-	filter
+	filter,
+	sync
 };
 
 function filter(searchParameters, oldZones) {	
@@ -41,6 +42,23 @@ function create(zoneName, owner, api,filters) {
 	}
 	function failure(error,zoneName) {
 		return { type: zoneConstants.CREATE_FAILURE, error, zoneName };
+	}
+}
+function sync(zoneName, owner, api, filters) {
+	return (dispatch) => {
+		dispatch(request());
+		zoneService
+			.sync(zoneName,owner, api || "Ascio", filters)
+			.then((zones) => dispatch(success(zones)), (error) => dispatch(failure(error.toString(),zoneName)));
+	};
+	function request() {
+		return { type: zoneConstants.SYNC_REQUEST };
+	}
+	function success(zones, filters) {
+		return { type: zoneConstants.SYNC_SUCCESS, zones, filters };
+	}
+	function failure(error,zoneName) {
+		return { type: zoneConstants.SYNC_FAILURE, error, zoneName };
 	}
 }
 function updateOwner(zoneName, owner){
