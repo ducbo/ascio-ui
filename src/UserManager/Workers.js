@@ -192,11 +192,11 @@ class Workers extends React.Component {
             </Button>
           </Modal.Footer>
         </Modal>
-        <div class="card record-inputs">
-          <div class="card-header">
+        <div className="card record-inputs">
+          <div className="card-header">
             <h5>Edit Workers</h5>
           </div>
-          <div class="card-body">
+          <div className="card-body">
           <RemoteAll
               data={ data || [] }
               page={ page || 1}

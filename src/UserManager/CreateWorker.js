@@ -34,11 +34,11 @@ class CreateWorker extends React.Component {
 		return (      
 			<div className="mb-1">			 
 				<AllowedRoles roles={["admin","user_editor"]}>
-					<div class="card record-inputs">
-						<div class="card-header">
+					<div className="card record-inputs">
+						<div className="card-header">
 						<h5>Create Worker</h5>
 						</div>
-						<div class="card-body">
+						<div className="card-body">
 							<Form>
 								<Form.Row>
 									<Col>

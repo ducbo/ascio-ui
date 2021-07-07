@@ -44,11 +44,11 @@ class LoginPage extends React.Component {
 		return (
 			<div className="login">
 				<img style={{ width: '100%' }} src={logo} alt="Logo" />
-				<div class="card mb-4 rounded-3 shadow-sm mt-5">
-					<div class="card-header py-3">
-						<h4 class="my-0 fw-normal">Login</h4>
+				<div className="card mb-4 rounded-3 shadow-sm mt-5">
+					<div className="card-header py-3">
+						<h4 className="my-0 fw-normal">Login</h4>
 					</div>
-					<div class="card-body">
+					<div className="card-body">
 						<div className={'form-group' + (submitted && !username ? ' has-error' : '')}>
 							<label htmlFor="username">Username</label>
 							<input

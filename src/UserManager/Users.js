@@ -189,11 +189,11 @@ class Users extends React.Component {
             </Button>
           </Modal.Footer>
         </Modal>
-        <div class="card record-inputs">
-        <div class="card-header">
+        <div className="card record-inputs">
+        <div className="card-header">
           <h5>Edit Accounts</h5>
         </div>
-        <div class="card-body card-table">
+        <div className="card-body card-table">
           <RemoteAll
           data={ data || [] }
           page={ page || 1}
