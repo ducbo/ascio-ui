@@ -19,7 +19,7 @@ function filter(searchParameters) {
     return fetch(`${config.apiUrl}/zones/search`, requestOptions).then(handleResponse);
 }
 function updateOwner (zoneName, owner) {
-    return fetch(`${config.apiUrl}/zones/${zoneName}`,{
+    return fetch(`${config.apiUrl}/zones/${zoneName}/owner`,{
         method: "PUT", 
         headers: authHeader({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({owner})            

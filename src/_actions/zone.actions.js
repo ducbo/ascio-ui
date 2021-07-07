@@ -66,7 +66,7 @@ function updateOwner(zoneName, owner){
 		dispatch(request(zoneName, owner));
 
 		zoneService
-			.update(zoneName,owner)
+			.updateOwner(zoneName,owner)
 			.then((resultZone) => dispatch(success(resultZone)), (error) => dispatch(failure(error.toString(),zoneName)));
 	};
 	function request(Id) {
