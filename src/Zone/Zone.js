@@ -115,21 +115,21 @@ class Zone extends React.Component {
         <div className="row">
             <div className="col-6"><h4 className="create-record">Zone <b>{zoneName}</b></h4></div>
         </div>
-        <div class="card record-inputs">
-        <div class="card-header">
+        <div className="card record-inputs">
+        <div className="card-header">
           <h5>Create Record</h5>
         </div>
-        <div class="card-body">
+        <div className="card-body">
         <Record data={this.state.createType} zone={zoneName} action = "create"></Record>    
         </div>
 </div>
       
         
-        <div class="card record-inputs">
-  <div class="card-header">
+        <div className="card record-inputs">
+  <div className="card-header">
   <h5>Edit Records</h5>
   </div>
-  <div class="card-body card-table">
+  <div className="card-body card-table">
   <BootstrapTable
     bootstrap4
       keyField="Id"
@@ -150,7 +150,7 @@ class Zone extends React.Component {
     <Button variant="secondary" onClick={this.backAction}>
             Back to Search Zones
     </Button>
-    <div class="name-notation-switch"><NameSwitch></NameSwitch></div>
+    <div className="name-notation-switch"><NameSwitch></NameSwitch></div>
     
   </div>
 </div>   
