@@ -1,7 +1,7 @@
 import React from "react";
 import BootstrapTable from 'react-bootstrap-table-next';
 import paginationFactory from 'react-bootstrap-table2-paginator';
-import filterFactory, { textFilter, Comparator } from 'react-bootstrap-table2-filter';
+import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
 import PropTypes from 'prop-types'
 import { history } from '../_helpers';
 import { connect } from 'react-redux';
@@ -10,9 +10,7 @@ import {defaultZoneFilters} from '../defaults.js'
 import {Modal, Button} from 'react-bootstrap'
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import { AllowedRoles } from "../_components";
-import { Combobox } from 'react-widgets';
-import Autocomplete from '@material-ui/lab/Autocomplete'
-import TextField from '@material-ui/core/TextField';
+import {ZoneUserSelector} from "../Zone";
 
 function dateFormatter (cell, row) {
   const date = new Date(parseInt(cell))  
@@ -106,18 +104,12 @@ class Zones extends React.Component {
       },
       filter: textFilter(),
       formatter: (cellContent, row) => { 
-        return  <>
-        <Autocomplete
-          value={selectableUsers ? {id:  cellContent, name: selectableUsers[cellContent]} : {id : "",name :""}}
-          size="small"
-          onChange={(event, newInputValue) => {console.log(newInputValue)}}
-          id={row.ZoneName}        
-          options={users}
-          getOptionLabel={(option) => {
-            return option.name || ""
-          }}
-          renderInput={(params) => <><TextField  {...params} labelSize="small" variant="outlined" /></>}
-        /></>}
+        return <ZoneUserSelector
+          zoneName={row.ZoneName}
+          selected = {row._clientId}
+        ></ZoneUserSelector>
+      
+      }
     
     }];
     const columns3 = [ {
