@@ -7,53 +7,25 @@ import { RedirectionType } from './RedirectionType';
 import fields from './fields';
 import {RecordInfo}  from './RecordInfo';
 
-function renderInfoText(zone, Source, Target, text, _type) {
-	const record = { Source, Target, _type };
-	if ((Source && Target) || _type === 'SOA') {
-		const newRecord = recordToApi(zone, record, 'Ascio');
-		const dot = fields[_type].dot
-		let dotText = ""
-		if(dot && (Target.indexOf(".") > -1)) {
-			dotText = <span>Please add a  <b>dot</b> at the end for a targets outside of  {zone}</span>
-		}
-		return (
-			<span>
-				<b>{newRecord.Source}</b> {text} <b>{newRecord.Target}</b><br></br>
-				{dotText}
-			</span>
-		);
-	} else {
-		return 'Please enter Source and Target';
-	}
-}
-
 class Record extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {
-			data: props.data || { TTL: 3600, RedirectionType: 'Permanent' },
-			zone: props.zone,
-			action: props.action,	
-		};
+		const data = props.data || { TTL: 3600, RedirectionType: 'Permanent' }
+		this.state = {...data};
 		this.onChange = this.onChange.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.setNewType = this.setNewType.bind(this);
 		this.nameswitch = false
 	}
-	componentDidUpdate() {
-		console.log('Record component update');
-	}
 	onChange(e) {
 		this.useNameswitch = false; 
-		this.state.data[e.target.name] = e.target.value;
-		this.setState(this.state);
+		this.setState({[e.target.name] : e.target.value});
 	}
 	setNewType(event) {
-		this.state.data._type = event.target.value;
-		this.setState(this.state);
+		this.setState({_type: event.target.value });
 	}
 	displayCreateForm() {
-		if (this.state.action !== 'create') return '';
+		if (this.props.action !== 'create') return '';
 		const html = (
 			<div>
 				<div className="form-group row">
@@ -79,15 +51,15 @@ class Record extends Component {
 		return html;
 	}
 	handleSubmit() {
-		if (this.state.data.Id) {
-			this.props.updateRecord(this.state.zone, this.state.data);
+		if (this.state.Id) {
+			this.props.updateRecord(this.props.zone, this.state);
 		} else {
-			this.props.createRecord(this.state.zone, this.state.data);
+			this.props.createRecord(this.props.zone, this.state);
 		}
 	}
 	renderField(field,data) {
-		const typeFields = fields[this.state.data._type];
-		const placeHolder = field == 'Target' ? typeFields.targetDescription : field;
+		const typeFields = fields[this.state._type];
+		const placeHolder = field === 'Target' ? typeFields.targetDescription : field;
 		let input = '';
 		switch (field) {
 			case 'RedirectionType':
@@ -118,30 +90,27 @@ class Record extends Component {
 	renderFields() {
 		let html = [];
 		const self = this;
-		const typeFields = fields[this.state.data._type];	
-		const data = this.getConvertedData(this.state.data)	
+		const typeFields = fields[this.state._type];	
+		const data = this.getConvertedData(this.state)	
 		typeFields.list.forEach((field) => {
-			if (field == 'TTL') return;
+			if (field === 'TTL') return;
 			html.push(self.renderField(field,data));
 		});
 		return html;
 	}
 	getConvertedData() {
 		if(this.props.nameswitch === this.nameswitch) {
-			console.log("same",this.state.data)
-			return this.state.data
+			return this.state
 		}
 		if(this.props.nameswitch) {
-			const newRecord = recordToApi(this.props.zone, {...this.state.data} , "Ascio")
+			const newRecord = recordToApi(this.props.zone, {...this.state} , "Ascio")
 			this.nameswitch =  this.props.nameswitch
 			this.setState({data: newRecord})
-			console.log("long format",newRecord)
 			return newRecord
         } else {
-			const newRecord = recordFromApi(this.props.zone, {...this.state.data} , "Ascio")
+			const newRecord = recordFromApi(this.props.zone, {...this.state} , "Ascio")
 			this.nameswitch =  this.props.nameswitch
 			this.setState({data: newRecord})
-			console.log("long format",newRecord)
 			return newRecord		
 		}
 
@@ -149,7 +118,7 @@ class Record extends Component {
 
 	}
 	validate() {
-		if(! (this.state.data.Target && this.state.data.Target)) {
+		if(! (this.state.Target && this.state.Target)) {
 			return false;
 		}
 		return true;
@@ -159,8 +128,8 @@ class Record extends Component {
 		let html = [];
 		let updating = self.state.updating;
 		let message = '';
-		const typeFields = fields[this.state.data._type];
-		const data = this.getConvertedData(this.state.data)
+		const typeFields = fields[this.state._type];
+		const data = this.getConvertedData(this.state)
 		typeFields.list.forEach((field) => {
 			html.push(self.renderField(field, data));
 		});
@@ -203,17 +172,17 @@ class Record extends Component {
 						<button
 							className="btn btn-primary"
 							disabled={updating}
-							action={this.state.action}
-							id={this.state.data.Id}
+							action={this.props.action}
+							id={this.state.Id}
 							onClick={this.handleSubmit}
 						>
-							{this.state.action} record
+							{this.props.action} record
 						</button>
 					</div>
 					<div className="col-md-8">
 						{' '}
 						<div className="alert alert-secondary" role="alert">
-							<RecordInfo record={{...self.state.data}} zone={self.props.zone} text={typeFields.text}></RecordInfo>
+							<RecordInfo record={{...self.state}} zone={self.props.zone} text={typeFields.text}></RecordInfo>
 						</div>
 					</div>
 				</div>
@@ -226,41 +195,16 @@ class Record extends Component {
 		return <TTL onChange={this.onChange} value={value} />;
 	}
 	render() {
-		let html = [];
-		const self = this;
-		let message = '';
-		const { error, success } = this.props.records;
-		if (
-			this.props.records.recordId == this.props.data.Id ||
-			(this.props.records.newRecord == true && this.props.action == 'create')
-		) {
-			if (error) {
-				message = (
-					<div className="alert alert-danger  mt-2 col-md-12" role="alert">
-						{error || this.state.error}
-					</div>
-				);
-			}
-			if (success) {
-				message = (
-					<div className="alert alert-success   mt-2 col-md-12" role="alert">
-						{this.props.action == 'create' ? 'Create record successful' : 'Update record successful'}
-					</div>
-				);
-			}
-		}
-
 		let form = '';
-		if (this.state.action == 'create') {
+		if (this.props.action === 'create') {
 			form = this.renderCreateForm(3600, { type: true });
 		} else {
-			form = this.renderCreateForm(this.state.data.TTL, {});
+			form = this.renderCreateForm(this.state.TTL, {});
 		}
 
 		return (
-			<div key={this.state.data.Id}>
-				{form}
-				
+			<div>
+				{form}				
 			</div>
 		);
 	}
