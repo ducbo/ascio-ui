@@ -3,16 +3,11 @@ import { alertActions } from './_actions';
 import NavTop from './NavTop';
 import NavLeft from './NavLeft';
 import Wait from './Wait'
-import logo from './logo.svg';
 import CustomerTreeItem from './TreeView.js'
 
 
 function NavProtected (props) {
 	const user = props.user.user
-	if(!props.user) {
-		console.log("logout")
-		return ""
-	}
 	const className = `alert ${props.alert.type} fadeInDown animated`
 	window.setTimeout(() => {
 		if(props.message) props.clearAlerts()
