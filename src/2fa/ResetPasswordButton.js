@@ -1,7 +1,5 @@
 import { connect } from 'react-redux';
 import { userActions } from '../_actions';
-import Code from './Code'
-import Activate from './Activate'
 import React from 'react';
 import { Button } from 'react-bootstrap';
 
@@ -24,7 +22,7 @@ class ResetPasswordButton extends React.Component {
 
 function mapState(state) {
     const {  authentication } = state;
-    const { user,qr, loggedIn} = authentication;
+    const { user,qr } = authentication;
     return { user,qr };
 }
 

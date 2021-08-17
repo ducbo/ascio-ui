@@ -26,8 +26,8 @@ class QR extends React.Component {
 
 function mapState(state) {
     const {  authentication,users } = state;
-    const { user, loggedIn} = authentication;
-    const qr = authentication.qr ||users.qr || users.error && users.error.qr
+    const { user } = authentication;
+    const qr = authentication.qr ||users.qr || (users.error && users.error.qr)
     return { user,qr };
 }
 
