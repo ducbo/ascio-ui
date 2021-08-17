@@ -18,7 +18,7 @@ import {Zone} from './Zone';
 import {defaultZoneFilters}  from './defaults';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.css';
-
+import { userTreeActions } from './_actions';
 
 
 class App extends React.Component {
@@ -28,13 +28,11 @@ class App extends React.Component {
 		const self = this;
 		let timer;		
 		const reAuth =  function() {
-			console.log("user:",self.user)
 			timer = window.setTimeout(async () => {				
 				if(props.user) {
 					await props.reAuth();
 					if(props.user) {
 						self.reconnectSocket(props.user.token );
-						console.log("reauth socket: ",props.user.token )
 					} else {
 						window.clearTimeout(timer)
 					}
@@ -53,6 +51,12 @@ class App extends React.Component {
 		if(this.props.user) {	
 			const self = this		
 			this.connectSocket(this.props.user.token)
+			const impersonatedJson = localStorage.getItem('customer_tree_'+self.props.user.user.username+'_selected');
+			let impersonated = null
+			if(impersonatedJson) {
+				impersonated = JSON.parse(impersonatedJson)
+				self.props.setImpersonate(impersonated)
+			}
 			window.setTimeout(function() {
 				self.props.socket.on("ascio:objects", function(message) {			
 					if(message.data.record)	 {
@@ -63,18 +67,17 @@ class App extends React.Component {
 							case "create" : action = "Created" ; break; 
 							case "update" : action = "Updated" ; break; 
 							case "delete" : action = "Deleted" ; break; 
+							default : break;
 						}
 						self.props.filter(defaultZoneFilters(self.props.user.user.username)); 
-						self.props.success(action + " zone" + message.data.zone.ZoneName)
+						self.props.success(action + " zone" + message.data.zone.ZoneName);						
 					}
 				}) 
 			},1)						
 		}
 	}
 	updateRecordSocket(data) {
-		console.log("updateRecordSocket", data)
 		if(data.data.zoneName !== this.props.records.zoneName) {
-			console.log("wrong zone")
 			return
 		}		
 		const record = data.data.record
@@ -97,9 +100,6 @@ class App extends React.Component {
 		this.connectSocket(token)
 	}
 	render() {
-		const click = () => {
-			this.props.success("test")
-		}
 		return (
 			<> 
 				<Router history={history}>
@@ -132,6 +132,7 @@ const actionCreators = {
 	success: alertActions.success,
 	reAuth: userActions.reAuth,
 	setSocket : userActions.setSocket,
+	setImpersonate : userTreeActions.impersonate,
 	updateRecordSocket : recordActions.updateSocket,
 	createRecordSocket : recordActions.createSocket,
 	deleteRecordSocket : recordActions.deleteSocket,
