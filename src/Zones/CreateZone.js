@@ -19,12 +19,11 @@ class CreateZone extends React.Component {
 		this.user = this.props.user.user;
 	}
 	handleChange(e) {
-		this.state[e.target.name] = e.target.value;
 		this.setState({[e.target.name] : e.target.value});
 	}
-	submit() {
+	async submit() {
 		const filters = this.props.filterParams || defaultZoneFilters(this.user.username);
-		this.props.createZone(this.state.zoneName, this.state.user.id, this.state.api, filters);
+		await this.props.createZone(this.state.zoneName, this.state.user.id, this.state.api, filters);
 	}
 	validate() {
 		if(! (this.state.zoneName && this.state.user)) {
@@ -38,8 +37,7 @@ class CreateZone extends React.Component {
 	render() {
 		const self = this;
 		let onChange = (user) => {
-			this.state.user = user;
-			self.setState(this.state);
+			self.setState({user});
 		};
 		const api = (
 			<AllowedRoles roles={["admin","zone_editor"]}>
@@ -60,29 +58,35 @@ class CreateZone extends React.Component {
 		return (      
 			<div className="mb-1">
 			 <AllowedRoles roles={["admin","zone_editor"]}>
-			 <Form>
-					<Form.Row>
-						<Col>
-							<Form.Control name="zoneName" placeholder="Zonename" onChange={this.handleChange} />
-						</Col>
-						<Col>
-							<Combobox onChange={onChange} valueField="id" textField="name" data={users} />
-						</Col>
-						<Col>						
-							<Button disabled={disabled} onClick={this.submit}>CreateZone</Button>
-						</Col>
-					</Form.Row>          
-					{api}
-          <Form.Row>
-            <Col className="mt-2">
-              <AlertSuccess 
-                success={this.props.success}
-                progress={this.props.progress}
-                error={this.props.error}
-              ></AlertSuccess>
-            </Col>
-          </Form.Row>
-				</Form>
+			 <div className="card-header">
+                    <h5>Create Zone</h5>
+                </div>
+                <div className="card-body">
+					<Form>
+						<Form.Row>
+							<Col>
+								<Form.Control name="zoneName" placeholder="Zonename" onChange={this.handleChange} />
+							</Col>
+							<Col>
+								<Combobox onChange={onChange} valueField="id" textField="name" data={users} />
+							</Col>
+							<Col>						
+								<Button disabled={disabled} onClick={this.submit}>CreateZone</Button>
+							</Col>
+						</Form.Row>          
+						{api}
+						<Form.Row>
+							<Col className="mt-2">
+							<AlertSuccess 
+								success={this.props.success}
+								progress={this.props.progress}
+								error={this.props.error}
+							></AlertSuccess>
+							</Col>
+						</Form.Row>
+					</Form>
+                </div>
+			
 			 </AllowedRoles>
 
 			</div>

@@ -17,20 +17,13 @@ class DnsManager extends Component {
         return (
             <>
                <NavProtected  selected={this.props.location.pathname}>
-            <div className="card record-inputs">
-                <div className="card-header">
-                    <h5>Create Zone</h5>
-                </div>
-                <div className="card-body">
-                    <CreateZone></CreateZone>
-                </div>
-            </div>
+                <CreateZone></CreateZone>
                 <div className="card">
                     <div className="card-header">
                         <h5>Edit Zones</h5>
                     </div>
                     <div className="card-body card-table">
-                        <Zones/> 
+                    <Zones/> 
                 </div>
             </div>
                 </NavProtected> 
