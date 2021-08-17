@@ -65,7 +65,6 @@ export function workers(state = {}, action) {
 				error: null
 			};
 		case workerConstants.CREATE_FAILURE:
-			console.log("action", action)
 			return {
 				...state,
 				loading:false,
