@@ -95,6 +95,5 @@ module.exports.pwStrength = (password,password2) => {
       valid: password === password2
     },
   }
-  console.log(strength)
   return strength;
 };
