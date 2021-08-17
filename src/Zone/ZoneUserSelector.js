@@ -3,6 +3,7 @@ import {UserSelector} from '../UserManager'
 import PropTypes from 'prop-types'
 import { zoneActions } from '../_actions';
 import { connect } from 'react-redux';
+import { AllowedRoles } from "../_components";
 
 function ZoneUserSelector(props) {
   const onChange = (user) => {
@@ -11,12 +12,18 @@ function ZoneUserSelector(props) {
         props.onChange(user)
     }
   }
-  return (
-    <UserSelector
-      id={props.zoneName}
-      onChange={onChange}
-      selected={props.selected}
-    />
+  return (<>
+    <AllowedRoles roles={["admin","zone_editor"]}>
+      <UserSelector
+        id={props.zoneName}
+        onChange={onChange}
+        selected={props.selected}
+    /></AllowedRoles>
+      <AllowedRoles>
+          {props.selected}
+      </AllowedRoles>
+    </>
+
   );
 }
 ZoneUserSelector.propTypes = {
