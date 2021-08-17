@@ -1,6 +1,5 @@
 import { workerConstants } from '../_constants';
 import { workerService } from '../_services';
-import { alertActions } from './';
 
 export const workerActions = {
     create,

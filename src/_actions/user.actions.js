@@ -284,14 +284,14 @@ function create(user,filters) {
                 },
                 error => {
                     dispatch(failure(error));
-                    dispatch(alertActions.error(error));
+                    dispatch(alertActions.error(error.message || error ));
                 }
             );
     };
 
     function request() { return { type: userConstants.CREATE_REQUEST } }
     function success(list,totalSize) { return { type: userConstants.CREATE_SUCCESS, list, totalSize} }
-    function failure(error) { return { type: userConstants.CREATE_FAILURE, error } }
+    function failure(error) { return { type: userConstants.CREATE_FAILURE, error} }
 }
 function getAll() {
     return dispatch => {
