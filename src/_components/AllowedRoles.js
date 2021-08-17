@@ -3,11 +3,15 @@ import { connect } from 'react-redux';
 function AllowedRoles(props)  {
     const user = props.user.user;
     const roles = user.roles instanceof Array ? user.roles : [user.roles]
-    const filteredArray = roles.filter(value => props.roles.includes(value));
+    const filteredArray = props.roles ? roles.filter(value => props.roles.includes(value)) : []; 
     if(filteredArray.length > 0) {
         return props.children;
     } else {
-        return ""
+        if(!props.roles &! roles) {
+            return props.children
+        } else {
+            return ""
+        }
     }
 }
 function mapState(state) {
