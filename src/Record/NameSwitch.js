@@ -9,7 +9,7 @@ class  NameSwitch extends React.Component {
         const user = JSON.parse(localStorage.getItem('user'));
         this.username = user.user.username
         let long = localStorage.getItem("nameswitch_"+this.username);
-        long = long == "true"
+        long = long === "true"
         this.props.set(long)
         this.state = {long}
     }

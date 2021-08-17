@@ -3,9 +3,6 @@ import { connect } from 'react-redux';
 const {recordToApi} = require("../_helpers")
 
 class  ConvertName extends React.Component {
-    constructor(props) {
-        super(props)
-    }
     render () {
         if(!this.props.nameswitch) {
             return this.props.value || ""

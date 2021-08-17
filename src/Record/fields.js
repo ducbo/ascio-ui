@@ -1,4 +1,4 @@
-export default {
+const fields =  {
 	A: {
 		list: [ 'Source', 'TTL' , 'Target'],
 		targetDescription: 'IPv4 Address',
@@ -55,3 +55,4 @@ export default {
 		text: "will redirect to"
 	}
 };
+export default fields

@@ -4,9 +4,6 @@ import { recordToApi } from '../_helpers';
 import fields from './fields';
 
 class  RecordInfo extends React.Component {
-    constructor(props) {
-        super(props);
-    }
     dotText() {
         if(!this.props.nameswitch) {
             const record = this.props.record
@@ -15,7 +12,6 @@ class  RecordInfo extends React.Component {
             if(dot && (record.Target.indexOf(".") > -1)) {
                 dotText = <span>Please add a  <b>dot</b> at the end for a targets outside of  <b>{this.props.zone}</b></span>
             }
-            console.log("done "+dotText)
             return dotText
         }    
     }

@@ -43,7 +43,7 @@ class PasswordResetPage extends React.Component {
     }
     sendUpdate = async (e) => {
         e.preventDefault()
-        const result = await this.props.updatePassword(this.state.username,this.token,this.state.password,this.state.code)
+        await this.props.updatePassword(this.state.username,this.token,this.state.password,this.state.code)
         if(!this.props.error) {
             history.push("/dns-manager")
         }
