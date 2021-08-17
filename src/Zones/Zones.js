@@ -85,10 +85,6 @@ class Zones extends React.Component {
     this.rootDescendants = this.props.rootDescendants
 
   }
-
-  onOwnerChange = (newOwner,a) => {
-      console.log("change",newOwner,a)
-  }
   getColumns = (users,selectableUsers) => {
     const columns1 = [{
       dataField: 'ZoneName',
@@ -140,11 +136,12 @@ class Zones extends React.Component {
     this.columns = columns1.concat(columns2,columns3)
     return this.columns
   }
-  deleteDialog(event) {
-    this.state.showDialog = true;
-    this.state.deleteZoneName = event.currentTarget.dataset.row
-    this.state.data = this.props.zones.data 
-    this.setState(this.state)
+  deleteDialog(e) {
+    this.setState(    {
+      showDialog : true,
+      deleteZoneName : e.currentTarget.dataset.row,
+      data : this.props.zones.data 
+    })
   }
   deleteZone() {
     const self = this
@@ -156,17 +153,14 @@ class Zones extends React.Component {
     })
   }
   closeDialog() {
-    this.state.showDialog = false;
-    this.setState(this.state)
+    this.setState({ showDialog : false })
   }
   componentDidMount() {
-    console.log("zone did mount", this.props.rootDescendants)
     const searchParameters = defaultZoneFilters(this.user.username)
     searchParameters.users = this.getImpersonated()
     this.props.filter(searchParameters,this.props.zones)
   }
   componentDidUpdate() {
-    console.log("zone did update", this.props.rootDescendants)
     // this.setState({options: this.props.rootDescendants})
     const searchParameters = defaultZoneFilters(this.user.username)
     searchParameters.users = this.getImpersonated()
@@ -179,7 +173,7 @@ class Zones extends React.Component {
     const self = this
     const queryArray = Object.keys(filters).map(filterName => {
       const filter = filters[filterName]
-      return "@" + filterName + "Search:" + filter.filterVal.replace(/\./g,"").replace(/\-/,"_")+"*"
+      return "@" + filterName + "Search:" + filter.filterVal.replace(/\./g,"").replace(/-/,"_")+"*"
     })
     const filter  = queryArray.length > 0 ? queryArray.join(" ") : "*"
     const users = this.getImpersonated();
@@ -199,7 +193,6 @@ class Zones extends React.Component {
     return this.props.impersonate || defaultZoneFilters(this.user.username).users || this.user.username 
   }
   render() {  
-    console.log("render zones", this.props.rootDescendants)   
     const page = this.props.filterParams ? this.props.filterParams.page : this.state.page
     const sizePerPage = this.props.filterParams ? this.props.filterParams.sizePerPage : this.state.sizePerPage
     let data = this.props.zones ? this.props.zones.data  : this.state.data
