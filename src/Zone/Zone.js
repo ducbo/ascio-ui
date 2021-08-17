@@ -91,9 +91,10 @@ class Zone extends React.Component {
     this.props.getRecords(this.props.match.params.zoneName)
   }
   deleteDialog(event) {
-    this.state.showDialog = true;
-    this.state.deleteId = event.currentTarget.id
-    this.setState(this.state)
+    this.setState({
+      showDialog : true,
+      deleteId : event.currentTarget.id
+    })
   }
   deleteRecord(event) {
     const {id} = event.target
@@ -102,13 +103,13 @@ class Zone extends React.Component {
     this.closeDialog()
   }
   closeDialog() {
-    this.state.showDialog = false;
-    this.setState(this.state)
+    this.setState({
+      showDialog : false
+    })
   }
   render() {     
     const { records } = this.props.records;
-    const  { data, sizePerPage, page } = this.state;
-    const {title,description,action} = this.state
+    const  { sizePerPage, page } = this.state;
     const zoneName = this.props.match.params.zoneName
     return (
         <NavProtected>
@@ -138,13 +139,12 @@ class Zone extends React.Component {
       ref="zonetable"
       data={ records }
       columns={ this.columns }
-      onTableChange={ console.log("Table has changed")}
       defaultSorted={ defaultSorted }
       filter={ filterFactory() }
       pagination={ paginationFactory({ page, sizePerPage }) }
       expandRow={{
         showExpandColumn: true,
-        renderer: row => (<Record data={{...row}} zone={zoneName} action = "update"></Record>)
+        renderer: row => (<Record data={{...row}} zone={zoneName} action = "update" key = {row.Id}></Record>)
       }}
     />
     <Button variant="secondary" onClick={this.backAction}>
