@@ -14,7 +14,6 @@ const useStyles = makeStyles((theme) => ({
 
 function Wait(props) {
   const classes = useStyles();
-  console.log("wait", props)
   if(props.progress || props.loading) {
     return (
         <div className={classes.root}>

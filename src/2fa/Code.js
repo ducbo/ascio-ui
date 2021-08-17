@@ -29,12 +29,9 @@ class Code extends React.Component {
         this.setState({code: value})
     }
     async submitCode() {        
-        const self = this;
         const {code} = this.state 
         const {username,password} = this.props.credentials
-        const result = await this.props.login(username, password, code, {activate2fa : this.props.qr !== undefined})
-        console.log("submitCode", result)      
-
+        await this.props.login(username, password, code, {activate2fa : this.props.qr !== undefined})
         if(this.props.loggedIn === true) {    
             const socket = socketIOClient(config.websocketUrl,{
                 transports: ['websocket']
@@ -59,7 +56,7 @@ class Code extends React.Component {
                 }
             </div>
             <button className="btn btn-primary" onClick={this.submitCode}>{buttonText}</button>
-            {" ",byPassButton}
+            {" "+byPassButton}
         </>
     }
 }
