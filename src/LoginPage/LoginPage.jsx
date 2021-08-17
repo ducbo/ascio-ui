@@ -1,10 +1,8 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import logo from '../logo-black.svg';
 import { userActions } from '../_actions';
-import { LoginButton, Code, QR } from '../2fa';
-import config from '../config';
+import { LoginButton, Code } from '../2fa';
 
 class LoginPage extends React.Component {
 	constructor(props) {
@@ -27,20 +25,16 @@ class LoginPage extends React.Component {
 		this.setState({ [name]: value });
 	}
 	render() {
-		const { loggingIn } = this.props;
 		const { username, password, submitted, code } = this.state;
 		const { alert } = this.props;
 
 		let alertHtml = alert && alert.message && <div className={`alert ${alert.type}`}>{alert.message}</div>;
 		let loginButton =
-			this.props.active2fa == false && this.props.force2fa == 'force' ? (
+			this.props.active2fa === false && this.props.force2fa === 'force' ? (
 				<LoginButton credentials={{ username, password, code }} />
 			) : (
 				''
 			);
-
-		const options = { transports: [ 'websocket' ] };
-		const uri = config.websocketUrl;
 		return (
 			<div className="login">
 				<img style={{ width: '100%' }} src={logo} alt="Logo" />
