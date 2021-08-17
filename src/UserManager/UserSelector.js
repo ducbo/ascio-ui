@@ -6,7 +6,6 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux';
 
 function UserSelector(props) {
-  const users = {}
   const getUser = (id) => {
     return {id, name : props.selectableUsers[id]} || {id:"",name:""};
   }

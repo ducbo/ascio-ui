@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { userActions } from '../_actions';
-import { Combobox } from 'react-widgets';
 import {TextInput,Email} from '../_fields'
 class UserForm extends Component {
 	constructor(props) {

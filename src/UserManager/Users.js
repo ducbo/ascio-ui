@@ -1,7 +1,7 @@
 import React from "react";
 import BootstrapTable from 'react-bootstrap-table-next';
 import paginationFactory from 'react-bootstrap-table2-paginator';
-import filterFactory, { textFilter, Comparator } from 'react-bootstrap-table2-filter';
+import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux';
 import { userActions } from '../_actions';
@@ -111,10 +111,11 @@ class Users extends React.Component {
     this.closeDialog = this.closeDialog.bind(this)  
   }
   deleteDialog(event) {
-    this.state.showDialog = true;
-    this.state.deleteUserName = event.currentTarget.dataset.row
-    this.state.data = this.props.list 
-    this.setState(this.state)
+    this.setState({
+      showDialog : false,
+      deleteUserName : event.currentTarget.dataset.row,
+      data : this.props.list 
+    })
   }
   deleteUser() {
     const self = this
@@ -125,8 +126,7 @@ class Users extends React.Component {
     })
   }
   closeDialog() {
-    this.state.showDialog = false;
-    this.setState(this.state)
+    this.setState({showDialog : false})
   }
   getImpersonated() {
     return this.props.impersonate || this.filters.users || this.user.username 
@@ -151,7 +151,7 @@ class Users extends React.Component {
     filters.type = { filterVal : this.filters.type}
     const queryArray = Object.keys(filters).map(filterName => {
       const filter = filters[filterName]
-      return "@" + filterName + ":" + filter.filterVal.replace(/\./g,"").replace(/\-/,"_")+"*"
+      return "@" + filterName + ":" + filter.filterVal.replace(/\./g,"").replace(/-/,"_")+"*"
     })
     const filter  = queryArray.length > 0 ? queryArray.join(" ") : "*"
     const users = this.getImpersonated();
