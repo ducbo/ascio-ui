@@ -73,7 +73,7 @@ function updateOwner(zoneName, owner){
 		return { type: zoneConstants.UPDATEOWNER_REQUEST, Id };
 	}
 	function success(zone) {
-		return { type: zoneConstants.UPDATEOWNER_SUCCESS, zone };
+		return { type: zoneConstants.UPDATEOWNER_SUCCESS, ...zone };
 	}
 	function failure(error,zoneName) {
 		return { type: zoneConstants.UPDATEOWNER_FAILURE, error, zoneName };
