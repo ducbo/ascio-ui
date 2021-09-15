@@ -31,15 +31,15 @@ function filter(searchParameters, oldZones) {
 function create(zoneName, owner, api,filters) {
 	return (dispatch) => {
 		dispatch(request());
-		zoneService
+		return zoneService
 			.create(zoneName,owner, api || "Ascio", filters)
-			.then((zones) => dispatch(success(zones,filters)), (error) => dispatch(failure(error.toString(),zoneName)));
+			.then((zones) => dispatch(success(zoneName, zones,filters)), (error) => dispatch(failure(error.toString(),zoneName)));
 	};
 	function request() {
 		return { type: zoneConstants.CREATE_REQUEST };
 	}
-	function success(zones,filterParams) {
-		return { type: zoneConstants.CREATE_SUCCESS, zones,filterParams };
+	function success(zoneName, zones,filterParams) {
+		return { type: zoneConstants.CREATE_SUCCESS, zoneName, zones,filterParams };
 	}
 	function failure(error,zoneName) {
 		return { type: zoneConstants.CREATE_FAILURE, error, zoneName };

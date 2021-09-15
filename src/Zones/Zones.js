@@ -5,7 +5,7 @@ import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
 import PropTypes from 'prop-types'
 import { history } from '../_helpers';
 import { connect } from 'react-redux';
-import { zoneActions } from '../_actions';
+import { zoneActions, alertActions } from '../_actions';
 import {defaultZoneFilters} from '../defaults.js'
 import {Modal, Button} from 'react-bootstrap'
 import { FaEdit, FaTrash } from 'react-icons/fa';
@@ -143,14 +143,14 @@ class Zones extends React.Component {
       data : this.props.zones.data 
     })
   }
-  deleteZone() {
-    const self = this
+  async deleteZone() {
     const searchParameters = defaultZoneFilters(this.user.username)
     searchParameters.users = this.getImpersonated()
-    this.props.deleteZone(this.state.deleteZoneName,searchParameters)
-    .then(() =>{
-      self.closeDialog();
-    })
+    this.props.progress("Deleting zone "+this.state.deleteZoneName)
+    this.closeDialog();
+    await this.props.deleteZone(this.state.deleteZoneName,searchParameters)
+    this.props.message(this.props.zoneMessage)
+
   }
   closeDialog() {
     this.setState({ showDialog : false })
@@ -231,13 +231,15 @@ class Zones extends React.Component {
 }
 const actionCreators = {
   filter: zoneActions.filter,
-  deleteZone: zoneActions.delete
+  deleteZone: zoneActions.delete,
+  message : alertActions.message,
+	progress: alertActions.progress,
 }
 function mapState(state) {
   const { user } = state.authentication;
-  const { zones,filterParams, refresh } = state.zones;
+  const { zones,filterParams, refresh,success, progress } = state.zones;
   const { rootDescendants, selectableUsers, descendants, impersonate } = state.usertree;
-  return { user, zones, filterParams, rootDescendants, selectableUsers, descendants,impersonate, refresh };
+  return { user, zones, filterParams, rootDescendants, selectableUsers, descendants,impersonate, refresh, zoneMessage : {success,progress} };
 }
 const connectedZones = connect(mapState, actionCreators)(Zones)
 export {connectedZones as Zones}

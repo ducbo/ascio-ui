@@ -2,8 +2,12 @@ import { recordConstants } from '../_constants';
 import { RecordInfo } from '../Record';
 import fields from '../Record/fields';
 
-export function records(state = { records: [] }, action) {
+export function records(state = { error: null, success: null, progress:null, loading:false, zoneName: null, records: [] }, action) {
 	let typeFields
+	state.error = null
+	state.success = null
+	state.progress = null
+	state.loading = false
 	switch (action.type) {
 		// get all records for a zone
 
@@ -96,24 +100,14 @@ export function records(state = { records: [] }, action) {
 			// remove deleted record from state
 			return {
 				zoneName: state.zoneName,
-				success: "Successfully deleted record. "+action.record.Id,
+				success: "Successfully deleted record. "+action.record.Id+" from zone "+state.zoneName,
 				records: state.records.filter((record) => record.Id !== action.record.Id)
 			};
 		case recordConstants.DELETE_FAILURE:
-			// remove 'deleting:true' property and add 'deleteError:[error]' property to record
 			return {
 				...state,
-				records: state.records.map((record) => {
-					if (record.Id === action.Id) {
-						// make copy of record without 'deleting:true' property
-						const { deleting, ...recordCopy } = record;
-						// return copy of record with 'deleteError:[error]' property
-						return { ...recordCopy, deleteError: action.error };
-					}
-
-					return record;
-				})
-			};
+				error: action.error				
+			}		
 		default:
 			return state;
 	}

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { userActions, userTreeActions } from '../_actions';
+import { userActions, userTreeActions,alertActions } from '../_actions';
 import { UserForm } from './UserForm';
 import {ResetQrButton,ResetPasswordButton} from '../2fa'
 import { Button } from 'react-bootstrap';
@@ -15,7 +15,9 @@ class UpdateUser extends Component {
 		this.setState({[e.target.name] : e.target.value});
 	}
 	onSubmit = async (e)  => {
+		this.props.progress("Updating user "+this.state.username)
 		await this.props.updateUser(this.state)
+		this.props.message(this.props.users)
 	}
 	setMessage = (type,message) => {
 		this.setState({message: {[type]: message}})
@@ -32,6 +34,8 @@ class UpdateUser extends Component {
 }
 
 const actionCreators = {
+	message : alertActions.message,
+	progress: alertActions.progress,	
 	updateUser: userActions.update,
 	refreshTree: userTreeActions.refresh
 };

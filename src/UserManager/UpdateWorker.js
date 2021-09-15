@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { workerActions, userTreeActions } from '../_actions';
+import { workerActions, userTreeActions, alertActions } from '../_actions';
 import { UserForm } from './UserForm';
 import {ResetQrButton,ResetPasswordButton} from '../2fa'
 import { Button } from 'react-bootstrap';
@@ -15,7 +15,10 @@ class UpdateWorker extends Component {
 		this.setState({[e.target.name] : e.target.value});
 	}
 	onSubmit = async (e)  => {
+		this.props.progress("Updating worker "+this.state.username)
 		await this.props.updateUser(this.state)
+		this.props.message(this.props.workers)
+
 	}
 	setMessage = (type,message) => {
 		this.setState({message: {[type]: message}})
@@ -32,14 +35,16 @@ class UpdateWorker extends Component {
 }
 
 const actionCreators = {
+	message : alertActions.message,
+	progress: alertActions.progress,
 	updateUser: workerActions.update,
 	refreshTree: userTreeActions.refresh
 };
 function mapState(state) {
-	const { users, authentication, records, usertree } = state;
+	const { workers, authentication, records, usertree } = state;
 	const { user } = authentication;
 	const { expanded } = usertree;
-	return { user, users, records, expanded };
+	return { user, workers, records, expanded };
 }
 const connectedUpdateWorker = connect(mapState, actionCreators)(UpdateWorker);
 export {connectedUpdateWorker as UpdateWorker};

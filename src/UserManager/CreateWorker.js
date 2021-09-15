@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import {  workerActions } from '../_actions';
+import {  workerActions, alertActions } from '../_actions';
 import { Button, Form, Col } from 'react-bootstrap';
 import { defaultWorkerFilters}  from '../defaults';
 import { AllowedRoles } from "../_components";
@@ -22,12 +22,13 @@ class CreateWorker extends React.Component {
 	}
 	submit = async () => {
 		const filters = defaultWorkerFilters(this.user.username) ;		
+		this.props.progress("Creating user "+this.state.username);
 		try {
 			await this.props.createWorker({...this.state, works_for : this.props.impersonate  || this.state.works_for  },filters);
 			this.setState({username : '', company : '', email: ''})
 		} catch (e) {
-
 		}
+		this.props.message(this.props.workers)
 	}
 	render() {	
 		return (      
@@ -62,14 +63,15 @@ class CreateWorker extends React.Component {
 	}
 }
 const actionCreators = {
+	message : alertActions.message,
+	progress: alertActions.progress,
 	createWorker: workerActions.create
 };
 function mapState(state) {
 	const { authentication,usertree,workers } = state;
 	const { user } = authentication;
 	const { impersonate } = usertree
-	const { error, success  } = workers
-	return { user,impersonate, error,success};
+	return { user,impersonate, workers};
 }
 const connectedCreateWorker = connect(mapState, actionCreators)(CreateWorker);
 export {connectedCreateWorker as CreateWorker};

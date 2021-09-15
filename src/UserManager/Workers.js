@@ -4,7 +4,7 @@ import paginationFactory from 'react-bootstrap-table2-paginator';
 import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux';
-import { workerActions } from '../_actions';
+import { workerActions, alertActions } from '../_actions';
 import {defaultWorkerFilters} from '../defaults.js'
 import {Modal, Button} from 'react-bootstrap'
 import { FaEdit, FaTrash } from 'react-icons/fa';
@@ -124,13 +124,13 @@ class Workers extends React.Component {
       data : this.props.list
     })
   }
-  deleteUser() {
+  async deleteUser() {
     const self = this
     const filters = this.props.filterParams || this.filters;
-    this.props.deleteUser(this.state.deleteUserName,filters)
-    .then(() =>{
-      self.closeDialog();
-    })
+    this.props.progress("Deleting user "+this.state.deleteUserName)
+    self.closeDialog();
+    await this.props.deleteUser(this.state.deleteUserName,filters)
+    this.props.message(this.props.workers)       
   }
   closeDialog() {
     this.setState({showDialog : false})
@@ -212,14 +212,16 @@ class Workers extends React.Component {
 }
 const actionCreators = {
   filter: workerActions.filter,
-  deleteUser: workerActions.delete
+  deleteUser: workerActions.delete,
+  message : alertActions.message,
+	progress: alertActions.progress
 }
 function mapState(state) {
   const { workers, authentication} = state
   const { user } = authentication
   const { list, filterParams, totalSize } = workers;
   const { impersonate } = state.usertree;
-  return { user : user.user , list, totalSize, filterParams, impersonate };
+  return { user : user.user , list, totalSize, filterParams, impersonate, workers };
 }
 const connectedWorkers = connect(mapState, actionCreators)(Workers)
 export {connectedWorkers as Workers}

@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { zoneActions } from '../_actions';
+import { zoneActions,alertActions } from '../_actions';
 import { Button, Form, Col } from 'react-bootstrap';
 import { Combobox } from 'react-widgets';
 import {defaultZoneFilters}  from '../defaults';
@@ -21,8 +21,14 @@ class CreateZone extends React.Component {
 		this.setState({[e.target.name] : e.target.value});
 	}
 	async submit() {
-		const filters = this.props.filterParams || defaultZoneFilters(this.user.username);
-		await this.props.createZone(this.state.zoneName, this.state.user.id, this.state.api, filters);
+		const self = this
+		const username = this.state.user.id
+		const filters = this.props.filterParams || defaultZoneFilters(username);
+		const message = this.props.message
+		this.props.progress("Creating zone "+this.state.zoneName+" for user "+ username);
+		await this.props.createZone(this.state.zoneName, username, this.state.api, filters);	
+		self.props.message(self.props.zones);
+		this.setState({zoneName : ""})
 	}
 	validate() {
 		if(! (this.state.zoneName && this.state.user)) {
@@ -65,7 +71,7 @@ class CreateZone extends React.Component {
 					<Form>
 						<Form.Row>
 							<Col>
-								<Form.Control name="zoneName" placeholder="Zonename" onChange={this.handleChange} />
+								<Form.Control name="zoneName" placeholder="Zonename" value={this.state.zoneName} onChange={this.handleChange} />
 							</Col>
 							<Col>
 								<Combobox onChange={onChange} valueField="id" textField="name" data={users} />
@@ -87,12 +93,14 @@ class CreateZone extends React.Component {
 	}
 }
 const actionCreators = {
+	message : alertActions.message,
+	progress: alertActions.progress,
 	createZone: zoneActions.create
 };
 function mapState(state) {
-	const { authentication } = state;
+	const { authentication, zones } = state;
 	const { user } = authentication;
-	const { zones, filterParams } = state.zones;
+	const {  filterParams } = zones;
 	const { rootDescendants } = state.usertree;
 	return { user, zones, filterParams, rootDescendants};
 }

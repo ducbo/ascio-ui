@@ -41,18 +41,18 @@ function create(user,filters) {
         return workerService.create(user,filters)
             .then(
                 result => { 
-                    dispatch(success(result.data, result.totalSize));
+                    dispatch(success(user, result.data, result.totalSize));
                 },
                 error => {
-                    dispatch(failure(error));
+                    dispatch(failure(user,error));
                     throw(error)
                 }
             );
     };
 
-    function request() { return { type: workerConstants.CREATE_REQUEST } }
-    function success(list,totalSize) { return { type: workerConstants.CREATE_SUCCESS, list, totalSize} }
-    function failure(error) { return { type: workerConstants.CREATE_FAILURE, error } }
+    function request(user) { return { type: workerConstants.CREATE_REQUEST ,user } }
+    function success(user, list,totalSize) { return { type: workerConstants.CREATE_SUCCESS, list, totalSize, user} }
+    function failure(user, error) { return { type: workerConstants.CREATE_FAILURE, error, user } }
 }
 function update(data) { 
     return dispatch => {

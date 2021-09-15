@@ -15,6 +15,22 @@ class UserForm extends Component {
     }
 	render() {
         return  <>
+            <TextInput
+               field="firstname"
+               name="Firstname"
+               data={this.state.data}
+               placeholder = "My Firstname"
+               description = "Please place your Firstname here"
+               onChange = {this.onChange}
+           />
+            <TextInput
+               field="lastname"
+               name="Lastname"
+               data={this.state.data}
+               placeholder = "My Lastname"
+               description = "Please place your Lastname here"
+               onChange = {this.onChange}
+           />
            <TextInput
                field="company"
                name="Company"
@@ -44,8 +60,6 @@ class UserForm extends Component {
 }
 
 const actionCreators = {
-	updateUser: userActions.update,
-	createUser: userActions.create
 };
 function mapState(state) {
 	const { users, authentication} = state;

@@ -1,6 +1,10 @@
 import { workerConstants } from '../_constants';
 
-export function workers(state = {}, action) {
+export function workers(state = {error : null, success : null, progress : null, loading : false}, action) {
+	state.error = null
+	state.success = null
+	state.progress = null
+	state.loading = false
 	switch (action.type) {
 
 		case workerConstants.SET_FILTER:
@@ -38,6 +42,7 @@ export function workers(state = {}, action) {
 				...state,
 				loading:false,
 				updatedUser: action.user,
+				success: "Updated "+action.user.username,
 				list: state.list.map((user) => {
 						if (user.username === action.user.username) {
 							return action.user;
@@ -56,14 +61,14 @@ export function workers(state = {}, action) {
 			return {
 				...state,
 				loading: true,
+				progress: "Creating user " + action.user.username
 			};
 		case workerConstants.CREATE_SUCCESS:
 			return {
 				...state,
-				loading:false,
 				list: action.list,
 				totalSize: action.totalSize,
-				error: null
+				success: "Created user " + action.user.username
 			};
 		case workerConstants.CREATE_FAILURE:
 			return {
@@ -75,7 +80,8 @@ export function workers(state = {}, action) {
 				// add 'deleting:true' property to user being deleted
 				return {
 				  ...state,
-				  loading: true,				  
+				  loading: true,
+				  progress: "Deleting user "+action.username,				  
 				  list: state.list.map(user =>
 					user.username === action.username
 					  ? { ...user, deleting: true }
@@ -87,6 +93,7 @@ export function workers(state = {}, action) {
 		return {
 			...state,
 			loading: false,
+			success: "Deleted user "+action.username,			
 			list: state.list.filter(user => user.username !== action.username)
 		};
 		case workerConstants.DELETE_FAILURE:
@@ -94,6 +101,7 @@ export function workers(state = {}, action) {
 		return {
 			...state,
 			loading:false,
+			error: action.error,
 			list: state.list.map(user => {
 			if (user.username === action.username) {
 				// make copy of user without 'deleting:true' property

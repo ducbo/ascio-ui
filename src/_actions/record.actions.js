@@ -72,8 +72,7 @@ function updateSocket(record){
 function _delete(zoneName, recordId) {
 	return (dispatch) => {
 		dispatch(request());
-
-		recordService
+		return recordService
 			.delete(zoneName, recordId)
 			.then((result) => dispatch(success(result)), (error) => dispatch(failure(error.toString())));
 	}

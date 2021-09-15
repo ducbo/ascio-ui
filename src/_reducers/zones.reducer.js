@@ -73,7 +73,7 @@ export function zones(state = { refresh: false, filterParams : {users : null}, z
 			return {
 				...state,
 				zones:action.zones,
-				success: "Zone successfully created.",
+				success: "Zone "+action.zoneName+" successfully created.",
 				filterParams:  { ...action.filterParams}
 				
 			};

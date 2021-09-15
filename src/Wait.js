@@ -35,13 +35,14 @@ function createStatus(state,module) {
 	return null
 }
 function mapState(state) {
-	return  createStatus(state,"zones") ||
+	return  	createStatus(state,"alert")  ||
+    createStatus(state,"zones") ||
 		createStatus(state,"records") ||
 		createStatus(state,"users") ||
 		createStatus(state,"workers") || 
 		createStatus(state,"authentication") || 
-		createStatus(state,"usertree") || 
-		createStatus(state,"alert")  
+		createStatus(state,"usertree") 
+	
 }
 const connectedWait = connect(mapState, {})(Wait)
 export default connectedWait  

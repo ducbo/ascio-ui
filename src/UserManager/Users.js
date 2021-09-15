@@ -117,13 +117,13 @@ class Users extends React.Component {
       data : this.props.list 
     })
   }
-  deleteUser() {
+  async deleteUser() {
     const self = this
     const filters = this.props.filterParams || this.filters;
-    this.props.deleteUser(this.state.deleteUserName,filters)
-    .then(() =>{
-      self.closeDialog();
-    })
+    this.props.progress("Deleting user "+this.state.deleteUserName)
+    await this.props.deleteUser(this.state.deleteUserName,filters)
+    this.props.message(this.props.users)  
+    self.closeDialog();
   }
   closeDialog() {
     this.setState({showDialog : false})

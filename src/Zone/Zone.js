@@ -6,7 +6,7 @@ import {ConvertName, Record} from '../Record'
 import {NameSwitch} from '../Record/NameSwitch'
 import {Modal, Button} from 'react-bootstrap'
 import { connect } from 'react-redux';
-import { recordActions } from '../_actions';
+import { recordActions, alertActions } from '../_actions';
 import NavProtected from '../NavProtected.js'
 import { history } from '../_helpers';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css'
@@ -95,11 +95,12 @@ class Zone extends React.Component {
       deleteId : event.currentTarget.id
     })
   }
-  deleteRecord(event) {
+  async deleteRecord(event) {
     const {id} = event.target
-    
-    this.props.deleteRecord(this.props.match.params.zoneName,id)
+    this.props.progress("Deleting record "+id+" from "+this.props.match.params.zoneName)
     this.closeDialog()
+    await this.props.deleteRecord(this.props.match.params.zoneName,id)
+    this.props.message(this.props.records)
   }
   closeDialog() {
     this.setState({
@@ -173,6 +174,8 @@ class Zone extends React.Component {
   }
 }
 const actionCreators = {
+  message : alertActions.message,
+	progress: alertActions.progress,
   getRecords: recordActions.getAll,
   deleteRecord: recordActions.delete,
   deleteUser: {}

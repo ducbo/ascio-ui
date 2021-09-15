@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { userActions } from '../_actions';
+import { userActions, alertActions } from '../_actions';
 import { Button, Form, Col } from 'react-bootstrap';
 import { defaultAccountFilters }  from '../defaults';
 import { AllowedRoles } from "../_components";
@@ -22,9 +22,11 @@ class CreateUser extends React.Component {
 	handleChange = (e) => {
 		this.setState({[e.target.name] : e.target.value});
 	}
-	submit = () => {
+	submit = async () => {
+		this.props.progress("Creating user "+this.state.username);
 		const filters =   defaultAccountFilters(this.user.username) ;		
-		this.props.createUser({...this.state, parent : this.props.impersonate },filters);
+		await this.props.createUser({...this.state, parent : this.props.impersonate },filters);
+		this.props.message(this.props.users)
 	}
 	render() {	
 		return (      
@@ -60,7 +62,9 @@ class CreateUser extends React.Component {
 	}
 }
 const actionCreators = {
-	createUser: userActions.create
+	createUser: userActions.create,
+	message : alertActions.message,
+	progress: alertActions.progress
 };
 function mapState(state) {
 	const { authentication,usertree } = state;
@@ -68,7 +72,7 @@ function mapState(state) {
 	const { error, success } = users;
 	const { user } = authentication;
 	const { impersonate } = usertree
-	return { user,impersonate, error, success };
+	return { user,impersonate, error, success, users };
 }
 const connectedCreateUser = connect(mapState, actionCreators)(CreateUser);
 export {connectedCreateUser as CreateUser};
