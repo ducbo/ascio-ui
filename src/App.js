@@ -68,8 +68,8 @@ class App extends React.Component {
 							case "delete" : action = "Deleted" ; break; 
 							default : break;
 						}
-						self.props.filter(defaultZoneFilters(self.props.user.user.username)); 
-						self.props.success(action + " zone: " + message.data.zone.ZoneName);						
+						//self.props.filter(defaultZoneFilters(self.props.user.user.username)); 
+						//self.props.success(action + " zone: " + message.data.zone.ZoneName);						
 					}
 				}) 
 			},1)						
