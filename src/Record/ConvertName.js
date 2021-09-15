@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from 'react-redux';
-const {recordToApi} = require("../_helpers")
+import {recordToApi} from "../_helpers"
 
 class  ConvertName extends React.Component {
     render () {
