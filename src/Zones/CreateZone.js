@@ -4,7 +4,6 @@ import { zoneActions } from '../_actions';
 import { Button, Form, Col } from 'react-bootstrap';
 import { Combobox } from 'react-widgets';
 import {defaultZoneFilters}  from '../defaults';
-import AlertSuccess from '../AlertSuccess';
 import { AllowedRoles } from "../_components";
 
 class CreateZone extends React.Component {
@@ -58,6 +57,7 @@ class CreateZone extends React.Component {
 		return (      
 			<div className="mb-1">
 			 <AllowedRoles roles={["admin","zone_editor"]}>
+			 <div className="card">
 			 <div className="card-header">
                     <h5>Create Zone</h5>
                 </div>
@@ -75,17 +75,10 @@ class CreateZone extends React.Component {
 							</Col>
 						</Form.Row>          
 						{api}
-						<Form.Row>
-							<Col className="mt-2">
-							<AlertSuccess 
-								success={this.props.success}
-								progress={this.props.progress}
-								error={this.props.error}
-							></AlertSuccess>
-							</Col>
-						</Form.Row>
 					</Form>
                 </div>
+			 </div>
+			
 			
 			 </AllowedRoles>
 
@@ -99,9 +92,9 @@ const actionCreators = {
 function mapState(state) {
 	const { authentication } = state;
 	const { user } = authentication;
-	const { zones, filterParams, progress, success, error } = state.zones;
+	const { zones, filterParams } = state.zones;
 	const { rootDescendants } = state.usertree;
-	return { user, zones, filterParams, rootDescendants, progress, success, error };
+	return { user, zones, filterParams, rootDescendants};
 }
 const connectedCreateZone = connect(mapState, actionCreators)(CreateZone);
 export {connectedCreateZone as CreateZone};

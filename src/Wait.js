@@ -24,10 +24,24 @@ function Wait(props) {
   return false;
 
 }
+function createStatus(state,module) {
+	if(!state[module]) {
+		return null
+	}
+	const  { loading } = state[module];
+	if(loading) {
+		return  { loading } 
+	}
+	return null
+}
 function mapState(state) {
-    const { progress } = state.zones;
-    const { loading } = state.records;
-    return {progress,loading};
+	return  createStatus(state,"zones") ||
+		createStatus(state,"records") ||
+		createStatus(state,"users") ||
+		createStatus(state,"workers") || 
+		createStatus(state,"authentication") || 
+		createStatus(state,"usertree") || 
+		createStatus(state,"alert")  
 }
 const connectedWait = connect(mapState, {})(Wait)
 export default connectedWait  

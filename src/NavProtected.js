@@ -8,10 +8,7 @@ import CustomerTreeItem from './TreeView.js'
 
 function NavProtected (props) {
 	const user = props.user.user
-	const className = `alert ${props.alert.type} fadeInDown animated`
-	window.setTimeout(() => {
-		if(props.message) props.clearAlerts()
-	},5000)
+	//const className = `alert ${props.alert.type} fadeInDown animated`
     return   <> 
 			<NavTop></NavTop>
 			<div className="container">
@@ -26,8 +23,7 @@ function NavProtected (props) {
 						{props.children}
 					</div>
 				</div>               
-				<Wait></Wait>
-				{props.message && <div style={{position:"absolute", marginLeft: "200px", top: "5px", left:"100px", padding: "3px 10px 3px 10px"}} className={className}>{props.message}</div>}
+				<Wait></Wait>				
 			</div>
 			</>
 }
@@ -35,7 +31,7 @@ function mapState(state) {
 	const {  authentication, alert } = state;
     const { user } = authentication;
     const { message, type } = alert;
-	return { alert, message, type, user,authentication };
+	return { message, type, user,authentication };
 }
 
 const actionCreators = {

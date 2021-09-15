@@ -6,7 +6,8 @@ export const zoneActions = {
     updateOwner,
 	delete: _delete,
 	filter,
-	sync
+	sync, 
+	refresh
 };
 
 function filter(searchParameters, oldZones) {	
@@ -82,18 +83,20 @@ function updateOwner(zoneName, owner){
 function _delete(zoneName, filters) {
 	return (dispatch) => {
 		dispatch(request());
-
 		return zoneService
 			.delete(zoneName, filters)
-			.then((zones) => dispatch(success(zones,filters)), (error) => dispatch(failure(error.toString(),zoneName)));
+			.then((zones) => dispatch(success(zones,filters,zoneName)), (error) => dispatch(failure(error.toString(),zoneName)));
 	}
 	function request() {
 		return { type: zoneConstants.DELETE_REQUEST };
 	}
-	function success(zones,filterParams) {
-		return { type: zoneConstants.DELETE_SUCCESS, zones,filterParams };
+	function success(zones,filterParams,zoneName) {
+		return { type: zoneConstants.DELETE_SUCCESS, zones,zoneName,filterParams };
 	}
 	function failure(error,zoneName) {
 		return { type: zoneConstants.DELETE_FAILURE, error, zoneName };
-	}
+	}	
+}
+function refresh() {
+	return { type: zoneConstants.REFRESH };
 }

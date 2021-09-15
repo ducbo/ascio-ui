@@ -6,6 +6,7 @@ import {
 	Redirect
 } from 'react-router-dom';
 import { connect } from 'react-redux';
+import {defaultZoneFilters}  from './defaults';
 import { history } from './_helpers';
 import { alertActions, userActions, recordActions, zoneActions } from './_actions';
 import { PrivateRoute } from './_components';
@@ -15,11 +16,9 @@ import { RegisterPage } from './RegisterPage';
 import {DnsManager} from './DnsManager';
 import {UserManager} from './UserManager';
 import {Zone} from './Zone';
-import {defaultZoneFilters}  from './defaults';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import { userTreeActions } from './_actions';
-
 
 class App extends React.Component {
 	constructor(props) {
@@ -70,7 +69,7 @@ class App extends React.Component {
 							default : break;
 						}
 						self.props.filter(defaultZoneFilters(self.props.user.user.username)); 
-						self.props.success(action + " zone" + message.data.zone.ZoneName);						
+						self.props.success(action + " zone: " + message.data.zone.ZoneName);						
 					}
 				}) 
 			},1)						
@@ -136,7 +135,8 @@ const actionCreators = {
 	updateRecordSocket : recordActions.updateSocket,
 	createRecordSocket : recordActions.createSocket,
 	deleteRecordSocket : recordActions.deleteSocket,
-	filter : zoneActions.filter
+	filter : zoneActions.filter,
+	refreshZones: zoneActions.refresh
 };
 
 const connectedApp = connect(mapState, actionCreators)(App);

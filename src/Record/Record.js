@@ -4,8 +4,9 @@ import { recordActions } from '../_actions';
 import { recordToApi, recordFromApi } from '../_helpers';
 import { TTL } from './TTL';
 import { RedirectionType } from './RedirectionType';
-import fields from './fields';
-import {RecordInfo}  from './RecordInfo';
+import { alertActions } from '../_actions'; 
+import { RecordInfo } from '.';
+import fields from '../Record/fields';
 
 class Record extends Component {
 	constructor(props) {
@@ -50,12 +51,16 @@ class Record extends Component {
 		);
 		return html;
 	}
-	handleSubmit() {
+	async handleSubmit() {		
 		if (this.state.Id) {
-			this.props.updateRecord(this.props.zone, this.state);
+			this.props.progress("Updating record in " + this.props.zone);
+			await this.props.updateRecord(this.props.zone, this.state);			
 		} else {
-			this.props.createRecord(this.props.zone, this.state);
+			this.props.progress("Creating record in " + this.props.zone);
+			await this.props.createRecord(this.props.zone, this.state);
+			this.setState({Source : "", Target: ""})
 		}
+		this.props.message(this.props.records)
 	}
 	renderField(field,data) {
 		const typeFields = fields[this.state._type];
@@ -104,6 +109,12 @@ class Record extends Component {
 		}
 		if(this.props.nameswitch) {
 			const newRecord = recordToApi(this.props.zone, {...this.state} , "Ascio")
+			if(newRecord.Target && (!newRecord.Target.indexOf(this.props.zone) && newRecord.Target.indexOf("."))) {
+				const last = newRecord.Target.slice(newRecord.Target.length - 1,  newRecord.Target.length)
+				if(last !== ".") {
+					newRecord.Target += "."
+				}
+			}
 			this.nameswitch =  this.props.nameswitch
 			this.setState({data: newRecord})
 			return newRecord
@@ -182,7 +193,7 @@ class Record extends Component {
 					<div className="col-md-8">
 						{' '}
 						<div className="alert alert-secondary" role="alert">
-							<RecordInfo record={{...self.state}} zone={self.props.zone} text={typeFields.text}></RecordInfo>
+							<RecordInfo record={{...self.state}} zone={self.props.zone} {...typeFields}></RecordInfo>
 						</div>
 					</div>
 				</div>
@@ -211,13 +222,14 @@ class Record extends Component {
 }
 
 const actionCreators = {
+	message : alertActions.message,
+	progress: alertActions.progress,
 	updateRecord: recordActions.update,
 	createRecord: recordActions.create
 };
 function mapState(state) {
-	const { users, authentication, records,nameswitch } = state;
-	const { user } = authentication;
-	return { user, users, records, nameswitch };
+	const { records,nameswitch } = state;
+	return { records, nameswitch };
 }
 const connectedRecord = connect(mapState, actionCreators)(Record);
 export { connectedRecord as Record };

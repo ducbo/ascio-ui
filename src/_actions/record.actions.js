@@ -32,9 +32,9 @@ function getAll(zoneName) {
 function create(zoneName, record) {
     return (dispatch) => {
 		dispatch(request());
-		recordService
+		return recordService
 			.create(zoneName,record)
-			.then((resultRecord) => dispatch(success(resultRecord)), (error) => dispatch(failure(error.toString())));
+			.then((resultRecord) => dispatch(success(resultRecord)), (error) => dispatch(failure(error.message || error.toString(), record.Id)));
 	};
 	function request() {
 		return { type: recordConstants.CREATE_REQUEST };
@@ -42,8 +42,8 @@ function create(zoneName, record) {
 	function success(record) {
 		return { type: recordConstants.CREATE_SUCCESS, record };
 	}
-	function failure(error,recordId) {
-		return { type: recordConstants.CREATE_FAILURE, error, recordId };
+	function failure(error) {
+		return { type: recordConstants.CREATE_FAILURE, error };
 	}
 }
 function createSocket(record){
@@ -52,8 +52,7 @@ function createSocket(record){
 function update(zoneName, record){
 	return (dispatch) => {
 		dispatch(request(record.Id));
-
-		recordService
+		return recordService
 			.update(zoneName,record)
 			.then((resultRecord) => dispatch(success(resultRecord)), (error) => dispatch(failure(error.toString(),record.Id)));
 	};

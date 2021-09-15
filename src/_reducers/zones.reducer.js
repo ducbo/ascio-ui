@@ -1,27 +1,30 @@
 import { zoneConstants } from '../_constants';
 
-export function zones(state = { filterParams : {users : null}, zones: {data :[] } }, action) {
+
+export function zones(state = { refresh: false, filterParams : {users : null}, zones: {data :[] } }, action) {
+	state.error = null
+	state.success = null
+	state.progress = null
+	state.loading = false
 	switch (action.type) {
 		// filter zones
 
 		case zoneConstants.FILTER_REQUEST:
 			return {
 				...state,
-				progress: "Loading search results",
 				loading: true, 
 				zones:action.zones
 			};
 		case zoneConstants.FILTER_SUCCESS:
 			return {
 				...state,
-				zones:action.zones,
-				progress: null,
+				zones:action.zones,				
 				filterParams: { ...action.filterParams}
 			};
 		case zoneConstants.FILTER_FAILURE:
 			return {
 				...state,
-				progress: null,
+				loading:false,
 				error: action.error
 			};
 
@@ -37,18 +40,16 @@ export function zones(state = { filterParams : {users : null}, zones: {data :[] 
 		case zoneConstants.UPDATEOWNER_SUCCESS:
 			return {
 				...state,
-				zones: state.zones.map((zone) => {
-					if (zone.zoneName !== action.zone.zoneName) {
-						return zone;
-                    }
-                    return {
-						...zone,
-						...action.zone
-					};
-				}),
-				progress: null,
-                loading: false,
-                success: true,
+				zones : {
+					data : state.zones.data.map((zone) => {
+						if (zone.ZoneName === action.zone.ZoneName) {
+							return { ...action.zone, key: zone.ZoneName};
+						} else {
+							return zone
+						}
+					})
+				},
+                success: "Owner of zone " + action.zone.ZoneName + " changed to "+ action.zone._clientName + ".",
                 zoneName: action.zoneName
 			};
 		case zoneConstants.UPDATEOWNER_FAILURE:
@@ -56,7 +57,6 @@ export function zones(state = { filterParams : {users : null}, zones: {data :[] 
 				...state,
                 zones: state.zones,
                 error: action.error,
-				progress: null,
                 zoneName: action.zoneName
 			};
 
@@ -73,7 +73,6 @@ export function zones(state = { filterParams : {users : null}, zones: {data :[] 
 			return {
 				...state,
 				zones:action.zones,
-				progress: null,
 				success: "Zone successfully created.",
 				filterParams:  { ...action.filterParams}
 				
@@ -82,7 +81,6 @@ export function zones(state = { filterParams : {users : null}, zones: {data :[] 
             return {
 				...state,
                 zones: state.zones,
-                progress: null,
 				error: action.error
 				
 			};;
@@ -97,14 +95,12 @@ export function zones(state = { filterParams : {users : null}, zones: {data :[] 
 		case zoneConstants.SYNC_SUCCESS:
 			return {
 				...state,
-				progress: null,
 				zones:action.zones,
 				success: "Zone successfully synced."
 			};
 		case zoneConstants.SYNC_FAILURE:
             return {                
 				...state,
-				progress: null,
                 error: action.error
 			};
 
@@ -123,18 +119,21 @@ export function zones(state = { filterParams : {users : null}, zones: {data :[] 
 			return {
 				...state,
 				zones:action.zones,
-				progress: null,
-				success: "Zone successfully deleted.",
+				success: "Zone "+action.zoneName+" successfully deleted.",
 				filterParams:  { ...action.filterParams}
 			};
 		case zoneConstants.DELETE_FAILURE:
 			// remove 'deleting:true' property and add 'deleteError:[error]' property to zone
 			return {
 				...state,
-				progress: null,
                 zones: state.zones,
                 error: action.error,
 			};
+		case zoneConstants.REFRESH: 
+			return {
+				...state,
+				refresh: ! state.refresh
+			}
 		default:
 			return state;
 	}

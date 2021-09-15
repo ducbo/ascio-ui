@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import {  workerActions } from '../_actions';
 import { Button, Form, Col } from 'react-bootstrap';
 import { defaultWorkerFilters}  from '../defaults';
-import AlertSuccess from '../AlertSuccess';
 import { AllowedRoles } from "../_components";
 
 class CreateWorker extends React.Component {
@@ -53,16 +52,7 @@ class CreateWorker extends React.Component {
 									<Col>                       
 										<Button onClick={this.submit}>Create Worker</Button>
 									</Col>
-								</Form.Row>          
-								<Form.Row>
-									<Col className="mt-2">
-									<AlertSuccess 
-										success={this.props.success}
-										progress={this.props.progress}
-										error={this.props.error}
-									></AlertSuccess>
-									</Col>
-								</Form.Row>
+								</Form.Row>        								
 							</Form>
 						</div>
 					</div>

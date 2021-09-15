@@ -55,7 +55,6 @@ body .MuiTreeItem-label
 .logout {
   float:right;
   text-align:right;
-  width: 100%;
   padding-right: 20px;
 }
 #nav-top a:link, #nav-top a:visited{
@@ -185,4 +184,10 @@ body .container {
 .container .name-notation-switch {
   margin-top: 20px;
   float: right;
+}
+#root .navi-alert {
+  margin-top:17px;
+  z-index: 100;
+  position: absolute;
+  margin-left: 275px;
 }

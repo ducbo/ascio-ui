@@ -4,7 +4,6 @@ import { workerActions, userTreeActions } from '../_actions';
 import { UserForm } from './UserForm';
 import {ResetQrButton,ResetPasswordButton} from '../2fa'
 import { Button } from 'react-bootstrap';
-import AlertSuccess from '../AlertSuccess';
 
 class UpdateWorker extends Component {
 	constructor(props) {
@@ -28,12 +27,6 @@ class UpdateWorker extends Component {
 					data = {this.state}
 				/>
 				<Button onClick = {this.onSubmit}>Update</Button> <ResetQrButton setMessage = {this.setMessage} username={this.state.username}/> <ResetPasswordButton setMessage = {this.setMessage} username={this.state.username}/>				
-				<AlertSuccess 
-					className="mt-2"
-                	success={this.state.message.success}
-                	progress={this.state.message.progress}
-                	error={this.state.message.error}
-              ></AlertSuccess>
 			</form>
 	}
 }

@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { userActions } from '../_actions';
 import { Button, Form, Col } from 'react-bootstrap';
 import { defaultAccountFilters }  from '../defaults';
-import AlertSuccess from '../AlertSuccess';
 import { AllowedRoles } from "../_components";
 
 class CreateUser extends React.Component {
@@ -50,16 +49,7 @@ class CreateUser extends React.Component {
                         <Col>                       
                             <Button onClick={this.submit}>CreateUser</Button>
                         </Col>
-                    </Form.Row>          
-					<Form.Row>
-						<Col className="mt-2">
-						<AlertSuccess 
-							success={this.props.success ? "User created" : null}
-							progress={this.props.progress}
-							error={this.props.error && this.props.error.message}
-						></AlertSuccess>
-						</Col>
-					</Form.Row>
+                    </Form.Row>         					
                 </Form>
         </div>
 </div>

@@ -1,4 +1,5 @@
 export * from './Record';
+export * from './RecordInfo';
 export * from './RedirectionType';
 export * from './TTL';
 export * from './NameSwitch';

@@ -26,10 +26,12 @@ export function users(state = {}, action) {
       };
     case userConstants.GETALL_SUCCESS:
       return {
+        loading:false,
         items: action.users
       };
     case userConstants.GETALL_FAILURE:
       return { 
+        loading:false,
         error: action.error
       };
       case userConstants.DELETE_REQUEST:
@@ -54,6 +56,7 @@ export function users(state = {}, action) {
 		// remove 'deleting:true' property and add 'deleteError:[error]' property to user 
 		return {
 			...state,
+      loading:false,
 			list: state.list.map(user => {
 			if (user.username === action.username) {
 				// make copy of user without 'deleting:true' property
@@ -73,7 +76,9 @@ export function users(state = {}, action) {
       case userConstants.UPDATE_SUCCESS:
         return {
           ...state,
+          loading:false,
           updatedUser: action.user,
+          success: "User updated: "+action.user.company,
           list: state.list.map((user) => {
               if (user.username === action.user.username) {
                 return action.user;
@@ -84,6 +89,7 @@ export function users(state = {}, action) {
       case userConstants.UPDATE_FAILURE:
         return { 
           ...state,
+          loading:false,
           error: action.error
         };
         
@@ -97,7 +103,7 @@ export function users(state = {}, action) {
           ...state,
           loading:false,
           list: action.list,
-          success: true,
+          success: "User created: "+action.user.company,
           totalSize: action.totalSize	
         };
       case userConstants.CREATE_FAILURE:
@@ -114,11 +120,13 @@ export function users(state = {}, action) {
       case userConstants.RESET_QR_SUCCESS: 
         return {
           username: action.username,
+          loading:false,
           message: action.message
         }
       case userConstants.RESET_QR_FAILURE: 
         return { 
           error: action.error,
+          loading:false,
           username: action.username
         };
       case userConstants.RESET_PASSWORD_REQUEST: 
@@ -128,10 +136,12 @@ export function users(state = {}, action) {
         }
       case userConstants.RESET_PASSWORD_SUCCESS: 
         return {
+          loading:false,
           username: action.username
         }
       case userConstants.RESET_PASSWORD_FAILURE: 
         return { 
+          loading:false,
           error: action.error,
           username: action.username
         };
@@ -142,26 +152,30 @@ export function users(state = {}, action) {
         }
       case userConstants.UPDATE_PASSWORD_SUCCESS: 
         return {
+          loading:false,
           username: action.username
         }
       case userConstants.UPDATE_PASSWORD_FAILURE: 
         return { 
+          loading:false,
           error: action.error,
           username: action.username
         };
       case userConstants.VERIFY_USER_TOKEN_REQUEST: 
         return {
-          loading: true,
           ...state,
+          loading: true,
           username: action.username
         }
       case userConstants.VERIFY_USER_TOKEN_SUCCESS: 
         return {
+          loading:false,
           username: action.username,
           qr: action.qr
         }
       case userConstants.VERIFY_USER_TOKEN_FAILURE: 
         return { 
+          loading:false,
           error: action.error,
           username: action.username,
           qr: action.qr

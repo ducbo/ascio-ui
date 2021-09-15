@@ -280,7 +280,7 @@ function create(user,filters) {
         return userService.create(user,filters)
             .then(
                 result => { 
-                    dispatch(success(result.data, result.totalSize));
+                    dispatch(success(result.data, result.totalSize,user));
                 },
                 error => {
                     dispatch(failure(error));
@@ -290,7 +290,7 @@ function create(user,filters) {
     };
 
     function request() { return { type: userConstants.CREATE_REQUEST } }
-    function success(list,totalSize) { return { type: userConstants.CREATE_SUCCESS, list, totalSize} }
+    function success(list,totalSize,user) { return { type: userConstants.CREATE_SUCCESS, list, totalSize, user} }
     function failure(error) { return { type: userConstants.CREATE_FAILURE, error} }
 }
 function getAll() {

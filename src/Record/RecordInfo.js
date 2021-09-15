@@ -16,12 +16,14 @@ class  RecordInfo extends React.Component {
         }    
     }
     render() {
+        const text = this.props.done ? this.props.textDone : this.props.text
         const record = this.props.record
         if ((record.Source && record.Target) || record._type === 'SOA') {
-            const newRecord = !this.props.nameswitch ? recordToApi(this.props.zone, {...record}, 'Ascio') : record;
+            //const newRecord = this.props.nameswitch ? recordToApi(this.props.zone, {...record}, 'Ascio') : record;
+            const newRecord =  recordToApi(this.props.zone, {...record}, 'Ascio');
             return (
                 <span>
-                    <b>{newRecord.Source}</b> {this.props.text} <b>{newRecord.Target}</b><br></br>
+                    <b>{newRecord.Source}</b> {text} <b>{newRecord.Target}</b><br></br>
                     {this.dotText()}
                 </span>
             );

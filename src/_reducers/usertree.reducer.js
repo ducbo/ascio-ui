@@ -1,8 +1,12 @@
 import { usertreeConstants } from '../_constants';
 
 export function usertree(state = {data: {}, descendants : [], rootDescendants : [], selectableUsers: {}, children : []}, action) {
+  state.error = null
+  state.success = null
+  state.progress = null
+  state.loading = false;
   switch (action.type) {
-    // refresh 
+    // refresh     
     case usertreeConstants.REFRESH: return {
       ...state, 
       refresh : ! state.refresh
@@ -95,11 +99,15 @@ export function usertree(state = {data: {}, descendants : [], rootDescendants : 
     case usertreeConstants.REFRESH_SUCCESS:
       return {
         ...state,
+        loading:false,
+        success:null,
+        error:null,
         data : action.usertree
       };
     case usertreeConstants.REFRESH_FAILURE:
       return { 
         ...state,
+        loading:false,
         error: action.error,
 
       };  

@@ -1,6 +1,9 @@
 import { recordConstants } from '../_constants';
+import { RecordInfo } from '../Record';
+import fields from '../Record/fields';
 
 export function records(state = { records: [] }, action) {
+	let typeFields
 	switch (action.type) {
 		// get all records for a zone
 
@@ -25,10 +28,12 @@ export function records(state = { records: [] }, action) {
 			return {
 				records: state.records,
 				zoneName: state.zoneName,
+				progress : "Updating record of "+state.zoneName,
 				loading: true
             };           
-		case recordConstants.UPDATE_SUCCESS:
-			return {
+		case recordConstants.UPDATE_SUCCESS:			
+			typeFields = fields[action.record._type]			
+			return {				
 				records: state.records.map((record) => {
 					if (record.Id !== action.record.Id) {
 						return record;
@@ -39,7 +44,7 @@ export function records(state = { records: [] }, action) {
 					};
 				}),
                 loading: false,
-                success: true,
+                success: <RecordInfo record={{...action.record}} zone={state.zoneName} {...typeFields} done={true}></RecordInfo>,
 				recordId: action.record.Id,
 				zoneName: state.zoneName
 			};
@@ -60,10 +65,11 @@ export function records(state = { records: [] }, action) {
 				loading: true
 			};
 		case recordConstants.CREATE_SUCCESS:
+			typeFields = fields[action.record._type]				
 			return {
                 records: [].concat([action.record],state.records), 
                 loading: false,
-                success: true,
+                success: <RecordInfo record={{...action.record}} zone={state.zoneName} {...typeFields} done={true}></RecordInfo>,
                 recordId: action.record.Id,
 				newRecord: true,
 				zoneName: state.zoneName
@@ -90,6 +96,7 @@ export function records(state = { records: [] }, action) {
 			// remove deleted record from state
 			return {
 				zoneName: state.zoneName,
+				success: "Successfully deleted record. "+action.record.Id,
 				records: state.records.filter((record) => record.Id !== action.record.Id)
 			};
 		case recordConstants.DELETE_FAILURE:

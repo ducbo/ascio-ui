@@ -7,7 +7,6 @@ export function workers(state = {}, action) {
 			return {
 				...state,
 				filterParams: action.filterParams,
-				loading: true
 			};
 		case workerConstants.FILTER_REQUEST:
 			return {
@@ -37,6 +36,7 @@ export function workers(state = {}, action) {
 		case workerConstants.UPDATE_SUCCESS:
 			return {
 				...state,
+				loading:false,
 				updatedUser: action.user,
 				list: state.list.map((user) => {
 						if (user.username === action.user.username) {
@@ -48,6 +48,7 @@ export function workers(state = {}, action) {
 		case workerConstants.UPDATE_FAILURE:
 			return {
                 ...state,
+				loading:false,
 				error: action.error
 			};
 
@@ -92,6 +93,7 @@ export function workers(state = {}, action) {
 		// remove 'deleting:true' property and add 'deleteError:[error]' property to user 
 		return {
 			...state,
+			loading:false,
 			list: state.list.map(user => {
 			if (user.username === action.username) {
 				// make copy of user without 'deleting:true' property

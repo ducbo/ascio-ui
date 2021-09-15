@@ -1,16 +1,34 @@
 import React from 'react';
 import { Alert } from 'react-bootstrap';
-
-class AlertSuccess extends React.Component {
-	render() {
-		const className = "in "+this.props.className
-		if (this.props.progress) {
-			return <Alert className={className} variant="secondary">{this.props.progress}</Alert>
-		} else if (this.props.success) {
-			return <Alert className={className} variant="success">{this.props.success}</Alert>
-		} else if (this.props.error) {
-			return <Alert className={className} variant="danger">{this.props.error}</Alert>
-		} else return ""
+import { connect } from 'react-redux';
+import { alertActions } from './_actions'; 
+function AlertSuccess (props) {
+	if( props.type==="alert-success" || props.type==="alert-danger") {
+		window.setTimeout(() => {
+			props.clear ()
+		},5000)
 	}
+	const className = "navi-alert  "+ (props.type || "")
+	if (props.type) {			
+		if (props.progress) {
+			return <Alert className={className} variant="primary">{props.progress || props.message}</Alert>
+		} else if (props.success) {
+			return <Alert className={className} variant="success">{props.success|| props.message}</Alert>
+		} else if (props.error) {
+			return <Alert className={className} variant="danger">{props.error}</Alert>
+		} else return  <Alert className={className} variant={props.variant}>{props.message}</Alert>
+	} else return ""
+
+
 }
-export default AlertSuccess;
+
+const actionCreators = {
+	clear: alertActions.clear
+}
+function mapState(state) {
+	const {alert} = state
+	const  { progress, success, error,message,type } = alert;
+	return  { progress, success, error,message,type } 
+}
+const connectedAlertSuccess = connect(mapState, actionCreators)(AlertSuccess);
+export default connectedAlertSuccess 
