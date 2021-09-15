@@ -6,21 +6,19 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux';
 
 function UserSelector(props) {
-  const getUser = (id) => {
-    return {id, name : props.selectableUsers[id]} || {id:"",name:""};
-  }
-  const [value, setValue] = React.useState(getUser(props.selected));
-    const onChange = (event,value) => {
+  const [value, setValue] = React.useState(props.selected);
+  const onChange = async  (event,value) => {
     setValue(value); 
-    props.onChange(value);
+    return props.onChange(value);
   }
   return (
     <Autocomplete
       id={props.id}
       options={props.rootDescendants}
-      getOptionSelected={(option) => option.id === value.id}
+      getOptionSelected={(option) =>  option.id === value.id}
       getOptionLabel={(option) => option.name ||""}
       value = {value}
+      //inputValue = {inputValue}
       onChange={onChange}
       size="small"
       renderInput={(params) => <TextField {...params}  variant="outlined" />}
@@ -29,13 +27,13 @@ function UserSelector(props) {
 }
 UserSelector.propTypes = {
     id: PropTypes.string.isRequired,
-    selected: PropTypes.string.isRequired,
+    selected: PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired
 };
 
 function mapState(state) {
-  const { rootDescendants,selectableUsers } = state.usertree;
-  return { rootDescendants,selectableUsers };
+  const { rootDescendants} = state.usertree;
+  return { rootDescendants };
 }
 const connectedUserSelector = connect(mapState)(UserSelector)
 export {connectedUserSelector as UserSelector}

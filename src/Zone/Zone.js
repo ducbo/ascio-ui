@@ -13,7 +13,6 @@ import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css'
 import 'react-widgets/dist/css/react-widgets.css';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 
-
 const selectOptions = {
     "A" : "A",
     "AAAA" : "AAAA",

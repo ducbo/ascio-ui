@@ -102,7 +102,7 @@ class Zones extends React.Component {
       formatter: (cellContent, row) => { 
         return <ZoneUserSelector
           zoneName={row.ZoneName}
-          selected = {row._clientId}
+          selected = {{ id : row._clientId, name : row._clientName}}
         ></ZoneUserSelector>
       
       }
@@ -158,7 +158,7 @@ class Zones extends React.Component {
   componentDidMount() {
     const searchParameters = defaultZoneFilters(this.user.username)
     searchParameters.users = this.getImpersonated()
-    this.props.filter(searchParameters,this.props.zones)
+    //this.props.filter(searchParameters,this.props.zones)
   }
   componentDidUpdate() {
     // this.setState({options: this.props.rootDescendants})
@@ -235,9 +235,9 @@ const actionCreators = {
 }
 function mapState(state) {
   const { user } = state.authentication;
-  const { zones,filterParams } = state.zones;
+  const { zones,filterParams, refresh } = state.zones;
   const { rootDescendants, selectableUsers, descendants, impersonate } = state.usertree;
-  return { user, zones, filterParams, rootDescendants, selectableUsers, descendants,impersonate };
+  return { user, zones, filterParams, rootDescendants, selectableUsers, descendants,impersonate, refresh };
 }
 const connectedZones = connect(mapState, actionCreators)(Zones)
 export {connectedZones as Zones}
