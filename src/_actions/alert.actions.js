@@ -24,7 +24,7 @@ function success(message) {
     return { type: alertConstants.SUCCESS, message };
 }
 function error(message) {
-    return { type: alertConstants.ERROR, message : message.message.response };
+    return { type: alertConstants.ERROR, message };
 }
 function progress(message) {
     return { type: alertConstants.PROGRESS, message };

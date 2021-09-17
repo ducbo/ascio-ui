@@ -111,7 +111,7 @@ function resetPassword(username) {
                     dispatch(success(username));                    
                 },
                 error => {
-                    dispatch(failure(error));
+                    dispatch(failure(error.message));
                  }
             );
     }    
