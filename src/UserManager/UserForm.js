@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { userActions } from '../_actions';
 import {TextInput,Email} from '../_fields'
 class UserForm extends Component {
 	constructor(props) {

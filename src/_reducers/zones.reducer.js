@@ -107,7 +107,6 @@ export function zones(state = { refresh: false, filterParams : {users : null}, z
 		// delete zone
 
 		case zoneConstants.DELETE_REQUEST:
-			// add 'deleting:true' property to zone being deleted
 			return {
 				...state,
 				progress: "Deleting zone. Please wait.",
@@ -115,7 +114,6 @@ export function zones(state = { refresh: false, filterParams : {users : null}, z
 				loading: true
 			};
 		case zoneConstants.DELETE_SUCCESS:
-			// remove deleted zone from state
 			return {
 				...state,
 				zones:action.zones,
@@ -123,7 +121,6 @@ export function zones(state = { refresh: false, filterParams : {users : null}, z
 				filterParams:  { ...action.filterParams}
 			};
 		case zoneConstants.DELETE_FAILURE:
-			// remove 'deleting:true' property and add 'deleteError:[error]' property to zone
 			return {
 				...state,
                 zones: state.zones,
