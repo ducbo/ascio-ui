@@ -186,8 +186,10 @@ body .container {
   float: right;
 }
 #root .navi-alert {
-  margin-top:17px;
+  margin-top:0;
   z-index: 100;
-  position: absolute;
-  margin-left: 275px;
+  position: fixed;
+  display:flex;
+  top:3px;
+  margin-left:260px;
 }
