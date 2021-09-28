@@ -66,7 +66,8 @@ class App extends React.Component {
 							case "create" : action = "Created" ; break; 
 							case "update" : action = "Updated" ; break; 
 							case "delete" : action = "Deleted" ; break; 
-							default : break;
+							case "sync" : action = "Synced" ; break; 
+							default : action = message.action;
 						}
 						self.props.filter(defaultZoneFilters(self.props.user.user.username)); 
 						self.props.success(action + " zone: " + message.data.zone.ZoneName);						
