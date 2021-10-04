@@ -44,7 +44,7 @@ class CreateZone extends React.Component {
 			self.setState({user});
 		};
 		const api = (
-			<AllowedRoles roles={["admin","zone_editor"]}>
+			<AllowedRoles roles={["admin"]}>
 				<Form.Row>
 					<Col md="5">
 						<Form.Label>API</Form.Label>
