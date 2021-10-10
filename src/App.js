@@ -8,6 +8,11 @@ import {
 import { connect } from 'react-redux';
 import {defaultZoneFilters}  from './defaults';
 import { history } from './_helpers';
+import ReactNotification from 'react-notifications-component' 
+import { store } from 'react-notifications-component';
+import 'react-notifications-component/dist/theme.css'
+import 'animate.css';
+
 import { alertActions, userActions, recordActions, zoneActions } from './_actions';
 import { PrivateRoute } from './_components';
 import { LoginPage } from './LoginPage';
@@ -73,6 +78,21 @@ class App extends React.Component {
 						self.props.success(action + " zone: " + message.data.zone.ZoneName);						
 					}
 				}) 
+				self.props.socket.on("ascio.log", function(data) {			
+					store.addNotification({
+						title: data.action.charAt(0).toUpperCase() + data.action.slice(1) + " "+ data.dataClass,
+						message: data.message ,
+						type: "success",
+						insert: "top",
+						container: "top-right",
+						animationIn: ["animate__animated", "animate__fadeIn"],
+						animationOut: ["animate__animated", "animate__fadeOut"],
+						dismiss: {
+						  duration: 5000,
+						  onScreen: true
+						}
+					  });
+				}) 
 			},1)						
 		}
 	}
@@ -102,6 +122,7 @@ class App extends React.Component {
 	render() {
 		return (
 			<> 
+				<ReactNotification/>
 				<Router history={history}>
 					<Switch>
 						<Route exact path="/" >
