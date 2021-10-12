@@ -32,5 +32,5 @@ const getFilters = function(name,defaultSortField) {
 export const defaultZoneFilters = getFilters("Zone","CreatedDate")
 export const defaultAccountFilters = getFilters("Account","created")
 export const defaultWorkerFilters = getFilters("Worker","created")
-export const defaultLogFilters = getFilters("Log","timeStamp")
+export const defaultLogFilters = getFilters("Log","CreatedDate")
 

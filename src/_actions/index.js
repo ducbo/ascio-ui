@@ -5,3 +5,4 @@ export * from './record.actions';
 export * from './zone.actions';
 export * from './usertree.actions';
 export * from './nameswitch.actions';
+export * from './log.actions';

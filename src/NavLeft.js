@@ -5,8 +5,11 @@ function NavLeft(props) {
     if (props.user) {
         return (
             <div id="nav-left">
-               <BlockLink href="/dns-manager" selected={props.selected}>Zones</BlockLink>
-               <AllowedRoles roles={["admin","user_editor"]}>
+                <AllowedRoles roles={["admin"]}>
+                    <BlockLink href="/logs" selected={props.selected}>Logs</BlockLink>
+                </AllowedRoles>
+                <BlockLink href="/dns-manager" selected={props.selected}>Zones</BlockLink>
+                <AllowedRoles roles={["admin","user_editor"]}>
                     <BlockLink href="/users" selected={props.selected}>Accounts</BlockLink>
                     <BlockLink href="/workers" selected={props.selected}>Workers</BlockLink>
                </AllowedRoles>         

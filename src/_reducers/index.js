@@ -9,6 +9,7 @@ import { users } from './users.reducer';
 import { workers } from './workers.reducer';
 import { alert } from './alert.reducer';
 import { nameswitch } from './nameswitch.reducer';
+import { log } from './log.reducer';
 
 const rootReducer = combineReducers({
   authentication,
@@ -19,7 +20,8 @@ const rootReducer = combineReducers({
   nameswitch,
   alert,
   usertree,
-  workers
+  workers,
+  log
 });
 
 export default rootReducer;

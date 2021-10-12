@@ -4,3 +4,4 @@ export * from './record.service';
 export * from './zone.service';
 export * from './usertree.service';
 export * from './nslookup.service';
+export * from './log.service';

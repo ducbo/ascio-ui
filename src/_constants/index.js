@@ -6,3 +6,4 @@ export * from './record.constants';
 export * from './usertree.constants';
 export * from './nameswitch.constants';
 export * from './nslookup.constants';
+export * from './log.constants';

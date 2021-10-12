@@ -13,12 +13,13 @@ import { store } from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css'
 import 'animate.css';
 
-import { alertActions, userActions, recordActions, zoneActions } from './_actions';
+import { alertActions, logActions, userActions, recordActions, zoneActions } from './_actions';
 import { PrivateRoute } from './_components';
 import { LoginPage } from './LoginPage';
 import { PasswordResetPage } from './PasswordResetPage';
 import { RegisterPage } from './RegisterPage';
 import {DnsManager} from './DnsManager';
+import {Log} from './Log';
 import {UserManager} from './UserManager';
 import {Zone} from './Zone';
 import './App.css';
@@ -78,9 +79,10 @@ class App extends React.Component {
 						self.props.success(action + " zone: " + message.data.zone.ZoneName);						
 					}
 				}) 
-				self.props.socket.on("ascio.log", function(data) {			
+				self.props.socket.on("ascio.log", function(data) {	
+					self.props.filterLogs(self.props.logFilters)		
 					store.addNotification({
-						title: data.action.charAt(0).toUpperCase() + data.action.slice(1) + " "+ data.dataClass,
+						title: data.action.charAt(0).toUpperCase() + data.action.slice(1) + " "+ data.dataClass + ": "+ data.objectName,
 						message: data.message ,
 						type: "success",
 						insert: "top",
@@ -128,6 +130,7 @@ class App extends React.Component {
 						<Route exact path="/" >
 							<Redirect to="/dns-manager" />
 						</Route>
+						<PrivateRoute path="/logs" exact component={Log} />
 						<PrivateRoute path="/dns-manager" exact component={DnsManager} />
 						<PrivateRoute path="/users" exact component={UserManager} />
 						<PrivateRoute path="/workers" exact component={UserManager} />
@@ -143,9 +146,10 @@ class App extends React.Component {
 	}
 }
 function mapState(state) {
-	const {  authentication,records  } = state;
+	const {  authentication,log,records  } = state;
+	const {  filters } = log;
 	const { user,socket,token } = authentication;	
-	return { user,authentication,socket,token,records};
+	return { user,authentication,socket,token,records, logFilters: filters};
 }
 
 const actionCreators = {
@@ -158,6 +162,7 @@ const actionCreators = {
 	createRecordSocket : recordActions.createSocket,
 	deleteRecordSocket : recordActions.deleteSocket,
 	filter : zoneActions.filter,
+	filterLogs : logActions.filter,
 	refreshZones: zoneActions.refresh
 };
 
