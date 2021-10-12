@@ -75,7 +75,7 @@ class LogTable extends React.Component {
       filter: dateFilter(),   
       sort: true
     }, {
-      dataField: 'loginUser.username',
+      dataField: 'loginUser__username',
       text: 'Login',
       sort: true,
       style : cellFormater,
