@@ -33,7 +33,7 @@ class FilterElement {
     isValid() {
         return this.name && this.value
     }
-    setTableFilter(name, filter) {
+    setTableFilter(filter) {
         return  this.setValue(filter.filterVal)           
     }
 }
