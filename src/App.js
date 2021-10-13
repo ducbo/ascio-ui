@@ -25,6 +25,7 @@ import {Zone} from './Zone';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import { userTreeActions } from './_actions';
+import { createMessage } from "./Messages"
 
 class App extends React.Component {
 	constructor(props) {
@@ -79,11 +80,15 @@ class App extends React.Component {
 						self.props.success(action + " zone: " + message.data.zone.ZoneName);						
 					}
 				}) 
-				self.props.socket.on("ascio.log", function(data) {	
-					self.props.filterLogs(self.props.logFilters)		
+				self.props.socket.on("ascio.log", function(data) {						
+					if(self.props.logFilters) {
+						self.props.filterLogs(self.props.logFilters)	
+					}
+					if(data.level !== "completed") return 
+					const message = createMessage(data)
 					store.addNotification({
-						title: data.action.charAt(0).toUpperCase() + data.action.slice(1) + " "+ data.dataClass + ": "+ data.objectName,
-						message: data.message ,
+						title: message.getTitle(),
+						message: message.getMessage(),
 						type: "success",
 						insert: "top",
 						container: "top-right",
