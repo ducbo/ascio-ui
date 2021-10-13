@@ -98,7 +98,8 @@ class Zones extends React.Component {
       style : {
         padding:"4px"
       },
-      filter: textFilter(),
+      headerStyle: {width:"300px"},
+      filter: textFilter(),      
       formatter: (cellContent, row) => { 
         return <ZoneUserSelector
           zoneName={row.ZoneName}
@@ -112,11 +113,13 @@ class Zones extends React.Component {
       dataField: 'CreatedDate',
       text: 'Created',
       type : 'date',
+      headerStyle: {width:"150px"},
       formatter : dateFormatter,
       sort: true,
     }, {
       dataField: 'Edit',
       text: 'Edit',
+      headerStyle: {width:"100px"},
       style : {
         padding:0
       },
@@ -130,6 +133,7 @@ class Zones extends React.Component {
         dataField: 'api',
         text: 'Api',
         sort: true,
+        headerStyle: {width:"200px"},
         filter: textFilter()
       }]
     }

@@ -49,6 +49,7 @@ class Zone extends React.Component {
     }, {
       dataField: '_type',
       text: 'Type',
+      headerStyle: {width:"120px"},
       filter: selectFilter({
         options: selectOptions,
         comparator: Comparator.EQ // default is Comparator.EQ
@@ -60,6 +61,7 @@ class Zone extends React.Component {
       text: 'Source',
       filter: textFilter(),    
       sort: true,
+      headerStyle: {width:"300px"},
       style: {wordWrap: "break-word"},
       formatter:  (cellContent, row) => { 
         return <ConvertName value={cellContent} record={row} zone={this.props.match.params.zoneName} keyName={"Source"}></ConvertName>
@@ -75,7 +77,8 @@ class Zone extends React.Component {
       }
     }, {
       dataField: 'Delete',
-      text: 'Delete',
+      headerStyle: {width:"100px"},
+      text: 'Actions',
       style : {
         padding:0
       },
