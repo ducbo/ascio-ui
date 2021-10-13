@@ -1,13 +1,14 @@
 import React from "react";
 import BootstrapTable from 'react-bootstrap-table-next';
 import paginationFactory from 'react-bootstrap-table2-paginator';
-import filterFactory, { textFilter, dateFilter } from 'react-bootstrap-table2-filter';
+import filterFactory, { textFilter, dateFilter, multiSelectFilter } from 'react-bootstrap-table2-filter';
 import { history,Filters } from '../_helpers';
 import { connect } from 'react-redux';
 import { logActions } from '../_actions';
 import {defaultLogFilters} from '../defaults.js'
 import {Modal, Button} from 'react-bootstrap'
 import { FaEye } from 'react-icons/fa';
+import {LogLevel} from './LogLevel'
 
 function dateFormatter (date, row) {    
     let month = date.getMonth() + 1;
@@ -21,25 +22,26 @@ function dateFormatter (date, row) {
     min = (min < 10 ? "0" : "") + min;
     return day + "." + month + "." + date.getFullYear() + " - " +hour + ":" + min
 }
+const selectOptions = {
+        "completed" : "completed",
+        "failed" : "failed",
+        "waiting" : "waiting",
+        "security" : "security", 
+        "error" : "error",        
+        "warn" : "warn",
+        "info" : "info",
+        "verbose" : "verbose",
+        "debug" : "debug"
+};
+const cellFormater  = (cell, row, rowIndex, colIndex,width) => {
+  let css = {
+    padding: 0,
+    paddingLeft:"15px",
+    verticalAlign: "middle"
+  } 
 
-const cellFormater  = (cell, row, rowIndex, colIndex) => {
-    switch (row.level) {
-        case "completed" : return {
-            backgroundColor: '#f5fff7'    
-        } 
-        case "failed" : return {
-            backgroundColor: '#fff5f5'    
-        } 
-        case "error" : return {
-            backgroundColor: '#fcebeb'    
-        } 
-        case "completed" : return {
-            backgroundColor: '#f5fff7'    
-        } 
-    }              
-  }
-
-
+    return css
+}
 const editButton = (cellContent) => {
   const target = cellContent.currentTarget.dataset.row
   history.push("/zone/" + target)
@@ -73,13 +75,15 @@ class LogTable extends React.Component {
       formatter: dateFormatter, 
       style : cellFormater,
       filter: dateFilter(),   
-      sort: true
+      sort: true,
+      headerStyle: {width:"180px"}
     }, {
       dataField: 'loginUser__username',
       text: 'Login',
       sort: true,
       style : cellFormater,
       filter: textFilter(),
+      headerStyle: {width:"135px"}
     
     }
 ,
@@ -88,14 +92,21 @@ class LogTable extends React.Component {
         text: 'Object',
         sort: true,
         style : cellFormater,
-        filter: textFilter(),      
+        filter: textFilter(), 
+        headerStyle: {width:"135px"}     
       },
       {
         dataField: 'level',
         text: 'Level',
         sort: true,
+        formatter: (cellContent) => {
+          return <LogLevel name={cellContent}></LogLevel>
+        },
         style: cellFormater,
-        filter: textFilter(),      
+        filter: multiSelectFilter({
+            options: selectOptions
+          }),
+        headerStyle: {width:"135px"}    
       },
       {
         dataField: 'message',
@@ -108,6 +119,7 @@ class LogTable extends React.Component {
         dataField: 'View',
         text: 'View',
         style : cellFormater,
+        headerStyle: {width:"70px"},
         formatter: (cellContent, row) => { return <><button title="Edit Zone" className="btn edit-button"  data-row={row.ZoneName} onClick={editButton}><FaEye  size="20px"></FaEye></button> </>}
       }
 ];
