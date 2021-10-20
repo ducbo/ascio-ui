@@ -12,6 +12,7 @@ import { history } from '../_helpers';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css'
 import 'react-widgets/dist/css/react-widgets.css';
 import { FaEdit, FaTrash } from 'react-icons/fa';
+import {LogTableZone} from '../Log'
 
 const selectOptions = {
     "A" : "A",
@@ -42,6 +43,7 @@ class Zone extends React.Component {
     } 
     this.deleteRecord = this.deleteRecord.bind(this)    
     this.closeDialog = this.closeDialog.bind(this)  
+    this.zoneName = this.props.match.params.zoneName
     this.columns = [{
       dataField: 'Id',
       text: 'ID',    
@@ -129,7 +131,7 @@ class Zone extends React.Component {
 </div>
       
         
-        <div className="card record-inputs">
+<div className="card record-inputs">
   <div className="card-header">
   <h5>Edit Records</h5>
   </div>
@@ -150,6 +152,7 @@ class Zone extends React.Component {
         renderer: row => (<Record data={{...row}} zone={zoneName} action = "update" key = {row.Id}></Record>)
       }}
     />
+
     <Button variant="secondary" onClick={this.backAction}>
             Back to Search Zones
     </Button>
@@ -157,7 +160,15 @@ class Zone extends React.Component {
     
   </div>
 </div>   
-   
+  <div className="card record-inputs">
+  <div className="card-header">
+  <h5>Zone History</h5>
+  </div>
+  <div className="card-body card-table">
+  <LogTableZone zoneName={this.zoneName}></LogTableZone>
+    
+  </div>
+</div>   
       <Modal  style={{opacity:1}} show={this.state.showDialog} onHide={this.closeDialog}>
           <Modal.Header closeButton>
             <Modal.Title>Delete record from {zoneName}</Modal.Title>
