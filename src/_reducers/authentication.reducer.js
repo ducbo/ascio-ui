@@ -68,6 +68,7 @@ export function authentication(state = initialState, action) {
       return {
           alert: {message: "Session expired."},
           code: action.error.code,
+          loggedIn: false,
           user: null
       };
     // GETQR
