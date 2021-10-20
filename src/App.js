@@ -14,6 +14,7 @@ import 'react-notifications-component/dist/theme.css'
 import 'animate.css';
 
 import { alertActions, logActions, userActions, recordActions, zoneActions } from './_actions';
+import {ReAuth} from './_helpers';
 import { PrivateRoute } from './_components';
 import { LoginPage } from './LoginPage';
 import { PasswordResetPage } from './PasswordResetPage';
@@ -32,26 +33,18 @@ class App extends React.Component {
 		super(props);
 		this.user = this.props.user ? this.props.user.user : localStorage.getItem('user');
 		const self = this;
-		let timer;		
+		const re =  React.createElement("h2",ReAuth)
+		let timer;						
 		const reAuth =  function() {
 			timer = window.setTimeout(async () => {				
-				if(props.user) {
+				if(window.location.pathname !== "/login" && props.user) {
 					await props.reAuth();
-					if(props.user) {
-						self.reconnectSocket(props.user.token );
-					} else {
-						window.clearTimeout(timer)
-					}
-					reAuth()
-				}
-				
-			}, 60*10*1000)
+					self.reconnectSocket(props.user.token );
+				}		
+				reAuth()
+			}, 60*10*1000) 
 		}
 		reAuth()
-		history.listen((location, action) => {
-			//clear alert on location change
-			//this.props.clearAlerts();
-		});
 	}
 	componentDidMount() {
 		if(this.props.user) {	
@@ -88,14 +81,16 @@ class App extends React.Component {
 					const message = createMessage(data)
 					store.addNotification({
 						title: message.getTitle(),
+						id: data.key,
 						message: message.getMessage(),
 						type: "success",
 						insert: "top",
 						container: "top-right",
 						animationIn: ["animate__animated", "animate__fadeIn"],
-						animationOut: ["animate__animated", "animate__fadeOut"],
+						animationOut: ["animate__animated", "animate__fadeOut"],						
 						dismiss: {
 						  duration: 5000,
+						  pauseOnHover: true,
 						  onScreen: true
 						}
 					  });
