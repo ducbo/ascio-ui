@@ -1,4 +1,4 @@
-class Range {
+export class Range {
     setFrom(from, include) {
         this.from = from
         this.includeFrom = include === undefined ? true : false
@@ -13,7 +13,7 @@ class Range {
         return this.to || this.from
     }
 }
-class FilterElement {
+export class FilterElement {
     constructor(name) {
         this.name = name 
         this.type = this.constructor.name
@@ -37,7 +37,7 @@ class FilterElement {
         return  this.setValue(filter.filterVal)           
     }
 }
-class RangeFilterElement extends FilterElement {
+export class RangeFilterElement extends FilterElement {
     constructor (name) {
         super(name)
         this.range = new Range()
@@ -47,7 +47,7 @@ class RangeFilterElement extends FilterElement {
         return this.name && this.range.isValid() && this.operator
     }
 }
-class DateFilterElement extends RangeFilterElement {
+export class DateFilterElement extends RangeFilterElement {
     setTableFilter(filter) {
         const value = filter.filterVal
         this.operator = value.comparator
@@ -63,6 +63,7 @@ class DateFilterElement extends RangeFilterElement {
             case "=" :  this.range.setFrom(currentDay.getTime()).setTo(nextDay.getTime()); break
             case "<" : this.range.setTo(currentDay.getTime(),false); break
             case "<=" : this.range.setTo(nextDay.getTime()); break
+            default: this.range.setFrom(currentDay.getTime()) 
         }
         return this
     }
@@ -83,9 +84,13 @@ export class Filters {
             }
             filterElement.setTableFilter(filter)
             if(filterElement.isValid()) {
-                this.items[filterName] = filterElement
+                this.addFilter(filterName, filterElement)
             }            
         }
+    }
+    addFilter(name, filterElement) {
+        filterElement.setName(name)
+        this.items[name] = filterElement
     }
     get() {
         return this.items
