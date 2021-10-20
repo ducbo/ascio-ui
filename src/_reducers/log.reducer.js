@@ -15,13 +15,13 @@ export function log(state = { filters:null, error: null, success: null, progress
 				filters: action.filters || state.filters
 			};
 		case logConstants.FILTER_SUCCESS:
-			action.logs.data = action.logs.data.map((entry) => {
+			action.logs.data = action.logs && action.logs.data.map((entry) => {
 				entry.CreatedDate = new Date(parseInt(entry.CreatedDate))
 				return entry
 			})
 			return {
 				...state,
-				...action.logs				
+				...action.logs 				
 			};
 		case logConstants.FILTER_FAILURE:
 			return {
