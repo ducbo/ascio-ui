@@ -12,6 +12,7 @@ export class Range {
     isValid() {
         return this.to || this.from
     }
+
 }
 export class FilterElement {
     constructor(name) {
@@ -63,7 +64,7 @@ export class DateFilterElement extends RangeFilterElement {
             case "=" :  this.range.setFrom(currentDay.getTime()).setTo(nextDay.getTime()); break
             case "<" : this.range.setTo(currentDay.getTime(),false); break
             case "<=" : this.range.setTo(nextDay.getTime()); break
-            default: this.range.setFrom(currentDay.getTime()) 
+            default: this.range.setFrom(currentDay.getTime()).setTo(nextDay.getTime()); break
         }
         return this
     }
