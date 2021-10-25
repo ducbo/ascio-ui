@@ -2,7 +2,13 @@ import React from 'react';
 import { Alert } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { alertActions } from './_actions'; 
+import {  FaExclamationTriangle, FaCheck, FaTimes, FaClock, FaLock, FaInfo, FaComments, FaBug } from 'react-icons/fa';
 function AlertSuccess (props) {
+	const iconMap = {
+		"alert-info" : <FaClock/>,
+		"alert-success" : <FaCheck/>,
+		"alert-danger" : <FaTimes/>
+	}
 	if( props.type==="alert-success" || props.type==="alert-danger") {
 		window.setTimeout(() => {
 			props.clear ()
@@ -16,7 +22,7 @@ function AlertSuccess (props) {
 			return <Alert className={className} variant="success">{props.success|| props.message}</Alert>
 		} else if (props.error) {
 			return <Alert className={className} variant="danger">{props.error}</Alert>
-		} else return  <Alert className={className} variant={props.variant}>{props.message}</Alert>
+		} else return  <Alert className={className} variant={props.variant}>{iconMap[props.type]}{props.type}{props.message}</Alert>
 	} else return ""
 
 
