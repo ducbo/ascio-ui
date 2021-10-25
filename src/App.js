@@ -7,7 +7,7 @@ import {
 } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {defaultZoneFilters}  from './defaults';
-import { history } from './_helpers';
+import { history, notify } from './_helpers';
 import ReactNotification from 'react-notifications-component' 
 import { store } from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css'
@@ -79,21 +79,8 @@ class App extends React.Component {
 					}
 					if(data.level !== "completed") return 
 					const message = createMessage(data)
-					store.addNotification({
-						title: message.getTitle(),
-						id: data.key,
-						message: message.getMessage(),
-						type: "success",
-						insert: "top",
-						container: "top-right",
-						animationIn: ["animate__animated", "animate__fadeIn"],
-						animationOut: ["animate__animated", "animate__fadeOut"],						
-						dismiss: {
-						  duration: 5000,
-						  pauseOnHover: true,
-						  onScreen: true
-						}
-					  });
+					notify(message.getTitle(), message.getMessage(), data.key)
+					notify(message.getTitle(), message.getMessage(), data.key)
 				}) 
 			},1)						
 		}
