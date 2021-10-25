@@ -12,7 +12,7 @@ const getFilters = function(name,defaultSortField) {
 			if(!result.sizePerPage || result.sizePerPage < 1) result.sizePerPage=10;
 			if(!result.sortField ) result.sortField=defaultSortField;
 			if(!result.sortOrder) result.sortOrder="asc";
-			result.filter="*";
+			if(!result.filter) result.filter="*";
 			if(impersonated) result.users = impersonated
 			return result
 		} else {

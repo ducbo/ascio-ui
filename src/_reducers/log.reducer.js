@@ -1,6 +1,6 @@
 import { logConstants } from '../_constants';
 
-export function log(state = { filters:null, error: null, success: null, progress:null, loading:false, zoneName: null, logs: [] }, action) {
+export function log(state = { filters:null, error: null, success: null, progress:null, loading:false, zoneName: null, data: [] }, action) {
 	state.error = null
 	state.success = null
 	state.progress = null
