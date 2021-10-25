@@ -62,7 +62,7 @@ class RemoteTableService extends React.Component {
       JSON.stringify(this.search)
     )
     // prepare filters
-    const request = { ...this.search, filter: this.getFilters().get() }
+    const request = { ...this.search, filter: this.getFilters(filters).get() }
     delete request.filters
     // send request
     await this.props.filterAction(request)
