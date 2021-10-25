@@ -1,4 +1,7 @@
 function dateFormatter (date, row) {
+    if(! (date instanceof Date)) {
+      date = new Date(parseInt(date))
+    }
     let month = date.getMonth() + 1
     let day = date.getDate()
     let hour = date.getHours()
