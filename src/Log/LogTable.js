@@ -94,12 +94,17 @@ const columns = (searchParameters) => {
   ]
 }
 
-class LogTable extends React.Component {
+class LogTable extends React.Component {  
   render () {
+    console.log("render")
+    const data = this.props.data || []
+    const totalSize = this.props.totalSize || 0
     return <RemoteTableService
     columns = {columns}
     filterAction = {this.props.filter}
     name = "Log"
+    data = {data}
+    totalSize = {totalSize}
     defaultFilters = {defaultLogFilters}
   ></RemoteTableService>
   }
@@ -108,5 +113,10 @@ class LogTable extends React.Component {
 const actionCreators = {
   filter: logActions.filter
 }
-const connectedLogTable = connect(null, actionCreators)(LogTable)
+function mapState (state) {
+  const { data, totalSize } = state.log  
+  const { impersonate } = state.usertree
+  return { data,  totalSize, impersonate}
+}
+const connectedLogTable = connect(mapState, actionCreators)(LogTable)
 export { connectedLogTable as LogTable }

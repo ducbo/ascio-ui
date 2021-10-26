@@ -48,6 +48,12 @@ class RemoteTableService extends React.Component {
     }
 
   }
+  componentDidUpdate() {
+    const filters = this.props.defaultFilters(this.user.username)
+    console.log("change table:",this.search)
+    this.search.users = this.getImpersonated()
+    this.handleTableChange("filter",this.search)
+  }
   handleTableChange = async (type, {page,sizePerPage,filters,sortField,sortOrder}) => {
     filters = type === "sort" ? this.search.filters : filters
     this.search = { users: this.search.users, page,sizePerPage,filters,sortField,sortOrder }
@@ -84,7 +90,6 @@ class RemoteTableService extends React.Component {
         onTableChange={this.handleTableChange}
         columns={this.props.columns}
         searchParameters={this.search}
-        additionalFilters = {this.props.additionalFilters}
       />
     )
   }
@@ -94,13 +99,15 @@ RemoteTableService.propTypes = {
   name: PropTypes.string.isRequired,
   filterAction : PropTypes.func.isRequired,
   defaultFilters : PropTypes.func.isRequired,
-  additionalFilters : PropTypes.func
+  additionalFilters : PropTypes.func,
+  data : PropTypes.array.isRequired,
+  totalSize : PropTypes.number.isRequired
 }
 function mapState (state) {
   const { user } = state.authentication
   const { data, totalSize } = state.log
   const { impersonate } = state.usertree
-  return { user: user.user, impersonate, data, totalSize }
+  return { user: user.user, impersonate}
 }
 const connectedRemoteTableService = connect(mapState, {})(RemoteTableService)
 export { connectedRemoteTableService as RemoteTableService }
