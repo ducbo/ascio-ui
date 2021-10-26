@@ -3,14 +3,13 @@ import BootstrapTable from 'react-bootstrap-table-next'
 import paginationFactory from 'react-bootstrap-table2-paginator'
 import filterFactory from 'react-bootstrap-table2-filter'
 import { connect } from 'react-redux'
-import {  Entry } from '../Log'
 import { Filters } from '../_helpers'
 import equal from 'deep-equal'
 import PropTypes from 'prop-types'
 
 
 
-const RemoteTable = ({ data, page, sizePerPage, onTableChange, totalSize, defaultSorted, columns, searchParameters }) => (
+const RemoteTable = ({ data, page, sizePerPage, onTableChange, totalSize, defaultSorted, columns, searchParameters, expandRow}) => (
   <BootstrapTable
     bootstrap4
     remote
@@ -24,10 +23,7 @@ const RemoteTable = ({ data, page, sizePerPage, onTableChange, totalSize, defaul
     filter={filterFactory()}
     pagination={paginationFactory({ page, sizePerPage, totalSize })}
     onTableChange={onTableChange}
-    expandRow={{
-      showExpandColumn: true,
-      renderer: row => <Entry data={{ ...row }} key={row.Id}></Entry>
-    }}
+    expandRow={expandRow}
   />
 )
 RemoteTable.propTypes = {
@@ -35,7 +31,8 @@ RemoteTable.propTypes = {
   page: PropTypes.number.isRequired,
   totalSize: PropTypes.number.isRequired,
   sizePerPage: PropTypes.number.isRequired,
-  onTableChange: PropTypes.func.isRequired
+  onTableChange: PropTypes.func.isRequired,
+  expandRow: PropTypes.object
 }
 class RemoteTableService extends React.Component {
   constructor (props) {
@@ -49,8 +46,6 @@ class RemoteTableService extends React.Component {
 
   }
   componentDidUpdate() {
-    const filters = this.props.defaultFilters(this.user.username)
-    console.log("change table:",this.search)
     this.search.users = this.getImpersonated()
     this.handleTableChange("filter",this.search)
   }
@@ -90,6 +85,7 @@ class RemoteTableService extends React.Component {
         onTableChange={this.handleTableChange}
         columns={this.props.columns}
         searchParameters={this.search}
+        expandRow={this.props.expandRow}
       />
     )
   }
@@ -101,7 +97,8 @@ RemoteTableService.propTypes = {
   defaultFilters : PropTypes.func.isRequired,
   additionalFilters : PropTypes.func,
   data : PropTypes.array.isRequired,
-  totalSize : PropTypes.number.isRequired
+  totalSize : PropTypes.number.isRequired,
+  expandRow : PropTypes.object
 }
 function mapState (state) {
   const { user } = state.authentication

@@ -7,6 +7,8 @@ import { LogLevel } from '.'
 import {RemoteTableService} from '../_components'
 import {getDefaultFilter, dateFormatter, cellFormater} from '../_helpers'
 import { defaultLogFilters } from '../defaults.js'
+import {  Entry } from '../Log'
+
 
 const actions = {
   "create" : "create",
@@ -106,6 +108,10 @@ class LogTable extends React.Component {
     data = {data}
     totalSize = {totalSize}
     defaultFilters = {defaultLogFilters}
+    expandRow = {{
+      showExpandColumn: true,
+      renderer: row => <Entry data={{ ...row }} key={row.Id}></Entry>
+    }}
   ></RemoteTableService>
   }
 
