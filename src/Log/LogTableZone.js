@@ -82,6 +82,8 @@ class LogTableZone extends React.Component {
 				columns={columns}
 				filterAction={this.props.filter}
 				name="Log"
+				data={this.props.data}
+				totalSize={this.props.totalSize}
 				defaultFilters={defaultLogFilters}
 				additionalFilters={this.getFilters}
 			/>
@@ -91,6 +93,10 @@ class LogTableZone extends React.Component {
 const actionCreators = {
   filter: logActions.filter
 }
-const connectedLogTableZone = connect(null, actionCreators)(LogTableZone)
+function mapState (state) {
+	const { data, totalSize } = state.log  
+	return { data,  totalSize}
+  }
+const connectedLogTableZone = connect(mapState, actionCreators)(LogTableZone)
 export { connectedLogTableZone as LogTableZone }
 
