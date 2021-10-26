@@ -22,7 +22,7 @@ function AlertSuccess (props) {
 			return <Alert className={className} variant="success">{props.success|| props.message}</Alert>
 		} else if (props.error) {
 			return <Alert className={className} variant="danger">{props.error}</Alert>
-		} else return  <Alert className={className} variant={props.variant}>{iconMap[props.type]}{props.type}{props.message}</Alert>
+		} else return  <Alert className={className} variant={props.variant}>{iconMap[props.type]}{props.message}</Alert>
 	} else return ""
 
 
