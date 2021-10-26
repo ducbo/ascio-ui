@@ -12,19 +12,16 @@ export function zones(state = { refresh: false, filterParams : {users : null}, z
 		case zoneConstants.FILTER_REQUEST:
 			return {
 				...state,
-				loading: true, 
-				zones:action.zones
+				loading: true
 			};
 		case zoneConstants.FILTER_SUCCESS:
 			return {
 				...state,
-				zones:action.zones,				
-				filterParams: { ...action.filterParams}
+				zones:action.zones								
 			};
 		case zoneConstants.FILTER_FAILURE:
 			return {
 				...state,
-				loading:false,
 				error: action.error
 			};
 
@@ -117,8 +114,7 @@ export function zones(state = { refresh: false, filterParams : {users : null}, z
 			return {
 				...state,
 				zones:action.zones,
-				success: "Zone "+action.zoneName+" successfully deleted.",
-				filterParams:  { ...action.filterParams}
+				success: "Zone "+action.zoneName+" successfully deleted."
 			};
 		case zoneConstants.DELETE_FAILURE:
 			return {
