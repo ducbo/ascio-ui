@@ -41,8 +41,7 @@ export class FilterElement {
 export class RangeFilterElement extends FilterElement {
     constructor (name) {
         super(name)
-        this.range = new Range()
-        
+        this.range = new Range()        
     }
     isValid() {
         return this.name && this.range.isValid() && this.operator
@@ -52,8 +51,11 @@ export class DateFilterElement extends RangeFilterElement {
     setTableFilter(filter) {
         const value = filter.filterVal
         this.operator = value.comparator
-        const date = value.date
+        let date = value.date
         if(!date) return
+        if(!(date instanceof Date)) {
+            date = new Date(date)
+        }
         const dateString = date.getFullYear() + "/" +( date.getMonth() +1) + "/" + date.getDate()
         const currentDay = new Date(dateString)
         const nextDay = new Date(dateString)
