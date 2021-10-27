@@ -49,7 +49,8 @@ class RemoteTableService extends React.Component {
     this.search.users = this.getImpersonated()
     this.handleTableChange("filter",this.search)
   }
-  handleTableChange = async (type, {page,sizePerPage,filters,sortField,sortOrder}) => {
+  handleTableChange = async (type, {page,sizePerPage,filters,sortField,sortOrder,users}) => {
+    this.search.users = users || this.getImpersonated()
     filters = type === "sort" ? this.search.filters : filters
     this.search = { users: this.search.users, page,sizePerPage,filters,sortField,sortOrder }
     // prevent double post
@@ -66,10 +67,14 @@ class RemoteTableService extends React.Component {
     const request = { ...this.search, filter: this.getFilters(filters).get() }
     delete request.filters
     // send request
-    await this.props.filterAction(request)
+    try {
+      await this.props.filterAction(request)
+    } catch (e) {
+      console.log(e)
+    }
   }
   getFilters(filters) {
-    return new Filters(filters)
+    return (this.props.additionalFilters &&  this.props.additionalFilters(filters)) || new Filters(filters)
   }
   getImpersonated() {
     return this.props.impersonate || this.props.defaultFilters(this.user.username).users || this.user.username 
