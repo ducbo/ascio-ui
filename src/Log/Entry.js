@@ -33,7 +33,7 @@ class Entry extends React.Component{
              <h4>{this.message}</h4>
             <table class="table table-dark table-sm striped" style={{width:"400px"}}>
                 <tr>
-                    <th style={{width:"100px"}}>Property</th>
+                    <th style={{width:"150px"}}>Property</th>
                     <th>Value</th>
                 </tr>
             {entries}
@@ -56,7 +56,7 @@ class Entry extends React.Component{
             <h4>{this.message}</h4>
             <table class="table table-dark table-sm striped" >
                 <tr>
-                    <th style={{width:"100px"}}>Property</th>
+                    <th style={{width:"150px"}}>Property</th>
                     <th>Old value</th>
                     <th>New value</th>
                 </tr>
