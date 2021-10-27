@@ -79,6 +79,7 @@ const columns = (searchParameters) => {
       dataField: 'message',
       text: 'Message',
       sort: true,
+      formatter: (cell) => cell.message || cell,
       style: cellFormater,
       filter: textFilter(getDefaultFilter(searchParameters,'message'))
     },
