@@ -55,7 +55,8 @@ RemoteAll.propTypes = {
   page: PropTypes.number.isRequired,
   totalSize: PropTypes.number.isRequired,
   sizePerPage: PropTypes.number.isRequired,
-  onTableChange: PropTypes.func.isRequired
+  onTableChange: PropTypes.func.isRequired,
+  expandRow: PropTypes.object
 };
 
 class Users extends React.Component {
@@ -131,19 +132,16 @@ class Users extends React.Component {
   getImpersonated() {
     return this.props.impersonate || this.filters.users || this.user.username 
   }
-  componentDidMount() {
+  async componentDidUpdate() {
     const searchParameters = this.filters
     searchParameters.users = this.getImpersonated()
-    this.props.filter(searchParameters)
-    this.setFilter(searchParameters)
-    this.lastUsers = searchParameters.users
-  }
-  componentDidUpdate() {
-    const searchParameters = this.filters
-    searchParameters.users = this.getImpersonated()
-    if(searchParameters.users !== this.state.lastUsers) {
-      this.props.filter(searchParameters)
-      this.setState({lastUsers:searchParameters.users})
+    if(searchParameters.users !== this.lastUsers) {
+      this.lastUsers = searchParameters.users
+      const filterResult = await this.props.filter(searchParameters)
+      this.setState({
+        data: filterResult.logs.data,
+        totalSize: filterResult.logs.totalSize
+      }) 
     }
   }
   handleTableChange =  (type, { page, sizePerPage, filters, sortField, sortOrder, cellEdit })  => {
@@ -155,6 +153,7 @@ class Users extends React.Component {
     })
     const filter  = queryArray.length > 0 ? queryArray.join(" ") : "*"
     const users = this.getImpersonated();
+    this.lastUsers = users
     sortField = sortField || this.filters.sortField
     sortOrder = sortOrder  || this.filters.sortOrder
     const searchParameters = {page,sizePerPage,filter,sortField,sortOrder,users, type: this.filters.type }
@@ -162,8 +161,7 @@ class Users extends React.Component {
     this.props.filter(searchParameters).then(() => {
       self.setState({
         data:this.props.list, 
-        totalSize: this.props.totalSize,
-        page, sizePerPage
+        totalSize: this.props.totalSize
       })
     })
   }
