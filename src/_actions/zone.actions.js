@@ -80,21 +80,21 @@ function updateOwner(zoneName, owner){
 		return { type: zoneConstants.UPDATEOWNER_FAILURE, error, zoneName };
 	}
 }
-function _delete(zoneName, filters) {
+function _delete(zoneName, filterParams) {
 	return (dispatch) => {
-		dispatch(request());
+		dispatch(request(zoneName,filterParams));
 		return zoneService
-			.delete(zoneName, filters)
-			.then((zones) => dispatch(success(zones,filters,zoneName)), (error) => dispatch(failure(error.toString(),zoneName)));
+			.delete(zoneName, filterParams)
+			.then((zones) => dispatch(success(zones,filterParams,zoneName)), (error) => dispatch(failure(error.toString(),zoneName)));
 	}
-	function request() {
-		return { type: zoneConstants.DELETE_REQUEST };
+	function request(zoneName, filterParams) {
+		return { type: zoneConstants.DELETE_REQUEST, zoneName, filterParams };
 	}
-	function success(zones,filterParams,zoneName) {
-		return { type: zoneConstants.DELETE_SUCCESS, zones,zoneName,filterParams };
+	function success(zones) {
+		return { type: zoneConstants.DELETE_SUCCESS, zones };
 	}
 	function failure(error,zoneName) {
-		return { type: zoneConstants.DELETE_FAILURE, error, zoneName };
+		return { type: zoneConstants.DELETE_FAILURE, error };
 	}	
 }
 function refresh() {
