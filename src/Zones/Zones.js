@@ -9,6 +9,7 @@ import { FaEdit, FaTrash } from 'react-icons/fa';
 import { AllowedRoles } from "../_components";
 import {ZoneUserSelector} from "../Zone";
 import { history } from '../_helpers';
+import {DeleteZone} from '.'
 
 const editButton = (cellContent) => {
   const target = cellContent.currentTarget.dataset.row
@@ -20,7 +21,8 @@ class Zones extends React.Component {
     super(props);
     this.user = this.props.user.user
     this.state ={
-        showDialog : false
+        showDialog : false,
+        deleteZoneName: "not set"
       }
     this.deleteZone = this.deleteZone.bind(this)    
     this.closeDialog = this.closeDialog.bind(this)
@@ -64,7 +66,7 @@ class Zones extends React.Component {
       style : {
         padding:0
       },
-      formatter: (cellContent, row) => { return <><button title="Edit Zone" className="btn edit-button"  data-row={row.ZoneName} onClick={editButton}><FaEdit  size="20px"></FaEdit></button> <AllowedRoles roles={["admin","zone_editor"]}><button title="Delete Zone" className="btn delete-button" data-row={row.ZoneName} onClick={this.deleteDialog.bind(this)}><FaTrash size="20px"></FaTrash></button></AllowedRoles></>}
+      formatter: (cellContent, row) => { return <><button title="Edit Zone" className="btn edit-button"  data-row={row.ZoneName} onClick={editButton}><FaEdit  size="20px"></FaEdit></button> <AllowedRoles roles={["admin","zone_editor"]}><button title="Delete Zone" className="btn delete-button" data-row={row.ZoneName}  onClick={this.deleteDialog}><FaTrash size="20px"></FaTrash></button></AllowedRoles></>}
     }];
 
     const user = JSON.parse(localStorage.getItem('user'))
@@ -81,37 +83,42 @@ class Zones extends React.Component {
     this.columns = columns1.concat(columns2,columns3)
     return this.columns
   }
-  deleteDialog(e) {
+  deleteDialog = (e) => {
     this.setState(    {
       showDialog : true,
-      deleteZoneName : e.currentTarget.dataset.row,
-      data : this.props.zones.data 
+      deleteZoneName : e.currentTarget.dataset.row
     })
   }
   async deleteZone() {
-    /* const searchParameters = defaultZoneFilters(this.user.username)
-    searchParameters.users = this.getImpersonated()
+    const searchParameters = defaultZoneFilters(this.user.username)
+    //searchParameters.users = this.getImpersonated()
     this.props.progress("Deleting zone "+this.state.deleteZoneName)
     this.closeDialog();
     await this.props.deleteZone(this.state.deleteZoneName,searchParameters)
-    this.props.message(this.props.zoneMessage) */
-
+    this.props.message(this.props.zoneMessage) 
   }
-  closeDialog() {
+  closeDialog = () => {
     this.setState({ showDialog : false })
   }
 
   render () {
     const data = this.props.zones ? this.props.zones.data : []
     const totalSize = this.props.zones ? this.props.zones.totalSize : 0
-    return <RemoteTableService
+    return <>
+    <RemoteTableService
     columns = {this.getColumns}
     filterAction = {this.props.filter}
     name = "Zone"
     data = {data}
     totalSize = {totalSize}
     defaultFilters = {defaultZoneFilters}
-  ></RemoteTableService>
+  ></RemoteTableService>,
+      <DeleteZone
+          zoneName = {this.state.deleteZoneName}
+          show = {this.state.showDialog}           
+          close = {() => {this.setState({showDialog : false})}}
+    ></DeleteZone>
+    </>
   }
 
 }
@@ -123,9 +130,9 @@ const actionCreators = {
 }
 function mapState(state) {
   const { user } = state.authentication;
-  const { zones,filterParams, refresh,success, progress } = state.zones;
-  const { rootDescendants, selectableUsers, descendants, impersonate } = state.usertree;
-  return { user, zones, filterParams, rootDescendants, selectableUsers, descendants,impersonate, refresh, zoneMessage : {success,progress} };
+  const { zones, success, progress } = state.zones;
+  const { rootDescendants } = state.usertree;
+  return { user, zones, rootDescendants, zoneMessage : {success,progress} };
 }
 const connectedZones = connect(mapState, actionCreators)(Zones)
 export {connectedZones as Zones}
