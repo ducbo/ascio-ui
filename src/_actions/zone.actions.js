@@ -28,12 +28,12 @@ function filter(searchParameters, oldZones) {
 		return { type: zoneConstants.FILTER_FAILURE, error };
 	}
 }
-function create(zoneName, owner, api,filters) {
+function create(zoneName, owner, api,searchParameters) {
 	return (dispatch) => {
 		dispatch(request());
 		return zoneService
-			.create(zoneName,owner, api || "Ascio", filters)
-			.then((zones) => dispatch(success(zoneName, zones,filters)), (error) => dispatch(failure(error.toString(),zoneName)));
+			.create(zoneName,owner, api || "Ascio", searchParameters)
+			.then((zones) => dispatch(success(zoneName, zones,searchParameters)), (error) => dispatch(failure(error.toString(),zoneName)));
 	};
 	function request() {
 		return { type: zoneConstants.CREATE_REQUEST };

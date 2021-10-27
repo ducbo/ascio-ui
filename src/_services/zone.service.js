@@ -25,11 +25,11 @@ function updateOwner (zoneName, owner) {
         body: JSON.stringify({owner})            
       }).then(handleResponse)             
 }
-function create (zoneName, owner, api, filters) {
+function create (zoneName, owner, api, searchParameters) {
     return fetch(`${config.apiUrl}/zones`,{
         method: "POST", 
         headers: authHeader({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify({zoneName,owner, api, filters})            
+        body: JSON.stringify({zoneName,owner, api, searchParameters})            
     }).then(handleResponse)             
 }
 function sync (zoneName, owner, api, filters) {

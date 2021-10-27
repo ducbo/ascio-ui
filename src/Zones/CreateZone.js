@@ -23,9 +23,9 @@ class CreateZone extends React.Component {
 	async submit() {
 		const self = this
 		const username = this.state.user.id
-		const filters = this.props.filterParams || defaultZoneFilters(username);
+		const filter = defaultZoneFilters(this.user.username);
 		this.props.progress("Creating zone "+this.state.zoneName+" for user "+ username);
-		await this.props.createZone(this.state.zoneName, username, this.state.api, filters);	
+		await this.props.createZone(this.state.zoneName, username, this.state.api, filter);	
 		self.props.message(self.props.zones);
 		this.setState({zoneName : ""})
 	}
