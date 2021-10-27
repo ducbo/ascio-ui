@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 import { RemoteTableService } from '../_components';
 import { Filters, FilterElement, dateFormatter, cellFormater } from '../_helpers';
 import { defaultLogFilters } from '../defaults.js';
+import {  Entry } from '../Log'
 import React from 'react';
-
 const columns = () => {
 	return [
 		{
@@ -86,6 +86,10 @@ class LogTableZone extends React.Component {
 				totalSize={this.props.totalSize}
 				defaultFilters={defaultLogFilters}
 				additionalFilters={this.getFilters}
+				expandRow = {{
+				    showExpandColumn: true,
+      				renderer: row => <Entry data={{ ...row }} key={row.Id}></Entry>
+				}}
 			/>
 		);
 	}
