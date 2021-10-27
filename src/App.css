@@ -200,3 +200,6 @@ body .container {
   margin-right:10px;
   
 }
+#root .filter {
+  font-weight: bold;
+}
