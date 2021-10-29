@@ -1,10 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { zoneActions,alertActions } from '../_actions';
+import { zoneActions, alertActions } from '../_actions';
 import { Button, Form, Col } from 'react-bootstrap';
 import { Combobox } from 'react-widgets';
-import {defaultZoneFilters}  from '../defaults';
-import { AllowedRoles } from "../_components";
+import { defaultZoneFilters } from '../defaults';
+import { AllowedRoles } from '../_components';
+import { UserSelector } from '../UserManager';
 
 class CreateZone extends React.Component {
 	constructor(props) {
@@ -13,38 +14,42 @@ class CreateZone extends React.Component {
 			user: '',
 			zoneName: null
 		};
-		this.handleChange = this.handleChange.bind(this);
-		this.submit = this.submit.bind(this);
 		this.user = this.props.user.user;
 	}
-	handleChange(e) {
-		this.setState({[e.target.name] : e.target.value});
+	setUser = (user) => {
+		this.setState({ user });
+	};
+	handleChange = (e) => {
+		this.setState({ [e.target.name]: e.target.value });
+	};
+	componentDidUpdate = () => {
+		console.log("update")
 	}
-	async submit() {
-		const self = this
-		const username = this.state.user.id
+	submit = async () => {
+		const self = this;
+		const username = this.state.user.id;
 		const filter = defaultZoneFilters(this.user.username);
-		this.props.progress("Creating zone "+this.state.zoneName+" for user "+ username);
-		await this.props.createZone(this.state.zoneName, username, this.state.api, filter);	
+		this.props.progress('Creating zone ' + this.state.zoneName + ' for user ' + username);
+		await this.props.createZone(this.state.zoneName, username, this.state.api, filter);
 		self.props.message(self.props.zones);
-		this.setState({zoneName : ""})
-	}
+		this.setState({ zoneName: '' });
+	};
 	validate() {
-		if(! (this.state.zoneName && this.state.user)) {
+		if (!(this.state.zoneName && this.state.user)) {
 			return false;
 		}
-		if(!this.state.zoneName.match(/^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9](?:\.[a-zA-Z]{2,})+$/)) {
-			return false; 
+		if (!this.state.zoneName.match(/^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9](?:\.[a-zA-Z]{2,})+$/)) {
+			return false;
 		}
 		return true;
 	}
+	getImpersonated() {
+		return this.props.impersonate || defaultZoneFilters(this.user.username).users || this.user.username;
+	}
 	render() {
 		const self = this;
-		let onChange = (user) => {
-			self.setState({user});
-		};
 		const api = (
-			<AllowedRoles roles={["admin"]}>
+			<AllowedRoles roles={[ 'admin' ]}>
 				<Form.Row>
 					<Col md="5">
 						<Form.Label>API</Form.Label>
@@ -56,52 +61,62 @@ class CreateZone extends React.Component {
 				</Form.Row>
 			</AllowedRoles>
 		);
-		
-   	 const users = this.props.rootDescendants || [];    
-		const disabled = !this.validate() ? "disabled" : false
-		return (      
-			<div className="mb-1">
-			 <AllowedRoles roles={["admin","zone_editor"]}>
-			 <div className="card">
-			 <div className="card-header">
-                    <h5>Create Zone</h5>
-                </div>
-                <div className="card-body">
-					<Form>
-						<Form.Row>
-							<Col>
-								<Form.Control name="zoneName" placeholder="Zonename" value={this.state.zoneName} onChange={this.handleChange} />
-							</Col>
-							<Col>
-								<Combobox onChange={onChange} valueField="id" textField="name" data={users} />
-							</Col>
-							<Col>						
-								<Button disabled={disabled} onClick={this.submit}>CreateZone</Button>
-							</Col>
-						</Form.Row>          
-						{api}
-					</Form>
-                </div>
-			 </div>
-			
-			
-			 </AllowedRoles>
 
+		const users = this.props.rootDescendants || [];
+		const disabled = !this.validate() ? 'disabled' : false;
+		const id = this.getImpersonated()
+		const selected = { id, name: this.props.selectableUsers[id] };
+		console.log('selected: ', selected);
+		return (
+			<div className="mb-1">
+				<AllowedRoles roles={[ 'admin', 'zone_editor' ]}>
+					<div className="card">
+						<div className="card-header">
+							<h5>Create Zone</h5>
+						</div>
+						<div className="card-body">
+							<Form>
+								<Form.Row>
+									<Col>
+										<Form.Control
+											name="zoneName"
+											placeholder="Zonename"
+											value={this.state.zoneName}
+											onChange={this.handleChange}
+										/>
+									</Col>
+									<Col>
+										<UserSelector
+											id={'create-' + this.state.zoneName}
+											onChange={this.setUser}
+											selected={selected}
+										/>
+									</Col>
+									<Col>
+										<Button disabled={disabled} onClick={this.submit}>
+											CreateZone
+										</Button>
+									</Col>
+								</Form.Row>
+								{api}
+							</Form>
+						</div>
+					</div>
+				</AllowedRoles>
 			</div>
 		);
 	}
 }
 const actionCreators = {
-	message : alertActions.message,
+	message: alertActions.message,
 	progress: alertActions.progress,
 	createZone: zoneActions.create
 };
 function mapState(state) {
 	const { authentication, zones } = state;
 	const { user } = authentication;
-	const {  filterParams } = zones;
-	const { rootDescendants } = state.usertree;
-	return { user, zones, filterParams, rootDescendants};
+	const {  impersonate, selectableUsers } = state.usertree;
+	return { user, zones, impersonate, selectableUsers };
 }
 const connectedCreateZone = connect(mapState, actionCreators)(CreateZone);
-export {connectedCreateZone as CreateZone};
+export { connectedCreateZone as CreateZone };
