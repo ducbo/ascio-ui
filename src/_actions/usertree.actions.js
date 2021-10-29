@@ -8,18 +8,36 @@ export const userTreeActions = {
 	impersonate,
 	refresh,
 	setExpanded,
-	setData
+	setData,
+	requestExpanded
 };
 
 function impersonate(users, descendants) {
 	return { type: usertreeConstants.IMPERSONATE, users, descendants }
 }
 function setExpanded(expanded) {
-	return { type: usertreeConstants.SET_EXPANDED, expanded }
+	return { type: usertreeConstants.EXPANDED_SUCCESS, expanded }
 }
 
 function setData(data) {
 	return { type: usertreeConstants.SET_DATA, data }
+}
+function requestExpanded(username) {
+	return (dispatch) => {
+		dispatch(request());
+		return userTreeService
+			.getParents(username)
+			.then((result) => dispatch(success(result)), (error) => dispatch(failure(error.toString())));
+	};
+	function request() {
+		return { type: usertreeConstants.EXPANDED_REQUEST };
+	}
+	function success(expanded) {
+		return { type: usertreeConstants.EXPANDED_SUCCESS, expanded};
+	}
+	function failure(error) {
+		return { type: usertreeConstants.EXPANDED_FAILURE, error };
+	}
 }
 function refresh(username,selected) {
 	return (dispatch) => {

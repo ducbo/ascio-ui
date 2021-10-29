@@ -5,7 +5,8 @@ import { history } from '../_helpers';
 export const userTreeService = {
     getDescendants,
     getChildren,
-    refresh
+    refresh,
+    getParents
 };
 function refresh(username,selected) {
     const requestOptions = { headers: authHeader(), method: "POST", body: JSON.stringify(selected || [])};
@@ -14,6 +15,10 @@ function refresh(username,selected) {
 function getDescendants(user) {
     const requestOptions = { headers: authHeader() };
     return  fetch(`${config.apiUrl}/users/${user}/allsubusers`,requestOptions).then(handleResponse);
+}
+function getParents(user) {
+    const requestOptions = { headers: authHeader() };
+    return  fetch(`${config.apiUrl}/users/${user}/parents`,requestOptions).then(handleResponse);
 }
 function getChildren(user) {
     const requestOptions = { headers: authHeader() };

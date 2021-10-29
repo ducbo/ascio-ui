@@ -78,10 +78,22 @@ export function usertree(state = {data: {}, descendants : [], rootDescendants : 
         impersonateDescendants: action.descendants,
         refresh: !state.refresh
       };
-    case usertreeConstants.SET_EXPANDED: {
+    case usertreeConstants.EXPANDED_REQUEST: {
       return {
         ...state, 
         expanded: action.expanded
+      }
+    }
+    case usertreeConstants.EXPANDED_SUCCESS: {
+      return {
+        ...state, 
+        expanded: action.expanded
+      }
+    }
+    case usertreeConstants.EXPANDED_FAILURE: {
+      return {
+        ...state, 
+        error: action.error
       }
     }
     case usertreeConstants.SET_DATA: {
