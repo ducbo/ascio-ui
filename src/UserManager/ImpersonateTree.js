@@ -5,7 +5,7 @@ import TreeView from "@material-ui/lab/TreeView";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import TreeItem from "@material-ui/lab/TreeItem";
-import { userTreeActions } from './_actions';
+import { userTreeActions } from '../_actions';
 
 const useStyles = makeStyles({
   root: {
@@ -15,7 +15,7 @@ const useStyles = makeStyles({
   }
 });
 
-function CustomerTreeItem(props) {
+function ImpersonateTree(props) {
   const classes = useStyles();  
   const user = props.user.user  
   const storageId = 'customer_tree_' + user.username
@@ -127,5 +127,5 @@ function mapState(state) {
   const { refresh,data, impersonate } = usertree;
   return { user,refresh, data, impersonate,updatedUser };
 }
-const connectedTreeView = connect(mapState, actionCreators)(CustomerTreeItem)
+const connectedTreeView = connect(mapState, actionCreators)(ImpersonateTree)
 export default connectedTreeView 

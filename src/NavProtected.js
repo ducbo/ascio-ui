@@ -3,7 +3,7 @@ import { alertActions } from './_actions';
 import NavTop from './NavTop';
 import NavLeft from './NavLeft';
 import Wait from './Wait'
-import CustomerTreeItem from './TreeView.js'
+import ImpersonateTree from './UserManager/ImpersonateTree.js'
 
 
 function NavProtected (props) {
@@ -17,7 +17,7 @@ function NavProtected (props) {
 					<NavLeft selected={props.selected}></NavLeft>
 					<hr/>
 					<h4>Impersonate</h4>
-					<CustomerTreeItem key={user.username} id={user.username} name={user.company}/>						
+					<ImpersonateTree key={user.username} id={user.username} name={user.company}/>						
 					</div>
 					<div className="col-lg-10 col-md-12 col-sm-12">
 						{props.children}
