@@ -18,6 +18,7 @@ const useStyles = makeStyles({
 function ImpersonateTree(props) {
   const classes = useStyles();  
   const user = props.user.user  
+  console.log("init tree")
   const storageId = 'customer_tree_' + user.username
   let initialData = JSON.parse(localStorage.getItem(storageId))
   if(!initialData) {
@@ -34,8 +35,13 @@ function ImpersonateTree(props) {
   let initialExpanded =  JSON.parse(localStorage.getItem(storageId+"_expanded"))  ||  []
   
   let [tree, setTree] = useState(initialData);  
-  let [expanded, setExpanded] = useState(initialExpanded);  
+  let [expanded, setExpanded] = useState(props.expanded || initialExpanded);  
   
+  if(props.expanded && (expanded !== props.expanded)) {
+    setExpanded(props.expanded)
+    localStorage.setItem(storageId+"_expanded", JSON.stringify(props.expanded))  
+  }
+
   if(props.updatedUser) {
     Object.keys(tree).forEach((key) => {
       tree[key].forEach(child => {
@@ -86,7 +92,7 @@ function ImpersonateTree(props) {
       const childrenNodes =
         tree[child.id] && tree[child.id].length > 0
           ? renderTree(tree[child.id])
-          : [<div key={child.id} />];
+          : [];
 
       return (
         <TreeItem key={child.id} nodeId={child.id} label={child.label}>
@@ -124,8 +130,8 @@ function mapState(state) {
   const {  authentication, usertree, users } = state;
   const { user } = authentication;
   const {updatedUser} = users
-  const { refresh,data, impersonate } = usertree;
-  return { user,refresh, data, impersonate,updatedUser };
+  const { refresh,data, impersonate, expanded, selectableUsers } = usertree;
+  return { user,refresh, data, impersonate,updatedUser, expanded, selectableUsers };
 }
 const connectedTreeView = connect(mapState, actionCreators)(ImpersonateTree)
 export default connectedTreeView 
