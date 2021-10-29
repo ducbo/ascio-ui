@@ -5,25 +5,36 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux';
 
-function UserSelector(props) {
-  const [value, setValue] = React.useState(props.selected);
-  const onChange = async  (event,value) => {
-    setValue(value); 
-    return props.onChange(value);
+class UserSelector extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {value : props.selected}
   }
-  return (
-    <Autocomplete
-      id={props.id}
-      options={props.rootDescendants}
-      getOptionSelected={(option) =>  option.id === value.id}
-      getOptionLabel={(option) => option.name ||""}
-      value = {value}
-      //inputValue = {inputValue}
-      onChange={onChange}
-      size="small"
-      renderInput={(params) => <TextField {...params}  variant="outlined" />}
-    />
-  );
+  onChange = async  (event,value) => {
+    this.setState({value}); 
+    return this.props.onChange(value);
+  }
+  componentDidUpdate() {
+    if(this.state.value !== this.props.selected) {
+      this.setState({value: this.props.selected})
+    }
+  }
+  render () {
+    return (
+      <Autocomplete
+        id={this.props.id}
+        options={this.props.rootDescendants}
+        getOptionSelected={(option,value) =>  option.id === value.id}
+        isOptionEqualToValue={(option, value) => option.id === value.id}
+        getOptionLabel={(option) => option.name ||""}
+        value = {this.state.value}
+        //inputValue = {inputValue}
+        onChange={this.onChange}
+        size="small"
+        renderInput={(params) => <TextField {...params}  variant="outlined" />}
+      />
+    );
+  }
 }
 UserSelector.propTypes = {
     id: PropTypes.string.isRequired,
