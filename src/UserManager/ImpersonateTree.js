@@ -26,7 +26,8 @@ function ImpersonateTree(props) {
       root: [
         {
           id: props.id,
-          label: props.name
+          label: props.name,
+          hasChildren: true
         }
       ],
       1: []
@@ -56,9 +57,13 @@ function ImpersonateTree(props) {
   if(props.data) Object.keys(props.data).forEach(key => {
     tree[key] = props.data[key]
   })
-  const onNodeSelect = async (event, users) => { 
-    localStorage.setItem(storageId+"_selected", JSON.stringify(users))      
-    await props.setImpersonate(users)
+  const onNodeSelect = async (event, user) => { 
+    const impersonate = {
+      username: user,
+      name: props.selectableUsers[user]
+    }
+    localStorage.setItem(storageId+"_selected", JSON.stringify(impersonate))      
+    await props.setImpersonate(impersonate)
   }
   const buildTree = function(name,nodes) {
       const newChildren = {
@@ -66,7 +71,8 @@ function ImpersonateTree(props) {
         [name] : nodes.children.map(child => {
           return {
             id : child.id,
-            label : child.name
+            label : child.name,
+            hasChildren : child.hasChildren
             }
           }
         )
@@ -89,11 +95,10 @@ function ImpersonateTree(props) {
   };
   const renderTree = children => {
     return children.map(child => {
-      const childrenNodes =
+      let childrenNodes =
         tree[child.id] && tree[child.id].length > 0
           ? renderTree(tree[child.id])
-          : [];
-
+          : child.hasChildren ?  <div key={child.key}></div> : []
       return (
         <TreeItem key={child.id} nodeId={child.id} label={child.label}>
           {childrenNodes}
@@ -112,7 +117,7 @@ function ImpersonateTree(props) {
       onNodeToggle={onNodeToggle}
       onNodeSelect={onNodeSelect}
       expanded={expanded || initialExpanded}
-      selected={props.impersonate || selectedStorage}
+      selected={props.impersonate && props.impersonate.username || selectedStorage}
     >
       {renderedChildren}
     </TreeView>
