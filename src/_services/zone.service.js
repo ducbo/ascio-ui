@@ -1,6 +1,6 @@
 import { authHeader } from '../_helpers';
 import config from '../config';
-import { history } from '../_helpers';
+import { handleResponse } from '../_helpers';
 
 export const zoneService = {
     create,
@@ -45,23 +45,4 @@ function _delete (zoneName, filters) {
         headers: authHeader({ 'Content-Type': 'application/json' }),
         body:  JSON.stringify(filters)    
       }).then(handleResponse)  
-}
-
-function handleResponse(response) {
-    return response.text().then(text => {
-        const data = text && JSON.parse(text);
-        if (!response.ok) {
-            if (response.status === 401) {
-                logout();
-            }
-
-            const error = (data && data.message) || response.statusText;
-            return Promise.reject(error);
-        }
-        return data;
-    });
-}
-function logout() {
-    localStorage.removeItem('user');
-    history.push("/login")
 }

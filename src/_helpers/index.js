@@ -6,3 +6,4 @@ export * from './pw-strength';
 export * from './Filters';
 export * from './RemoteTable.js';
 export * from './notification.js';
+export * from './handleResponse.js';
