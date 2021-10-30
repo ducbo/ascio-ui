@@ -50,7 +50,7 @@ class RemoteTableService extends React.Component {
     this.handleTableChange("filter",this.search)
   }
   handleTableChange = async (type, {page,sizePerPage,filters,sortField,sortOrder,users}) => {
-    this.search.users = users || this.getImpersonated()
+    this.search.users = this.getImpersonated()
     filters = type === "sort" ? this.search.filters : filters
     this.search = { users: this.search.users, page,sizePerPage,filters,sortField,sortOrder }
     // prevent double post
@@ -77,7 +77,7 @@ class RemoteTableService extends React.Component {
     return (this.props.additionalFilters &&  this.props.additionalFilters(filters)) || new Filters(filters)
   }
   getImpersonated() {
-    return this.props.impersonate || this.props.defaultFilters(this.user.username).users || this.user.username 
+    return this.props.impersonate || this.props.defaultFilters(this.user.username).users || this.user 
   }
   render () {
     return (
@@ -102,7 +102,7 @@ RemoteTableService.propTypes = {
   defaultFilters : PropTypes.func.isRequired,
   additionalFilters : PropTypes.func,
   data : PropTypes.array.isRequired,
-  totalSize : PropTypes.number.isRequired,
+  totalSize : PropTypes.number,
   expandRow : PropTypes.object
 }
 function mapState (state) {

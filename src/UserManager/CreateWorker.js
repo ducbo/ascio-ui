@@ -24,7 +24,7 @@ class CreateWorker extends React.Component {
 		const filters = defaultWorkerFilters(this.user.username) ;		
 		this.props.progress("Creating user "+this.state.username);
 		try {
-			await this.props.createWorker({...this.state, works_for : this.props.impersonate  || this.state.works_for  },filters);
+			await this.props.createWorker({...this.state, works_for : this.props.impersonate.username  || this.state.works_for  },filters);
 			this.setState({username : '', company : '', email: ''})
 		} catch (e) {
 		}
