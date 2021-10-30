@@ -38,7 +38,7 @@ ActionDialog.propTypes = {
 	hide : PropTypes.func.isRequired,
     action : PropTypes.func.isRequired,
     title : PropTypes.string.isRequired,
-    body : PropTypes.bool.isRequired,
+    body : PropTypes.string.isRequired,
     buttonText : PropTypes.string.isRequired,
 }
 export { ActionDialog };
