@@ -12,7 +12,7 @@ class CreateZone extends React.Component {
 		super(props);
 		this.state = {
 			user: '',
-			zoneName: null
+			zoneName: ""
 		};
 		this.user = this.props.user.user;
 	}
@@ -64,8 +64,7 @@ class CreateZone extends React.Component {
 
 		const users = this.props.rootDescendants || [];
 		const disabled = !this.validate() ? 'disabled' : false;
-		const id = this.getImpersonated()
-		const selected = { id, name: this.props.selectableUsers[id] };
+		const selected = this.getImpersonated()
 		console.log('selected: ', selected);
 		return (
 			<div className="mb-1">
