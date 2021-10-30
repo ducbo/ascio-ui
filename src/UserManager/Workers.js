@@ -136,7 +136,7 @@ class Workers extends React.Component {
     this.setState({showDialog : false})
   }
   getImpersonated() {
-    return this.props.impersonate || this.filters.users || this.user.username 
+    return this.props.impersonate || this.filters.users || this.user 
   }
   componentDidMount() {
     const searchParameters = this.filters
