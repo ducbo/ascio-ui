@@ -4,7 +4,7 @@ import NavTop from './NavTop';
 import NavLeft from './NavLeft';
 import Wait from './Wait'
 import ImpersonateTree from './UserManager/ImpersonateTree.js'
-
+import UserTreeSelector from './UserManager/UserTreeSelector';
 
 function NavProtected (props) {
 	const user = props.user.user
@@ -17,7 +17,8 @@ function NavProtected (props) {
 					<NavLeft selected={props.selected}></NavLeft>
 					<hr/>
 					<h4>Impersonate</h4>
-					<ImpersonateTree key={user.username} id={user.username} name={user.company}/>						
+					<UserTreeSelector></UserTreeSelector>
+					<ImpersonateTree key={user.username} id={user.username} name={user.company} />						
 					</div>
 					<div className="col-lg-10 col-md-12 col-sm-12">
 						{props.children}
@@ -28,10 +29,11 @@ function NavProtected (props) {
 			</>
 }
 function mapState(state) {
-	const {  authentication, alert } = state;
+	const {  authentication, alert, usertree } = state;
     const { user } = authentication;
     const { message, type } = alert;
-	return { message, type, user,authentication };
+	const { expanded } = usertree
+	return { message, type, user,authentication, expanded };
 }
 
 const actionCreators = {
