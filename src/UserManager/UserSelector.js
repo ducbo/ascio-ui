@@ -24,8 +24,7 @@ class UserSelector extends React.Component {
       <Autocomplete
         id={this.props.id}
         options={this.props.rootDescendants}
-        getOptionSelected={(option,value) =>  option.id === value.id}
-        isOptionEqualToValue={(option, value) => option.id === value.id}
+        getOptionSelected={(option,value) =>  option.id === value.username}
         getOptionLabel={(option) => option.name ||""}
         value = {this.state.value}
         //inputValue = {inputValue}
