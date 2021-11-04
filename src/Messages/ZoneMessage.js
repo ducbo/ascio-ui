@@ -1,6 +1,6 @@
 const {Message} = require(".")
 
-module.exports =  class UserMessage extends Message {
+class ZoneMessage extends Message {
     getTitle() {
         return "["+this.loginUser.username+"] " + this.action.charAt(0).toUpperCase() + this.action.slice(1) + " "+ this.dataClass + ": "+ this.objectName
     }
@@ -8,3 +8,4 @@ module.exports =  class UserMessage extends Message {
         return this.message
     }
 }
+export  {ZoneMessage}

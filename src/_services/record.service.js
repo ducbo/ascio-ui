@@ -1,6 +1,5 @@
 import { authHeader } from '../_helpers';
 import config from '../config';
-import { history } from '../_helpers';
 import { handleResponse } from '../_helpers';
 
 export const recordService = {
@@ -36,8 +35,4 @@ function _delete (zoneName, recordId) {
         method: "DELETE",
         headers: authHeader()       
       }).then(handleResponse)  
-}
-function logout() {  
-    localStorage.removeItem('user');
-    history.push("/login")
 }

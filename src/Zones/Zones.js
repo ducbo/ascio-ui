@@ -1,5 +1,5 @@
 import React from 'react'
-import  { textFilter, dateFilter} from 'react-bootstrap-table2-filter'
+import  { textFilter } from 'react-bootstrap-table2-filter'
 import { connect } from 'react-redux'
 import { zoneActions, alertActions } from '../_actions';
 import {RemoteTableService} from '../_components'

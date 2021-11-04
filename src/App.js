@@ -9,12 +9,10 @@ import { connect } from 'react-redux';
 import {defaultZoneFilters}  from './defaults';
 import { history, notify } from './_helpers';
 import ReactNotification from 'react-notifications-component' 
-import { store } from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css'
 import 'animate.css';
 
 import { alertActions, logActions, userActions, recordActions, zoneActions } from './_actions';
-import {ReAuth} from './_helpers';
 import { PrivateRoute } from './_components';
 import { LoginPage } from './LoginPage';
 import { PasswordResetPage } from './PasswordResetPage';
@@ -33,10 +31,9 @@ class App extends React.Component {
 		super(props);
 		this.user = this.props.user ? this.props.user.user : localStorage.getItem('user');
 		const self = this;
-		const re =  React.createElement("h2",ReAuth)
-		let timer;						
+				
 		const reAuth =  function() {
-			timer = window.setTimeout(async () => {				
+			window.setTimeout(async () => {				
 				if(window.location.pathname !== "/login" && props.user) {
 					await props.reAuth();
 					self.reconnectSocket(props.user.token );
@@ -109,8 +106,7 @@ class App extends React.Component {
 		this.connectSocket(token)
 	}
 	render() {
-		return (
-			<> 
+		return <> 
 				<ReactNotification/>
 				<Router history={history}>
 					<Switch>
@@ -129,7 +125,6 @@ class App extends React.Component {
 					</Switch>
 				</Router> 				   
 			</>
-		);
 	}
 }
 function mapState(state) {

@@ -117,7 +117,7 @@ function ImpersonateTree(props) {
       onNodeToggle={onNodeToggle}
       onNodeSelect={onNodeSelect}
       expanded={expanded || initialExpanded}
-      selected={props.impersonate && props.impersonate.username || selectedStorage}
+      selected={(props.impersonate && props.impersonate.username) || selectedStorage}
     >
       {renderedChildren}
     </TreeView>

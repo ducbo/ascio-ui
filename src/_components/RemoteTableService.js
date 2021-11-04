@@ -107,7 +107,6 @@ RemoteTableService.propTypes = {
 }
 function mapState (state) {
   const { user } = state.authentication
-  const { data, totalSize } = state.log
   const { impersonate } = state.usertree
   return { user: user.user, impersonate}
 }

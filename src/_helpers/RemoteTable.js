@@ -30,6 +30,6 @@ function dateFormatter (date, row) {
   }
 
 
-export {dateFormatter as dateFormatter}
-export {cellFormater as cellFormater}
-export {getDefaultFilter as getDefaultFilter}
+export {dateFormatter}
+export {cellFormater}
+export {getDefaultFilter}

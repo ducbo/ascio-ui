@@ -2,7 +2,8 @@ import React from 'react';
 import { Alert } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { alertActions } from './_actions'; 
-import {  FaExclamationTriangle, FaCheck, FaTimes, FaClock, FaLock, FaInfo, FaComments, FaBug } from 'react-icons/fa';
+//import {  FaExclamationTriangle, FaCheck, FaTimes, FaClock, FaLock, FaInfo, FaComments, FaBug } from 'react-icons/fa';
+import {  FaCheck, FaTimes, FaClock } from 'react-icons/fa';
 function AlertSuccess (props) {
 	const iconMap = {
 		"alert-info" : <FaClock/>,

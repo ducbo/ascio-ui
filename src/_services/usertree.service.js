@@ -1,6 +1,5 @@
 import { authHeader } from '../_helpers';
 import config from '../config';
-import { history } from '../_helpers';
 import { handleResponse } from '../_helpers';
 
 export const userTreeService = {

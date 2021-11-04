@@ -1,4 +1,4 @@
-module.exports = class Message {
+class Message {
     constructor(messageData) {
         for(const key in messageData) {
             this[key] = messageData[key]
@@ -11,3 +11,4 @@ module.exports = class Message {
         return this.message
     }
 }
+export {Message}

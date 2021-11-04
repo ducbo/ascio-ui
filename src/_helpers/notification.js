@@ -28,4 +28,4 @@ function notify(title,message,key) {
         }
     }
 }
-export {notify as notify}
+export {notify}

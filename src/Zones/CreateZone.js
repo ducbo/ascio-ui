@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { zoneActions, alertActions } from '../_actions';
 import { Button, Form, Col } from 'react-bootstrap';
-import { Combobox } from 'react-widgets';
+//import { Combobox } from 'react-widgets';
 import { defaultZoneFilters } from '../defaults';
 import { AllowedRoles } from '../_components';
 import { UserSelector } from '../UserManager';
@@ -47,7 +47,6 @@ class CreateZone extends React.Component {
 		return this.props.impersonate || defaultZoneFilters(this.user.username).users || this.user.username;
 	}
 	render() {
-		const self = this;
 		const api = (
 			<AllowedRoles roles={[ 'admin' ]}>
 				<Form.Row>
@@ -61,8 +60,6 @@ class CreateZone extends React.Component {
 				</Form.Row>
 			</AllowedRoles>
 		);
-
-		const users = this.props.rootDescendants || [];
 		const disabled = !this.validate() ? 'disabled' : false;
 		const selected = this.getImpersonated()
 		console.log('selected: ', selected);
