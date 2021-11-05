@@ -1,96 +1,42 @@
-import React from "react";
-import BootstrapTable from 'react-bootstrap-table-next';
-import paginationFactory from 'react-bootstrap-table2-paginator';
-import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux';
+import React from 'react'
+import  { textFilter } from 'react-bootstrap-table2-filter'
+import { connect } from 'react-redux'
 import { workerActions, alertActions } from '../_actions';
-import {defaultWorkerFilters} from '../defaults.js'
-import {Modal, Button} from 'react-bootstrap'
+import {RemoteTableService} from '../_components'
+import { dateFormatter,getDefaultFilter } from '../_helpers'
+import { defaultWorkerFilters } from '../defaults.js'
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import { AllowedRoles } from "../_components";
-import {UpdateWorker} from './UpdateWorker'
-
-function dateFormatter (cell, row) {
-  const date = new Date(parseInt(cell))  
-  let month = date.getMonth() + 1;
-  let day = date.getDate();
-  let hour = date.getHours();
-  let min = date.getMinutes();
-    
-  month = (month < 10 ? "0" : "") + month;
-  day = (day < 10 ? "0" : "") + day;
-  hour = (hour < 10 ? "0" : "") + hour;
-  min = (min < 10 ? "0" : "") + min;
-  return day + "." + month + "." + date.getFullYear() + " - " +hour + ":" + min
-  }
-
-
-const RemoteAll = ({ data, page, sizePerPage, onTableChange, totalSize, columns,user}) => (
-  <div>
-    <BootstrapTable
-      bootstrap4
-      remote
-      striped
-      hover
-      condense
-      keyField="username"
-      data={ data }
-      columns={ columns }
-      defaultSorted={ [{ dataField: defaultWorkerFilters(user).sortField,  order: defaultWorkerFilters(user).sortOrder}] }
-      filter={ filterFactory() }
-      pagination={ paginationFactory({ page, sizePerPage, totalSize }) }
-      onTableChange={ onTableChange }  
-      expandRow={{
-        showExpandColumn: true,
-        renderer: row => (<UpdateWorker data={{...row}} action = "update"></UpdateWorker>)
-      }}
-      classes="expand-table" 
-    />
-  </div>
-);
-
-RemoteAll.propTypes = {
-  data: PropTypes.array.isRequired,
-  page: PropTypes.number.isRequired,
-  totalSize: PropTypes.number.isRequired,
-  sizePerPage: PropTypes.number.isRequired,
-  onTableChange: PropTypes.func.isRequired
-};
+import {DeleteUser} from "."
+import {UpdateUser} from './UpdateUser'
 
 class Workers extends React.Component {
   constructor(props) {
     super(props);
-    this.handleTableChange = this.handleTableChange.bind(this);
-    this.user = this.props.user
-    this.filters = defaultWorkerFilters(this.user.username)
-    this.filterName = "defaultWorkerFilters" 
+    this.user = this.props.user.user
     this.state ={
-      data: [],
-      totalSize:0,
-      sizePerPage : 10, 
-      page: 1,
-      showDialog : false, 
-      users : this.getImpersonated(),
-      lastUsers : null
+        showDialog : false,
+        deleteUsername: "not set"
       }
-    this.columns = [{
+  }
+  getColumns = (searchParameters) => {
+    return [{
       dataField: 'username',
       text: 'Username',    
       sort: true,
-      filter: textFilter()
+      filter: textFilter(getDefaultFilter(searchParameters,'username'))
     }, {
       dataField: 'company',
       text: 'Company',
       sort: true,
-      filter: textFilter()
+      filter: textFilter(getDefaultFilter(searchParameters,'company'))
     
     },
     {
       dataField: 'works_for',
       text: 'Works for',
       sort: true,
-      filter: textFilter(),
+      filter: textFilter(getDefaultFilter(searchParameters,'works_for')),
       formatter: (cellContent) => { return cellContent.replace(" ", ", ")}
     
     },
@@ -98,7 +44,7 @@ class Workers extends React.Component {
       dataField: 'email',
       text: 'Email',
       sort: true,
-      filter: textFilter()
+      filter: textFilter(getDefaultFilter(searchParameters,'email'))
     
     },{
       dataField: 'updated',
@@ -113,115 +59,49 @@ class Workers extends React.Component {
         padding:0
       },
       formatter: (cellContent, row) => { return <><button title="Edit User" className="btn edit-button"  data-row={row.username}><FaEdit  size="20px"></FaEdit></button> <AllowedRoles roles={["admin","user_editor"]}><button title="Delete User" className="btn delete-button" data-row={row.username} onClick={this.deleteDialog.bind(this)}><FaTrash size="20px"></FaTrash></button></AllowedRoles></>}
-    }];    
-    this.deleteUser = this.deleteUser.bind(this)    
-    this.closeDialog = this.closeDialog.bind(this)  
+    }];
   }
-  deleteDialog(event) {
-    this.setState({
+  deleteDialog = (e) => {
+    this.setState(    {
       showDialog : true,
-      deleteUserName : event.currentTarget.dataset.row,
-      data : this.props.list
+      deleteUsername : e.currentTarget.dataset.row
     })
   }
-  async deleteUser() {
-    const self = this
-    const filters = this.props.filterParams || this.filters;
-    this.props.progress("Deleting user "+this.state.deleteUserName)
-    self.closeDialog();
-    await this.props.deleteUser(this.state.deleteUserName,filters)
-    this.props.message(this.props.workers)       
+  render () {
+    const data = this.props.list 
+    const totalSize =  this.props.totalSize
+    return <>
+    <RemoteTableService
+    columns = {this.getColumns}
+    filterAction = {this.props.filter}
+    name = "Worker"
+    data = {data}
+    totalSize = {totalSize}
+    defaultFilters = {defaultWorkerFilters}
+    expandRow={{
+        showExpandColumn: true,
+        renderer: row => (<UpdateUser data={{...row}} action = "update"></UpdateUser>)
+    }}
+  ></RemoteTableService>,
+      <DeleteUser
+          username = {this.state.deleteUsername}
+          show = {this.state.showDialog}           
+          close = {() => {this.setState({showDialog : false})}}
+    ></DeleteUser>
+    </>
   }
-  closeDialog() {
-    this.setState({showDialog : false})
-  }
-  getImpersonated() {
-    return this.props.impersonate || this.filters.users || this.user 
-  }
-  componentDidMount() {
-    const searchParameters = this.filters
-    searchParameters.users = this.getImpersonated()
-    this.props.filter(searchParameters)
-    this.setFilter(searchParameters)
-    this.lastUsers = searchParameters.users
-  }
-  componentDidUpdate() {
-    const searchParameters = this.filters
-    searchParameters.users = this.getImpersonated()
-    if(this.lastUsers && (searchParameters.users !== this.lastUsers)) {
-      this.props.filter(searchParameters)
-      this.setFilter(searchParameters)
-      this.lastUsers = searchParameters.users
-    } else {
-      this.lastUsers = searchParameters.users
-    }
-  }
-  handleTableChange =  (type, { page, sizePerPage, filters, sortField, sortOrder, cellEdit })  => {
-    filters.type = { filterVal : this.filters.type}
-    const queryArray = Object.keys(filters).map(filterName => {
-      const filter = filters[filterName]
-      return "@" + filterName + ":" + filter.filterVal.replace(/\./g,"").replace(/-/,"_")+"*"
-    })
-    const filter  = queryArray.length > 0 ? queryArray.join(" ") : "*"
-    const users = this.getImpersonated();
-    sortField = sortField || this.filters.sortField
-    sortOrder = sortOrder  || this.filters.sortOrder
-    const searchParameters = {page,sizePerPage,filter,sortField,sortOrder,users, type: this.filters.type }
-    this.props.filter(searchParameters,this.props.workers)
-    this.setFilter(searchParameters)
-  }
-  setFilter(searchParameters) {
-    localStorage.setItem(this.filterName+'_' + this.user.username, JSON.stringify(searchParameters))
-  }
-  render() {     
-    const page =  this.props.filterParams.page 
-    const sizePerPage =  this.props.filterParams.sizePerPage 
-    let data = this.props.list
-    return <>  
-        <Modal  style={{opacity:1}} show={this.state.showDialog} onHide={this.closeDialog}>
-          <Modal.Header closeButton>
-            <Modal.Title>Delete user: {this.state.deleteUserName}</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>Do you want to delete the user {this.state.deleteUserName}?</Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={this.closeDialog}>
-              Close
-            </Button>
-            <Button variant="primary" id={this.state.deleteUserName} onClick={this.deleteUser}>
-              Delete user
-            </Button>
-          </Modal.Footer>
-        </Modal>
-        <div className="card record-inputs">
-          <div className="card-header">
-            <h5>Edit Workers</h5>
-          </div>
-          <div className="card-body">
-          <RemoteAll
-              data={ data || [] }
-              page={ page || 1}
-              columns = {this.columns}
-              user = {this.user.username}
-              sizePerPage={ sizePerPage | this.filters.sizePerPage}
-              totalSize={  this.totalSize || this.state.totalSize }
-              onTableChange={ this.handleTableChange }  />  
-          </div>
-      </div>
-      </>    
-  }
+
 }
 const actionCreators = {
   filter: workerActions.filter,
-  deleteUser: workerActions.delete,
   message : alertActions.message,
-	progress: alertActions.progress
+	progress: alertActions.progress,
 }
 function mapState(state) {
-  const { workers, authentication} = state
-  const { user } = authentication
-  const { list, filterParams, totalSize } = workers;
-  const { impersonate } = state.usertree;
-  return { user : user.user , list, totalSize, filterParams, impersonate, workers };
+  const { user } = state.authentication;
+  const { list, totalSize } = state.workers;
+  const { rootDescendants } = state.usertree;
+  return { user, list, totalSize, rootDescendants};
 }
 const connectedWorkers = connect(mapState, actionCreators)(Workers)
 export {connectedWorkers as Workers}

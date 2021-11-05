@@ -1,12 +1,12 @@
 import { workerConstants } from '../_constants';
 
-export function workers(state = {error : null, success : null, progress : null, loading : false}, action) {
+export function workers(state = {list: [], totalSize: 0, error : null, success : null, progress : null, loading : false}, action) {
 	state.error = null
 	state.success = null
 	state.progress = null
 	state.loading = false
 	switch (action.type) {
-
+// TODO:  remove SET_FILTER
 		case workerConstants.SET_FILTER:
 			return {
 				...state,
@@ -21,7 +21,6 @@ export function workers(state = {error : null, success : null, progress : null, 
 		case workerConstants.FILTER_SUCCESS:
 			return {
 				...state,
-				loading:false, 
 				list: action.list,
 				totalSize: action.totalSize,
 				
