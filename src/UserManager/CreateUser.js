@@ -27,16 +27,36 @@ class CreateUser extends React.Component {
 		const filters =   defaultAccountFilters(this.user.username) ;		
 		await this.props.createUser({...this.state, parent : this.props.impersonate.username },filters);
 		this.props.message(this.props.users)
-	}
+	}	
+	validate() {
+		if (!this.state.username) {
+			return false;
+		}
+		if (!this.state.username.match(/^[a-z0-9_]+$/)) {
+			return false;
+		}
+		if (!this.state.email) {
+			return false;
+		}
+		if (!this.state.email.match( /\S+@\S+\.\S+/)) {
+			return false;
+		}
+		if (!this.state.company) {
+			return false;
+		}
+		return true;
+	}	
 	render() {	
+		const disabled = !this.validate() ? 'disabled' : false;
 		return (      
 			<div className="mb-1">
 			 <AllowedRoles roles={["admin","user_editor"]}>
 			 <div className="card record-inputs">
 				<div className="card-header">
-					<h5>Create subaccount of {this.props.impersonate.name}</h5>
+					<h5>Create sub-account of {this.props.impersonate.name}</h5>
 				</div>
 				<div className="card-body">
+				<p>Create new user as a sub-account of {this.props.impersonate.name}. Can see/edit  it's zones and all zones of the sub-users.<br></br>Only the character a-z, 0-9 and _ are allowed for the username.  </p>
 				<Form>
                     <Form.Row>
                         <Col>
@@ -49,7 +69,7 @@ class CreateUser extends React.Component {
                             <Form.Control name="email" placeholder="Email" onChange={this.handleChange} value={this.state.email} />
                         </Col>
                         <Col>                       
-                            <Button onClick={this.submit}>CreateUser</Button>
+                            <Button  disabled={disabled} onClick={this.submit}>CreateUser</Button>
                         </Col>
                     </Form.Row>         					
                 </Form>

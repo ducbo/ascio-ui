@@ -30,15 +30,35 @@ class CreateWorker extends React.Component {
 		}
 		this.props.message(this.props.workers)
 	}
-	render() {	
+	validate() {
+		if (!this.state.username) {
+			return false;
+		}
+		if (!this.state.username.match(/^[a-z0-9_]+$/)) {
+			return false;
+		}
+		if (!this.state.email) {
+			return false;
+		}
+		if (!this.state.email.match( /\S+@\S+\.\S+/)) {
+			return false;
+		}
+		if (!this.state.company) {
+			return false;
+		}
+		return true;
+	}	
+	render() {
+		const disabled = !this.validate() ? 'disabled' : false;
 		return (      
 			<div className="mb-1">			 
 				<AllowedRoles roles={["admin","user_editor"]}>
 					<div className="card record-inputs">
 						<div className="card-header">
-						<h5>Create worker for account {this.props.impersonate.name}</h5>
+						<h5>Create worker for the account {this.props.impersonate.name}</h5>
 						</div>
 						<div className="card-body">
+							<p>Create a new user that works for the company {this.props.impersonate.name}. Can see/edit  it's zones and all zones of the sub-users. <br></br>Only the character a-z, 0-9 and _ are allowed for the username.  </p>
 							<Form>
 								<Form.Row>
 									<Col>
@@ -51,7 +71,7 @@ class CreateWorker extends React.Component {
 										<Form.Control name="email" placeholder="Email" onChange={this.handleChange} value={this.state.email}/>
 									</Col>
 									<Col>                       
-										<Button onClick={this.submit}>Create Worker</Button>
+										<Button disabled={disabled}  onClick={this.submit}>Create Worker</Button>
 									</Col>
 								</Form.Row>        								
 							</Form>

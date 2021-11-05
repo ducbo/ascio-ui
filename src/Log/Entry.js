@@ -31,7 +31,7 @@ class Entry extends React.Component{
         });
         return <>
              <h4>{this.message}</h4>
-            <table class="table table-dark table-sm striped" style={{width:"400px"}}>
+            <table className="table table-dark table-sm striped" style={{width:"400px"}}>
                 <tr>
                     <th style={{width:"150px"}}>Property</th>
                     <th>Value</th>
@@ -54,7 +54,7 @@ class Entry extends React.Component{
         });
         return <>
             <h4>{this.message}</h4>
-            <table class="table table-dark table-sm striped" >
+            <table className="table table-dark table-sm striped" >
                 <tr>
                     <th style={{width:"150px"}}>Property</th>
                     <th>Old value</th>

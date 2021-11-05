@@ -63,9 +63,10 @@ class CreateZone extends React.Component {
 				<AllowedRoles roles={[ 'admin', 'zone_editor' ]}>
 					<div className="card">
 						<div className="card-header">
-							<h5>Create/Sync zone for user {this.props.impersonate.name}</h5>
+							<h5>Create/Sync zone for account {this.props.impersonate.name}.</h5>							
 						</div>
 						<div className="card-body">
+						<p>The zone will be synced, if the zone already exists. They user will be set to  {this.props.impersonate.name}.</p>
 							<Form>
 								<Form.Row>
 									<Col>
