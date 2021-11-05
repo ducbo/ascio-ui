@@ -62,13 +62,12 @@ class CreateZone extends React.Component {
 		);
 		const disabled = !this.validate() ? 'disabled' : false;
 		const selected = this.getImpersonated()
-		console.log('selected: ', selected);
 		return (
 			<div className="mb-1">
 				<AllowedRoles roles={[ 'admin', 'zone_editor' ]}>
 					<div className="card">
 						<div className="card-header">
-							<h5>Create Zone</h5>
+							<h5>Create Zone for user {this.props.impersonate.name}</h5>
 						</div>
 						<div className="card-body">
 							<Form>

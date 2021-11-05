@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
-import { history } from '../_helpers';
-import { userActions } from '../_actions';
+import { history, init } from '../_helpers';
+import { userActions,userTreeActions } from '../_actions';
 import {QR} from './QR'
 import React from 'react';
 import socketIOClient from "socket.io-client";
@@ -36,7 +36,9 @@ class Code extends React.Component {
             const socket = socketIOClient(config.websocketUrl,{
                 transports: ['websocket']
               }) 
-            socket.emit("user:login",this.props.user.token)                    
+            socket.emit("user:login",this.props.user.token)    
+            await this.props.getRootDescendants(this.props.user.user.username)  
+            await this.props.impersonate(init(this.props.user.user))                          
             history.push("/dns-manager")
         }
 
@@ -62,7 +64,9 @@ class Code extends React.Component {
 }
 
 const actionCreators = {
-    login: userActions.login
+    login: userActions.login,
+    getRootDescendants : userTreeActions.getRootDescendants,
+    impersonate : userTreeActions.impersonate
 };
 function mapState(state) {
     const {  authentication } = state;

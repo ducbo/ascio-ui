@@ -17,14 +17,15 @@ import { PrivateRoute } from './_components';
 import { LoginPage } from './LoginPage';
 import { PasswordResetPage } from './PasswordResetPage';
 import { RegisterPage } from './RegisterPage';
-import {DnsManager} from './DnsManager';
-import {Log} from './Log';
-import {UserManager} from './UserManager';
-import {Zone} from './Zone';
+import { DnsManager } from './DnsManager';
+import { Log } from './Log';
+import { UserManager } from './UserManager';
+import { Zone } from './Zone';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import { userTreeActions } from './_actions';
 import { createMessage } from "./Messages"
+import { init } from "./_helpers"
 
 class App extends React.Component {
 	constructor(props) {
@@ -46,13 +47,9 @@ class App extends React.Component {
 	componentDidMount() {
 		if(this.props.user) {	
 			const self = this		
+			this.props.getRootDescendants(this.props.user.user.username)
 			this.connectSocket(this.props.user.token)
-			const impersonatedJson = localStorage.getItem('customer_tree_'+self.props.user.user.username+'_selected');
-			let impersonated = null
-			if(impersonatedJson) {
-				impersonated = JSON.parse(impersonatedJson)
-				self.props.setImpersonate(impersonated)
-			}
+			self.props.setImpersonate(init(self.props.user.user))
 			window.setTimeout(function() {
 				self.props.socket.on("ascio:objects", function(message) {			
 					if(message.data.record)	 {
@@ -140,6 +137,7 @@ const actionCreators = {
 	reAuth: userActions.reAuth,
 	setSocket : userActions.setSocket,
 	setImpersonate : userTreeActions.impersonate,
+	getRootDescendants : userTreeActions.getRootDescendants,
 	updateRecordSocket : recordActions.updateSocket,
 	createRecordSocket : recordActions.createSocket,
 	deleteRecordSocket : recordActions.deleteSocket,

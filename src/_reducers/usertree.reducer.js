@@ -1,6 +1,6 @@
 import { usertreeConstants } from '../_constants';
 
-export function usertree(state = {data: {}, descendants : [], rootDescendants : [], selectableUsers: {}, children : []}, action) {
+export function usertree(state = {data: {}, descendants : [], rootDescendants : [], selectableUsers: {}, children : [], impersonate : {name: null, username: null}}, action) {
   state.error = null
   state.success = null
   state.progress = null

@@ -7,3 +7,4 @@ export * from './Filters';
 export * from './RemoteTable.js';
 export * from './notification.js';
 export * from './handleResponse.js';
+export * from './init.js';
