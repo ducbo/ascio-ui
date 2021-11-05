@@ -80,14 +80,15 @@ export function usertree(state = {data: {}, descendants : [], rootDescendants : 
       };
     case usertreeConstants.EXPANDED_REQUEST: {
       return {
-        ...state, 
+        ...state,
+        worker: action.worker, 
         expanded: action.expanded
       }
     }
     case usertreeConstants.EXPANDED_SUCCESS: {
       return {
         ...state, 
-        expanded: action.expanded
+        expanded: state.worker ?action.expanded.concat([state.worker]) : action.expanded
       }
     }
     case usertreeConstants.EXPANDED_FAILURE: {

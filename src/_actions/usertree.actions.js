@@ -22,15 +22,15 @@ function setExpanded(expanded) {
 function setData(data) {
 	return { type: usertreeConstants.SET_DATA, data }
 }
-function requestExpanded(username) {
+function requestExpanded(username, worker) {
 	return (dispatch) => {
-		dispatch(request());
+		dispatch(request(worker));
 		return userTreeService
 			.getParents(username)
 			.then((result) => dispatch(success(result)), (error) => dispatch(failure(error.toString())));
 	};
-	function request() {
-		return { type: usertreeConstants.EXPANDED_REQUEST };
+	function request(worker) {
+		return { type: usertreeConstants.EXPANDED_REQUEST, worker };
 	}
 	function success(expanded) {
 		return { type: usertreeConstants.EXPANDED_SUCCESS, expanded};

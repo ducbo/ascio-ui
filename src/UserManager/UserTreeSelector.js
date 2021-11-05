@@ -9,7 +9,11 @@ class UserTreeSelector extends React.Component {
             return
         }
         const impersonate = {username:value.id, name: value.name}
-        this.props.requestExpanded(value.id)
+        let worker = null
+        if(this.props.user.type === "worker") {
+            worker = this.props.user.username
+        }
+        this.props.requestExpanded(value.id, worker)
         this.props.setImpersonate(impersonate)   
         const storageId = 'customer_tree_' + this.props.user.username
         localStorage.setItem(storageId+"_selected", JSON.stringify(impersonate))         
