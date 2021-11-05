@@ -51,6 +51,9 @@ class RemoteTableService extends React.Component {
   }
   handleTableChange = async (type, {page,sizePerPage,filters,sortField,sortOrder,users}) => {
     this.search.users = this.getImpersonated()
+    if(!this.search.users.username) {
+      return
+    }
     filters = type === "sort" ? this.search.filters : filters
     this.search = { users: this.search.users, page,sizePerPage,filters,sortField,sortOrder }
     // prevent double post
