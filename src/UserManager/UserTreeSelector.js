@@ -16,9 +16,6 @@ class UserTreeSelector extends React.Component {
         this.props.setImpersonate({username:value.id, name: value.name})      
     }
     render () {
-        return ""
-    }
-    render2 () {
         return  <>
                 <button className="btn btn-default" onClick={this.test}>tucows/ascio/epag</button>
                 <UserSelector

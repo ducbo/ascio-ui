@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { connect } from 'react-redux';
 import {CreateZone, Zones} from '../Zones'
-import { userTreeActions } from '../_actions';
 import NavProtected from '../NavProtected.js'
 
 class DnsManager extends Component {
@@ -9,9 +8,6 @@ class DnsManager extends Component {
         super(props);
         this.state = { selectedSubUsers: []};
         this.user = this.props.user.user
-    }
-    componentDidMount() {
-        this.props.getRootDescendants(this.user.username)
     }
     render() {
         return (
@@ -31,14 +27,11 @@ class DnsManager extends Component {
         )
     }
 }
-const actionCreators = {
-    getRootDescendants : userTreeActions.getRootDescendants
-}
 function mapState(state) {
     const {  authentication } = state;
     const { user } = authentication;
     const { rootDescendants } = state.usertree
     return { user,  rootDescendants };
 }
-const connectedDnsManager = connect(mapState, actionCreators)(DnsManager)
+const connectedDnsManager = connect(mapState, null)(DnsManager)
 export { connectedDnsManager as DnsManager}

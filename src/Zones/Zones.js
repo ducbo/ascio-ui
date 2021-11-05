@@ -117,9 +117,9 @@ const actionCreators = {
 }
 function mapState(state) {
   const { user } = state.authentication;
-  const { zones, success, progress } = state.zones;
+  const { zones } = state.zones;
   const { rootDescendants } = state.usertree;
-  return { user, zones, rootDescendants, zoneMessage : {success,progress} };
+  return { user, zones, rootDescendants};
 }
 const connectedZones = connect(mapState, actionCreators)(Zones)
 export {connectedZones as Zones}
