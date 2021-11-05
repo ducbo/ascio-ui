@@ -4,3 +4,4 @@ export * from './UserManager';
 export * from './CreateUser';
 export * from './CreateWorker';
 export * from './UserSelector';
+export * from './DeleteUser';

@@ -1,6 +1,6 @@
 import { userConstants } from '../_constants';
 
-export function users(state = {}, action) {
+export function users(state = {list: [], totalSize: 0}, action) {
   state.error = null
 	state.success = null
 	state.progress = null
@@ -8,6 +8,7 @@ export function users(state = {}, action) {
   switch (action.type) {
     case userConstants.FILTER_REQUEST:
 			return {
+        ...state,
 				loading: true, 
         filterParams:  { ...action.filterParams}
 			};

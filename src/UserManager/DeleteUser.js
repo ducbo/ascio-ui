@@ -1,46 +1,56 @@
-import { connect } from 'react-redux';
-import { userActions, alertActions, zoneActions, workerActions, userActions } from '../_actions';
-import React from 'react';
-import { Button } from 'react-bootstrap';
-import {defaultZoneFilters, defaultWorkerFilters, defaultAccountFilters}  from '../defaults';
+import { ActionDialog } from "../_components/ActionDialog";
+import React from "react";
+import PropTypes from 'prop-types'
+import { userActions, alertActions } from '../_actions';
+import { connect } from 'react-redux'
 
 class DeleteUser extends React.Component {
-    constructor (props) { 
-        super(props)
-        this.state = {loading: false}
+    submitDelete = async () => {
+        console.log("disabled")
+        /* 
+        const searchParameters = defaultUserFilters(this.props.user.username)        
+        searchParameters.users = this.props.impersonate   
+        const filters = new Filters(searchParameters.filter)        
+        this.props.progress("Deleting user "+this.props.username)
+        this.props.close()
+        await this.props.DeleteUser(this.props.username, {...searchParameters, filter: filters.get()})
+        this.setState({ showDialog : false })
+        this.props.message(this.props.userMessage)  
+        */
     }
-    send = async () =>  {
-        this.setState({loading: true})
-        await this.filter(defaultZoneFilters, "Zones")
-        await this.filter(defaultWorkerFilters, "Workers")
-        await this.filter(defaultAccountFilters, "Accounts")
-        this.setState({loading: false})
-        this.props.message(this.props.users)
-    }
-    filter = async (defaultFilters,type) =>  {
-        const filters = defaultFilters()
-        filters.users = this.username
-        return this.props["filter"+type](filters)        
-    }
-    render() {
-       return <Button onClick={this.sendReset} disabled={this.props.users.loading}>Reset Password</Button>
-    }
-}
+    render () {
+        const objectName = "user"
+        return <ActionDialog
+            objectName = {objectName}
+            objectValue = {this.props.username}
+            show       = {this.props.show}
+            hide       = {this.props.close}
+            action     = {this.submitDelete}
+            title      = {"Delete " + objectName+ ": " + this.props.username}
+            body       = {"Do you want to delete the "+objectName+" "+this.props.username+" and all it's records?"}
+            buttonText      = {"Delete"}        
+        ></ActionDialog>
 
-function mapState(state) {
-    const {  authentication, users ,workers, zones } = state;
-    const { user,qr } = authentication;
-    return { user,qr,users, workers, zones  };
+    }
+
+
+}
+DeleteUser.propTypes = {
+    username : PropTypes.string.isRequired,
+    show     : PropTypes.bool.isRequired,
+    close     : PropTypes.func.isRequired,
 }
 
 const actionCreators = {
+    deleteUser: userActions.delete,
     message : alertActions.message,
-	progress: alertActions.progress,
-    filterWorkers : workerActions.filter,
-    filterUsers : userActions.filter,
-    filterZones : zoneActions.filter,
-    resetPassword: userActions.resetPassword 
-};
-
-const DeleteUserconnected = connect(mapState, actionCreators)(DeleteUser);
-export  { DeleteUserconnected as DeleteUser }
+    progress: alertActions.progress,
+  }
+  function mapState(state) {
+    const { user } = state.authentication;
+    const { impersonate } = state.usertree
+    const { success, progress } = state.users;
+    return { user, impersonate,  userMessage : {success,progress} };
+  }
+  const connectedDeleteUser = connect(mapState, actionCreators)(DeleteUser)
+  export {connectedDeleteUser as DeleteUser}
