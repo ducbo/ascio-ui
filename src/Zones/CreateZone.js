@@ -22,12 +22,9 @@ class CreateZone extends React.Component {
 	handleChange = (e) => {
 		this.setState({ [e.target.name]: e.target.value });
 	};
-	componentDidUpdate = () => {
-		console.log("update")
-	}
 	submit = async () => {
 		const self = this;
-		const username = this.state.user.id;
+		const username = this.props.impersonate.username
 		const filter = defaultZoneFilters(this.user.username);
 		this.props.progress('Creating zone ' + this.state.zoneName + ' for user ' + username);
 		await this.props.createZone(this.state.zoneName, username, this.state.api, filter);
@@ -35,7 +32,7 @@ class CreateZone extends React.Component {
 		this.setState({ zoneName: '' });
 	};
 	validate() {
-		if (!(this.state.zoneName && this.state.user)) {
+		if (!this.state.zoneName) {
 			return false;
 		}
 		if (!this.state.zoneName.match(/^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9](?:\.[a-zA-Z]{2,})+$/)) {
@@ -61,7 +58,6 @@ class CreateZone extends React.Component {
 			</AllowedRoles>
 		);
 		const disabled = !this.validate() ? 'disabled' : false;
-		const selected = this.getImpersonated()
 		return (
 			<div className="mb-1">
 				<AllowedRoles roles={[ 'admin', 'zone_editor' ]}>
@@ -80,13 +76,7 @@ class CreateZone extends React.Component {
 											onChange={this.handleChange}
 										/>
 									</Col>
-									<Col>
-										<UserSelector
-											id={'create-' + this.state.zoneName}
-											onChange={this.setUser}
-											selected={selected}
-										/>
-									</Col>
+
 									<Col>
 										<Button disabled={disabled} onClick={this.submit}>
 											CreateZone
