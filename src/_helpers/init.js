@@ -6,7 +6,11 @@ function init(user)  {
     let impersonated = null
     if(impersonatedJson) {
         impersonated = JSON.parse(impersonatedJson)
-        return impersonated
+        if(impersonated instanceof Object) {
+            return impersonated
+        } else {
+            return {username : impersonated, name: impersonated}
+        }
     } else {
         return {name: null, username: null}
     }

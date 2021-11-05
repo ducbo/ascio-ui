@@ -5,6 +5,9 @@ const getFilters = function(name,defaultSortField) {
 		let impersonated = null
 		if(impersonatedJson) {
 			impersonated = JSON.parse(impersonatedJson)
+			if(!(impersonated instanceof Object)) {
+				impersonated =  {username : impersonated, name: impersonated}
+			}
 		} 
 		if (storageFilters) {
 			const result =  JSON.parse(storageFilters);
