@@ -3,7 +3,7 @@ import  { textFilter } from 'react-bootstrap-table2-filter'
 import { connect } from 'react-redux'
 import { userActions, alertActions } from '../_actions';
 import {RemoteTableService} from '../_components'
-import { dateFormatter } from '../_helpers'
+import { dateFormatter, getDefaultFilter } from '../_helpers'
 import { defaultAccountFilters } from '../defaults.js'
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import { AllowedRoles } from "../_components";
@@ -25,19 +25,19 @@ class Users extends React.Component {
       dataField: 'username',
       text: 'Username',    
       sort: true,
-      filter: textFilter()
+      filter: textFilter(getDefaultFilter(searchParameters,'username'))
     }, {
       dataField: 'company',
       text: 'Company',
       sort: true,
-      filter: textFilter()
+      filter: textFilter(getDefaultFilter(searchParameters,'company'))
     
     },
     {
       dataField: 'email',
       text: 'Email',
       sort: true,
-      filter: textFilter()
+      filter: textFilter(getDefaultFilter(searchParameters,'email'))
     
     },
     {
