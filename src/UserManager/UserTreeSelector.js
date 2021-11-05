@@ -11,9 +11,11 @@ class UserTreeSelector extends React.Component {
         this.props.setImpersonate({username:"softgarden", name: "Softgarden"})        
     }
     onChange =  async(value) => {
-        console.log("usertreeselector",value)
+        const impersonate = {username:value.id, name: value.name}
         this.props.requestExpanded(value.id)
-        this.props.setImpersonate({username:value.id, name: value.name})      
+        this.props.setImpersonate(impersonate)   
+        const storageId = 'customer_tree_' + this.props.user.username
+        localStorage.setItem(storageId+"_selected", JSON.stringify(impersonate))         
     }
     render () {
         return  <>
@@ -36,7 +38,11 @@ const actionCreators = {
   }
   
   function mapState(state) {
-    return { impersonate: state.usertree.impersonate };
+    const {user} = state.authentication
+    return { 
+        user: user.user, 
+        impersonate: state.usertree.impersonate 
+    };
   }
   const UserTreeSelectorConnected = connect(mapState, actionCreators)(UserTreeSelector)
   export default UserTreeSelectorConnected 
