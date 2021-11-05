@@ -5,7 +5,6 @@ function handleResponse(response) {
         const data = text && JSON.parse(text);
         if (!response.ok) {
             if (response.status === 401) {
-                localStorage.clear();
                 logout();
             }
 
