@@ -37,17 +37,22 @@ function ImpersonateTree(props) {
   let [tree, setTree] = useState(initialData);  
   let [expanded, setExpanded] = useState(props.expanded || initialExpanded);  
   // user selector activated
+  let children
+  const getExpandedData = async (expanded) => {
+    for (let i = 0; i < props.expanded.length; i++) {
+      const node = props.expanded[i]
+      if(expanded.indexOf(node) < 0) {
+          children = await props.getChildren(node)
+          buildTree(node,children)     
+      }
+      
+    }
+                      
+  }
   if(props.expanded && (expanded !== props.expanded)) {
     setExpanded(props.expanded)
     localStorage.setItem(storageId+"_expanded", JSON.stringify(props.expanded))  
-    for(let i = 0; i < props.expanded.length; i++) {
-      const node = props.expanded[i]
-      if(expanded.indexOf(node) < 0) {
-        props.getChildren(node).then(children => {
-          buildTree(node,children)                  
-        })     
-      }
-    }
+    getExpandedData(expanded)
   }
   if(props.updatedUser) {
     Object.keys(tree).forEach((key) => {

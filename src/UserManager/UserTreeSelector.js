@@ -10,7 +10,7 @@ class UserTreeSelector extends React.Component {
         }
         const impersonate = {username:value.id, name: value.name}
         let worker = null
-        if(this.props.user.type === "worker") {
+        if(this.props.user.works_for) {
             worker = this.props.user.username
         }
         this.props.requestExpanded(value.id, worker)
