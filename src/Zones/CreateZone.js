@@ -63,7 +63,7 @@ class CreateZone extends React.Component {
 				<AllowedRoles roles={[ 'admin', 'zone_editor' ]}>
 					<div className="card">
 						<div className="card-header">
-							<h5>Create Zone for user {this.props.impersonate.name}</h5>
+							<h5>Create/Sync zone for user {this.props.impersonate.name}</h5>
 						</div>
 						<div className="card-body">
 							<Form>
@@ -79,7 +79,7 @@ class CreateZone extends React.Component {
 
 									<Col>
 										<Button disabled={disabled} onClick={this.submit}>
-											CreateZone
+											Create/Sync
 										</Button>
 									</Col>
 								</Form.Row>

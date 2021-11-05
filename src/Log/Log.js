@@ -17,7 +17,15 @@ class Log extends Component {
         return (
             <>
                 <NavProtected  selected={this.props.location.pathname}>
+                <div className="card">
+                    <div className="card-header">
+                        <h5>View logs for account {this.props.impersonate.name}</h5>
+                    </div>
+                    <div className="card-body card-table">
                     <LogTable/>
+                </div>
+                </div>
+                   
                 </NavProtected> 
             </>
         )
@@ -29,8 +37,8 @@ const actionCreators = {
 function mapState(state) {
     const {  authentication } = state;
     const { user } = authentication;
-    const { rootDescendants } = state.usertree
-    return { user,  rootDescendants };
+    const { rootDescendants, impersonate } = state.usertree
+    return { user,  rootDescendants, impersonate };
 }
 const connectedLog = connect(mapState, actionCreators)(Log)
 export { connectedLog as Log}

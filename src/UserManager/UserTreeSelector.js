@@ -4,13 +4,10 @@ import { userTreeActions} from "../_actions"
 import { connect } from 'react-redux';
 
 class UserTreeSelector extends React.Component {
-    test = () =>  {
-        console.log("click")
-        //this.props.setExpanded(["tucows","ascio"])   
-        this.props.requestExpanded("softgarden")
-        this.props.setImpersonate({username:"softgarden", name: "Softgarden"})        
-    }
     onChange =  async(value) => {
+        if(!value) {
+            return
+        }
         const impersonate = {username:value.id, name: value.name}
         this.props.requestExpanded(value.id)
         this.props.setImpersonate(impersonate)   
@@ -19,12 +16,11 @@ class UserTreeSelector extends React.Component {
     }
     render () {
         return  <>
-                <button className="btn btn-default" onClick={this.test}>tucows/ascio/epag</button>
                 <UserSelector
                     selected = {this.props.impersonate}
                     onChange = {this.onChange}
                     id = "tree-selector"
-                ></UserSelector>
+                ></UserSelector><hr></hr>
 
             </>
     }

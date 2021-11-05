@@ -34,7 +34,7 @@ class CreateUser extends React.Component {
 			 <AllowedRoles roles={["admin","user_editor"]}>
 			 <div className="card record-inputs">
 				<div className="card-header">
-					<h5>Create Account</h5>
+					<h5>Create subaccount of {this.props.impersonate.name}</h5>
 				</div>
 				<div className="card-body">
 				<Form>
