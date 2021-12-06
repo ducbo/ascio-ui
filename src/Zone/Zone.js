@@ -4,7 +4,7 @@ import paginationFactory from 'react-bootstrap-table2-paginator';
 import filterFactory, { selectFilter,textFilter, Comparator } from 'react-bootstrap-table2-filter';
 import {ConvertName, Record, DeleteRecord} from '../Record'
 import {NameSwitch} from '../Record/NameSwitch'
-import {Modal, Button} from 'react-bootstrap'
+import { Button} from 'react-bootstrap'
 import { connect } from 'react-redux';
 import { recordActions, alertActions } from '../_actions';
 import NavProtected from '../NavProtected.js'

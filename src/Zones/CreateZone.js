@@ -5,7 +5,6 @@ import { Button, Form, Col } from 'react-bootstrap';
 //import { Combobox } from 'react-widgets';
 import { defaultZoneFilters } from '../defaults';
 import { AllowedRoles } from '../_components';
-import { UserSelector } from '../UserManager';
 
 class CreateZone extends React.Component {
 	constructor(props) {
