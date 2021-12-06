@@ -2,7 +2,7 @@ import React from "react";
 import BootstrapTable from 'react-bootstrap-table-next';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import filterFactory, { selectFilter,textFilter, Comparator } from 'react-bootstrap-table2-filter';
-import {ConvertName, Record} from '../Record'
+import {ConvertName, Record, DeleteRecord} from '../Record'
 import {NameSwitch} from '../Record/NameSwitch'
 import {Modal, Button} from 'react-bootstrap'
 import { connect } from 'react-redux';
@@ -13,6 +13,8 @@ import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css'
 import 'react-widgets/dist/css/react-widgets.css';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import {LogTableZone} from '../Log'
+
+
 
 const selectOptions = {
     "A" : "A",
@@ -169,20 +171,13 @@ class Zone extends React.Component {
     
   </div>
 </div>   
-      <Modal  style={{opacity:1}} show={this.state.showDialog} onHide={this.closeDialog}>
-          <Modal.Header closeButton>
-            <Modal.Title>Delete record from {zoneName}</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>Do you want to delete the record {this.state.deleteId}?</Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={this.closeDialog}>
-              Close
-            </Button>
-            <Button variant="primary" id={this.state.deleteId} onClick={this.deleteRecord}>
-              Delete record
-            </Button>
-          </Modal.Footer>
-        </Modal>
+<DeleteRecord
+   show = {this.state.showDialog}
+   close ={this.closeDialog}
+   zoneName={zoneName}
+   recordId={this.state.deleteId}
+
+></DeleteRecord>
   </NavProtected>
     );
   }
