@@ -99,7 +99,7 @@ class Zones extends React.Component {
     data = {data}
     totalSize = {totalSize}
     defaultFilters = {defaultZoneFilters}
-  ></RemoteTableService>,
+  ></RemoteTableService>
       <DeleteZone
           zoneName = {this.state.deleteZoneName}
           show = {this.state.showDialog}           
