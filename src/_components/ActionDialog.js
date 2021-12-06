@@ -12,7 +12,7 @@ class ActionDialog extends React.Component {
     }
 	render() {
 		return (<>
-			<Modal style={{ opacity: 1 }} show={this.props.show} onHide={this.props.hide}>
+			<Modal show={this.props.show} onHide={this.props.hide}>
 				<Modal.Header closeButton>
 					<Modal.Title>{this.props.title}</Modal.Title>
 				</Modal.Header>
