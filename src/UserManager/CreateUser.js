@@ -26,6 +26,7 @@ class CreateUser extends React.Component {
 		this.props.progress("Creating user "+this.state.username);
 		const filters =   defaultAccountFilters(this.user.username) ;		
 		await this.props.createUser({...this.state, parent : this.props.impersonate.username },filters);
+		this.setState({username : '', company : '', email: ''})
 		this.props.message(this.props.users)
 	}	
 	validate() {
