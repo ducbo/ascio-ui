@@ -79,7 +79,7 @@ export function users(state = {list: [], totalSize: 0}, action) {
         return {
           ...state,          
           updatedUser: action.user,
-          success: "User updated: "+action.user.company,
+          success: "User updated: "+action.user.company || action.user.name || action.user.username,
           list: state.list.map((user) => {
               if (user.username === action.user.username) {
                 return action.user;

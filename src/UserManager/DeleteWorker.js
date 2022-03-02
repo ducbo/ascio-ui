@@ -48,7 +48,7 @@ const actionCreators = {
   function mapState(state) {
     const { user } = state.authentication;
     const { impersonate } = state.usertree
-    const { success, progress } = state.users;
+    const { success, progress } = state.workers;
     return { user, impersonate,  userMessage : {success,progress} };
   }
   const connectedDeleteWorker = connect(mapState, actionCreators)(DeleteWorker)

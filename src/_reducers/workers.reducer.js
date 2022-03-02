@@ -41,7 +41,7 @@ export function workers(state = {list: [], totalSize: 0, error : null, success :
 				...state,
 				loading:false,
 				updatedUser: action.user,
-				success: "Updated "+action.user.username,
+				success: "Updated "+action.user.company || action.user.name || action.user.username,
 				list: state.list.map((user) => {
 						if (user.username === action.user.username) {
 							return action.user;
