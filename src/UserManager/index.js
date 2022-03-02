@@ -5,4 +5,6 @@ export * from './CreateUser';
 export * from './CreateWorker';
 export * from './UserSelector';
 export * from './DeleteUser';
+export * from './DeleteCheck';
+export * from './DeleteCheckObjects';
 export * from './DeleteWorker';

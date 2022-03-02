@@ -11,7 +11,7 @@ class DeleteWorker extends React.Component {
         const searchParameters = defaultWorkerFilters(this.props.user.username)        
         searchParameters.users = this.props.impersonate   
         const filters = new Filters(searchParameters.filter)        
-        this.props.progress("Deleting user "+this.props.username)
+        this.props.progress("Deleting worker "+this.props.username)
         this.props.close()
         await this.props.deleteWorker(this.props.username, {...searchParameters, filter: filters.get()})
         this.setState({ showDialog : false })

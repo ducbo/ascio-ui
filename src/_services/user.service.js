@@ -20,7 +20,8 @@ export const userService = {
     verifyTotpCode,
     delete: _delete,
     filter,
-    create
+    create,
+    checkDelete
 };
 function filter(searchParameters) {
     const requestOptions = {
@@ -29,6 +30,13 @@ function filter(searchParameters) {
         body: JSON.stringify(searchParameters)
     };
     return fetch(`${config.apiUrl}/users/search`, requestOptions).then(handleResponse);
+}
+function checkDelete(username) {
+    const requestOptions = {
+        method: 'GET',
+        headers: authHeader(),
+    };
+    return fetch(`${config.apiUrl}/users/check-delete/${username}`, requestOptions).then(handleResponse);
 }
 function create(user,filters) {
     const requestOptions = {

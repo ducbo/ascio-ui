@@ -21,9 +21,11 @@ class ActionDialog extends React.Component {
 					<Button variant="secondary" onClick={this.props.hide}>
 						Close
 					</Button>
+					{this.props.buttonText &&  
 					<Button variant="primary" id={this.props.objectValue} onClick={this.props.action}>
-						{this.props.buttonText}
-					</Button>
+					{this.props.buttonText}
+				</Button>					
+					}
 				</Modal.Footer>
 			</Modal>
 			</>

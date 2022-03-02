@@ -42,17 +42,16 @@ export function users(state = {list: [], totalSize: 0}, action) {
 				// add 'deleting:true' property to user being deleted
         return {
           ...state,
-          loading: false,
-          success: "Deleted user "+action.username,			
-          list: action.users.data
+          loading: true,
+          progress: "Deleting user "+action.username		  
         };	
 		case userConstants.DELETE_SUCCESS:
 		// remove deleted user from state
 		return {
 			...state,
-      success: "Deleted user "+action.username,
 			loading: false,
-			list: state.list.filter(user => user.username !== action.username)
+			success: "Deleted user "+action.username,			
+			list: action.users.data
 		};
 		case userConstants.DELETE_FAILURE:
 		// remove 'deleting:true' property and add 'deleteError:[error]' property to user 

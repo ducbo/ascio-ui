@@ -77,16 +77,11 @@ export function workers(state = {list: [], totalSize: 0, error : null, success :
 			};
 		case workerConstants.DELETE_REQUEST:
 				// add 'deleting:true' property to user being deleted
-				return {
-				  ...state,
-				  loading: true,
-				  progress: "Deleting user "+action.username,				  
-				  list: state.list.map(user =>
-					user.username === action.username
-					  ? { ...user, deleting: true }
-					  : user
-				  )
-				};	
+			return {
+				...state,
+				loading: true,
+				progress: "Deleting user "+action.username,				  
+			};	
 		case workerConstants.DELETE_SUCCESS:
 		// remove deleted user from state
 		return {

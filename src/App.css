@@ -207,3 +207,8 @@ body .container {
 #root .filter {
   font-weight: bold;
 }
+.userDeleteCheck {
+  overflow-y: scroll;
+  max-height: 300px;
+  margin-bottom:20px;
+}
