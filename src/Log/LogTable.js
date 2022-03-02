@@ -11,6 +11,7 @@ import {  Entry } from '../Log'
 
 
 const actions = {
+  "search" : "search",
   "create" : "create",
   "update" : "update",
   "delete" : "delete",
