@@ -14,7 +14,7 @@ function message(result) {
     if(result.success) {
         return success(result.success)
     } else if (result.error) {
-        return error(result.error)
+        return error(result.error.message || result.error)
     } else  if (result.progress) {
         return progress(result.progress)
     }   return { type: "none" };
