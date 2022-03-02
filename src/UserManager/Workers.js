@@ -7,7 +7,7 @@ import { dateFormatter,getDefaultFilter } from '../_helpers'
 import { defaultWorkerFilters } from '../defaults.js'
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import { AllowedRoles } from "../_components";
-import {DeleteUser} from "."
+import {DeleteWorker} from "."
 import {UpdateUser} from './UpdateUser'
 
 class Workers extends React.Component {
@@ -83,11 +83,11 @@ class Workers extends React.Component {
         renderer: row => (<UpdateUser data={{...row}} action = "update"></UpdateUser>)
     }}
   ></RemoteTableService>,
-      <DeleteUser
+      <DeleteWorker
           username = {this.state.deleteUsername}
           show = {this.state.showDialog}           
           close = {() => {this.setState({showDialog : false})}}
-    ></DeleteUser>
+    ></DeleteWorker>
     </>
   }
 

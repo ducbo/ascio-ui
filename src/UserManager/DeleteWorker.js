@@ -6,26 +6,19 @@ import { defaultWorkerFilters } from '../defaults.js'
 import { connect } from 'react-redux'
 import { Filters } from '../_helpers'
 
-class DeleteUser extends React.Component {
+class DeleteWorker extends React.Component {
     submitDelete = async () => {
-        if(this.props.type==="worker") {
-            const searchParameters = defaultWorkerFilters(this.props.user.username)        
-            searchParameters.users = this.props.impersonate   
-            const filters = new Filters(searchParameters.filter)        
-            this.props.progress("Deleting user "+this.props.username)
-            this.props.close()
-            await this.props.deleteWorker(this.props.username, {...searchParameters, filter: filters.get()})
-            this.setState({ showDialog : false })
-            this.props.message(this.props.userMessage)
-        } else {
-            console.log("disabled")
-        }
-        /* 
-
-        */
+        const searchParameters = defaultWorkerFilters(this.props.user.username)        
+        searchParameters.users = this.props.impersonate   
+        const filters = new Filters(searchParameters.filter)        
+        this.props.progress("Deleting user "+this.props.username)
+        this.props.close()
+        await this.props.deleteWorker(this.props.username, {...searchParameters, filter: filters.get()})
+        this.setState({ showDialog : false })
+        this.props.message(this.props.userMessage)
     }
     render () {
-        const objectName = "user"
+        const objectName = "worker"
         return <ActionDialog
             objectName = {objectName}
             objectValue = {this.props.username}
@@ -41,7 +34,7 @@ class DeleteUser extends React.Component {
 
 
 }
-DeleteUser.propTypes = {
+DeleteWorker.propTypes = {
     username : PropTypes.string.isRequired,
     show     : PropTypes.bool.isRequired,
     close     : PropTypes.func.isRequired,
@@ -58,5 +51,5 @@ const actionCreators = {
     const { success, progress } = state.users;
     return { user, impersonate,  userMessage : {success,progress} };
   }
-  const connectedDeleteUser = connect(mapState, actionCreators)(DeleteUser)
-  export {connectedDeleteUser as DeleteUser}
+  const connectedDeleteWorker = connect(mapState, actionCreators)(DeleteWorker)
+  export {connectedDeleteWorker as DeleteWorker}

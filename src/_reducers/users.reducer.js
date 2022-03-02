@@ -40,15 +40,12 @@ export function users(state = {list: [], totalSize: 0}, action) {
       };
       case userConstants.DELETE_REQUEST:
 				// add 'deleting:true' property to user being deleted
-				return {
-				  ...state,
-				  loading: true,
-				  list: state.list.map(user =>
-					user.username === action.username
-					  ? { ...user, deleting: true }
-					  : user
-				  )
-				};	
+        return {
+          ...state,
+          loading: false,
+          success: "Deleted user "+action.username,			
+          list: action.users.data
+        };	
 		case userConstants.DELETE_SUCCESS:
 		// remove deleted user from state
 		return {

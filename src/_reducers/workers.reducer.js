@@ -93,7 +93,7 @@ export function workers(state = {list: [], totalSize: 0, error : null, success :
 			...state,
 			loading: false,
 			success: "Deleted user "+action.username,			
-			list: state.list.filter(user => user.username !== action.username)
+			list: action.users.data
 		};
 		case workerConstants.DELETE_FAILURE:
 		// remove 'deleting:true' property and add 'deleteError:[error]' property to user 
